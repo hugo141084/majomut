@@ -1,0 +1,346 @@
+<?php
+$d=count($destino);
+$i=1;
+foreach ($destino as $des){
+    if($i<$d) $alma .=$des->descripcion.", ";
+    else $alma .=$des->descripcion.".";
+}
+$d=count($ciclo);
+$i=1;
+foreach ($ciclo as $cic){
+    if($i<$d) $cicl .=$cic->ciclo.", ";
+    else $cicl .=$cic->ciclo.".";
+}
+Load::lib('tcpdf');
+Load::lib('funciones');
+class reporte extends TCPDF {
+
+  
+
+    public function Header() {
+        
+    }
+
+    public function Footer() {
+        /* establecemos el color del texto */
+        $this->SetTextColor(0, 0, 0);
+        $this->SetFont('helvetica', 'C', 7);
+
+       
+            $this->SetXY(10, 260);
+            $this->MultiCell(110, 1, "1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. 29247 \n  Teléfonos 967 678 31 96 y 967 678 81 06 \n San Cristóbal de Las Casas, Chiapas.", 0, 'C');
+            $this->SetXY(120, 260);
+            $this->MultiCell(60, 1, "www.majomut.org \n mail: directivosmajomut@prodigy.net.mx \n  info@majomut.org", 0, 'C');
+            $this->SetXY(182, 260);
+            $this->SetFont('helvetica', 'C', 7);
+            $this->MultiCell(30, 1, "" . $this->getAliasNumPage() . " / " . $this->getAliasNbPages() . " \n ", 0, 'C');
+        
+    }
+
+}
+$pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter'); 
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('');
+$pdf->SetTitle('Reportes');
+$pdf->SetSubject('');
+
+$logo='./img/logoReporte.png';
+
+
+//set margins
+$pdf->SetMargins(10,10,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('10');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+
+$pdf->AddPage();
+   
+    ?>
+<?php
+ 
+    //set it to writable location, a place for temp generated PNG files
+
+
+//ofcourse we need rights to create temp dir
+
+
+
+//$longitud = count($datos);
+// Set some content to print
+$html="<style>
+        .mitabla{
+		font-size: 11px; 
+		color: #333; 
+	}
+        .mitabla1{
+		font-size: 9px; 
+		color: #333; 
+	}
+        .mitabla2{
+		font-size: 9px; 
+		color: #333; 
+                font:bold;
+	}
+        .resp{
+        
+        font-size:18px;
+        font-family:Courier,monospace;
+        font:bold;
+     }
+     .respTi{
+        
+        font-size:9px;
+        font-family:Courier,monospace;
+     }
+     p.saltodepagina
+{
+page-break-after:always;
+}
+
+        </style>";
+
+
+
+
+
+$html .='
+ <table class="mitabla" border="0" >
+<thead>
+
+<tr>
+<th align="center" style="width: 20% ">
+
+<img src="'.$logo.'" width="100" height="110"  />
+</th>
+<th align="left" style="width: 80%; font-weigth:18px;">
+
+  <hr>
+<font align="center" class="resp"><br>
+UNION DE PRODUCTORES  ORGANICOS <br>
+BENEFICIO MAJOMUT, S. DE P.R. DE R.L <br>
+R.F.C.  UPO111114BJ7 <br>
+</font>
+ <hr>  
+ 
+
+</th>
+
+</tr>
+
+</thead>
+ <tbody>
+          <tr>
+          <td colspan="3">   
+          
+
+ 
+
+<br>
+<br>
+<table style="width: 100%" border="0" class="mitabla">   
+    <tr >
+        <td style="width: 65%" border="0" >             </td>
+        <td style="width: 35%" border="0" >San Cristobal de las Casas, Chiapas            </td>
+    </tr>
+     <tr >
+        <td style="width: 65%" border="0" >             </td>
+        <td style="width: 35%" border="0" >'.FechaCadena($datosCompra->fecha_documento).'            </td>
+    </tr>
+     <tr >
+        <td style="width: 65%" border="0" >             </td>
+        <td style="width: 35%" border="0" >Cotizacion No. '.$datosCompra->documento.'            </td>
+    </tr>
+    </table>
+   <br>
+<br> 
+<table style="width: 100%" border="0" class="mitabla">   
+    <tr >
+        <td style="width: 20%" border="0" ><strong>CLIENTE </strong>      </td>
+        <td style="width: 80%" border="0" >'.$datosCompra->nombrecompleto.'           </td>
+    </tr>
+       <tr>
+        <td  border="0" ><strong>DIRECCION: </strong>      </td>
+        <td  border="0" >'.$datosCompra->direccion.'           </td> 
+    </tr>
+    
+     <tr>
+        <td  border="0" ><strong>TELEFONO: </strong>      </td>
+        <td  border="0" >'.$datosCompra->telefono.'           </td>  
+    </tr> 
+    <tr>
+        <td  border="0" ><strong>EMAIL: </strong>      </td>
+        <td  border="0" >'.$datosCompra->correoelectronico.'           </td>  
+    </tr> 
+    <tr>
+        <td  border="0" ><strong>ORGANIZACIÓN: </strong>      </td>
+        <td  border="0" >'.$datosCompra->organizacion.'           </td>  
+    </tr> 
+ </table>
+<p>Presente</p>
+<p>Es un gusto para nosotros atenderle, de acuerdo a su solicitud, nos dirigimos para presentarle la cotización
+del café cosecha ciclo 2019-2020, los precios y las calidades, que a continuación se presenta:</p>
+
+ </td>
+</tr>
+
+<tr>
+<td colspan="3">
+
+</td>
+</tr>
+
+<tr>
+<td colspan="3">
+<table style="width: 100%" border="1" class="mitabla1" cellpadding="3">
+<tr align="center" bgcolor="#CCCCCC" class="respTi">
+<td style="width: 15%">CODIGO <br>PRODUCTO</td>
+<td style="width: 15%">CANTIDAD</td>
+<td style="width: 40%">PRODUCTO</td>
+<td style="width: 15%">VALOR UNITARIO</td>
+<td style="width: 15%">VALOR UNITARIO</td>
+
+</tr>';
+$i=1;
+$c1=0;$c2=0;$c3=0;$c4=0;
+foreach ($detalleCompra as $datos){
+ $c1=$datos->cantidad * $datos->precio;
+ 
+$html .=' <tr align="center">
+<td style="width: 15%; " >'.$datos->clave.' </td>
+<td style="width: 15%" >'.$datos->cantidad.'</td>
+<td style="width: 40%" >'.$datos->descripcion.'</td>
+<td style="width: 15%" >'.$datos->precio.'</td>
+<td style="width: 15%" >'. number_format($c1,2).'</td>
+
+</tr>'; 
+$i++;
+}
+
+if($i<5){
+for($j=$i;$j<=5;$j++){
+ $html .=' <tr align="center">
+<td style="width: 15%;height: 19px;"></td>
+<td style="width: 15%"></td>
+<td style="width: 40%"></td>
+<td style="width: 15%"></td>
+<td style="width: 15%"></td>
+
+</tr>';    
+}    
+}
+$html .=' <tr align="center" bgcolor="#CCCCCC">
+<td style="width: 15%"></td>
+<td style="width: 15%"></td>
+<td style="width: 40%"></td>
+<td style="width: 15%">SUBTOTAL</td>
+<td style="width: 15%">'.$datosCompra->subtotal.'</td>
+
+</tr>'; 
+$html .=' <tr align="center" bgcolor="#CCCCCC">
+<td style="width: 15%"></td>
+<td style="width: 15%"></td>
+<td style="width: 40%"></td>
+<td style="width: 15%">IVA</td>
+<td style="width: 15%">'.$datosCompra->iva.'</td>
+
+</tr>'; 
+$html .=' <tr align="center" bgcolor="#CCCCCC">
+<td style="width: 15%"></td>
+<td style="width: 15%"></td>
+<td style="width: 40%"></td>
+<td style="width: 15%">COSTO ENVIO</td>
+<td style="width: 15%">'.$datosCompra->costo_envio.'</td>
+
+</tr>'; 
+$html .=' <tr align="center" bgcolor="#CCCCCC">
+<td style="width: 15%"></td>
+<td style="width: 15%"></td>
+<td style="width: 40%"></td>
+<td style="width: 15%">TOTAL</td>
+<td style="width: 15%">'. number_format(($datosCompra->monto + $datosCompra->costo_envio),2).'</td>
+
+</tr>'; 
+$html .='</table> <p>
+NOTA:</p>
+<p>
+Por políticas de la empresa debemos recibir por e-mail copia de la ficha de depósito o transferencia con
+el 100 % del valor del pedido realizado, antes de ser enviado a domicilio. 
+</p>
+
+</td></tr>
+
+
+<tr>  
+
+<td style="width: 80%">
+<br><br/><br/><br><br><br><br><br>
+<p>NOTA:</p>
+
+<p>Pueden ser pedidos mixtos de acuerdo a sus necesidades.
+Enviar los datos para facturación.
+Precios sujetos a cambio, el cual se le comunicaría con anticipación.</p>
+<p>Los datos para depositar son los siguientes:</p>
+<table style="width: 100%" border="1" class="mitabla1" cellpadding="3">
+<tr>
+<td style="width: 30%"> Nombre </td>
+<td style="width: 70%"> Unión de Productores Orgánicos Beneficio Majomut, S. de P.R. de R.L. </td>
+</tr>
+<tr>
+<td> No. Cuenta </td>
+<td> 0190410128 </td>
+</tr>
+<tr>
+<td> CLABE Interbancaria </td>
+<td> 012130001904101289 </td>
+</tr>
+<tr>
+<td> Banco </td>
+<td> BBVA Bancomer, S.A. </td>
+</tr>
+<tr>
+<td> Sucursal </td>
+<td> 4439 </td>
+</tr>
+</table>
+<p>Por cualquier duda o aclaración estamos a sus órdenes.</p>
+<p>Unión de Productores Orgánicos Beneficio Majomut, S. de P.R. de R.L.<br>
+1ra. Cerrada de la Era No. 1<br>
+Barrió la Quinta San Martín.<br>
+C.P. 29247<br>
+Teléfono y Fax: 01 967 678 31 96 / 967 678 81 06</p>
+<p>Datos de contacto:</p>
+<p>Ing. Manuel Gómez González<br>
+Responsable del Área de Comercialización & Logística de Exportación<br>
+Unión Majomut.<br>
+e-mail: ventas@majomut.org</p>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+      ';    
+   $html .='
+ 
+ 
+
+ ';
+  
+//print_r($datos);
+  
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+
+// ---------------------------------------------------------
+
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+ //$pdf->Output('reporte.pdf', 'I');
+
+
+   ob_end_clean();  
+
+ $pdf->Output('reportePedido.pdf', 'I');
+
+?>
+

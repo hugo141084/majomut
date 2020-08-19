@@ -1,0 +1,53 @@
+<?php View::content(); ?>
+<br>
+  <div class="row">
+     <div class="col-md-12">
+       
+     </div>
+  </div>
+   <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>Agregar Costo de Envio</span>
+         </strong>
+        </div>
+        <div class="panel-body">
+          <?php echo Form::open("envios/index/"); ?>
+            <div class="form-group">
+                Codigo <br> 
+             <?php echo Form::text('costo.codigo', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Numero kilos <br> 
+             <?php echo Form::text('costo.num_kilos', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Costo <br> 
+           <?php echo Form::text('costo.costo', ' class="element text"  '); ?>
+        </div>
+              
+              
+            <button type="submit" name="add_cat" class="btn btn-primary">Agregar Costo</button>
+        <?php echo Form::close(); ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>
+          <span class="glyphicon glyphicon-th"></span>
+          <span>Lista de Costos de Envios</span>
+       </strong>
+      </div>
+        <div id="form_container" style="width:100%">   
+<?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos));  ?>
+</div>
+    </div>
+    </div>
+   </div>
+  
+

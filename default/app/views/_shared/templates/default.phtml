@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+	<title>:: Union - Majomut</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="loans HTML Template">
+	<meta name="keywords" content="loans, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<!-- Favicon -->
+	<link href="<?php echo PUBLIC_PATH ?>img/favicon.ico" rel="shortcut icon"/>
+
+	<!-- Google font
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
+  -->
+	<!-- Stylesheets -->
+        
+
+        <?php Tag::css('form_css') ?> <!-- estilos para el form!-->
+	<?php Tag::css('mi_estilo') ?> <!-- algunos de mis estilos personalizados!-->
+        <?php Tag::css('bootstrap'); ?>
+        <?php Tag::css('bootstrap.min'); ?>
+        <?php Tag::css('font-awesome.min'); ?>
+        <?php Tag::css('owl.carousel.min'); ?>
+        <?php Tag::css('flaticon'); ?>
+        <?php Tag::css('slicknav.min'); ?>
+        <?php Tag::css('style'); ?>
+        <?php Tag::css('exception') ?>
+         <?php Tag::css('jquery.alerts'); ?>
+         <?php Tag::css('kumbia'); ?>
+        <?php Tag::css('jquery/shadowbox') ?> <!-- estilos para la ventana emergente!--> 
+	<!-- Main Stylesheets -->
+	
+
+<!--====== Javascripts & Jquery ======-->
+	
+        <?php //echo Tag::js('owl.carousel.min'); ?>
+         <?php echo Tag::js('jquery-3.2.1.min'); ?>
+       <?php echo Tag::js('bootstrap'); ?>
+
+        <?php //echo  Tag::js('bootstrap.min'); ?>
+        <?php echo Tag::js('jquery.slicknav.min'); ?>
+        <?php echo Tag::js('jquery.ui.draggable'); ?>
+
+            <?php echo Tag::js('jquery.alerts.mod'); ?>
+            <?php echo Tag::js('jquery.blockUI'); ?>
+        
+        <?php echo Tag::js('jquery-ui.min'); ?>
+        <?php echo Tag::js('main'); ?>
+<?php echo Tag::js('jquery/shadowbox'); ?><!-- js para la ventana emergente!-->
+<?php echo Tag::js('popper'); ?><!-- js para la ventana emergente!-->
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+
+  <?= Html::includeCss() ?>
+        <?php
+            $valido = Load::model('usuario')->isValid();
+
+
+                 
+
+            ?>
+</head>
+<body>
+    
+
+  <header class="header-section">
+   
+     
+       <script type="text/javascript">
+        Shadowbox.init({
+            overlayColor: "#000",
+            overlayOpacity: '0.6',
+            modal: true,
+            handleOversize: "rezise",
+            enableKeys: false,
+            onClose: function() { 
+            }
+        });
+    </script>                                             
+      <a href="index.html" class="site-logo"  style="padding: 0">
+			<img src="<?php echo PUBLIC_PATH ?>img/logo.png"  />
+		</a>
+		<nav class="header-nav">
+                    
+                    
+			<?php   if ($valido) {
+                                    $tipo = 1;
+
+                                    switch ($tipo) {
+                                       
+                                                case 1:
+                                                  
+                                                    ?>
+			<ul class="main-menu">
+				<li><a href="<?php echo PUBLIC_PATH ?>">Inicio</a>   
+                                                    <ul class="sub-menu">
+                                                        <li>
+                                                            <a  href="javascript: void(0)"  onClick="salir();" style="padding:8px 5px 2px 5px;margin:0;">Salir</a>   
+                                                        </li>
+                                                    </ul>
+                                                </li>
+				
+				<li><a href="#">Catalogo</a>
+					<ul class="sub-menu">
+						<li><a href="<?php echo PUBLIC_PATH ?>producto">Productos</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoPresentacion">Tipo</a></li>
+						<li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoCalidad">Presentacion</a></li>
+						<li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoPreparacion">Preparacion</a></li>
+                                                
+                                                <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoLote">Lotes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoEmbalaje">Empaque</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoMedida">Unidad Medida</a></li>
+                                            <!--    <li><a href="<?php echo PUBLIC_PATH ?>proveedor">Proveedor</a></li>  !-->
+					</ul>
+				</li>
+                                <li><a href="#">Inventario</a>
+					<ul class="sub-menu">
+						<li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoAlmacen">Almacen</a></li>
+						<li><a href="<?php echo PUBLIC_PATH ?>inventario/inventarioIni">Inventario Inicial</a></li>
+						<li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoRecepcion">Recepcion de Cafe</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoSalidaCT">Salida para Tostado</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoEntradaCT">Recepcion de Cafe Tostado</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>">Empaquetado</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>">Combinacion de Lotes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/asignar">Asignacion de Inventarios</a></li>
+					</ul>
+				</li>
+                                <li><a href="<?php echo PUBLIC_PATH ?>cliente">clientes</a></li>
+                                <li><a href="#">Ventas</a>
+					<ul class="sub-menu">
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoVenta">Directa</a></li>
+						<li><a href="<?php echo PUBLIC_PATH ?>venta/listadoCotizacion">Cotización</a></li>
+						<li><a href="<?php echo PUBLIC_PATH ?>venta/listadoPedido">Pedidos</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoAnticipo">Anticipos</a></li>
+						</ul>
+				</li>
+                                <li><a href="">Configuracion</a>
+                                <ul class="sub-menu">
+                                    <li><a href="<?php echo PUBLIC_PATH ?>banco">Bancos</a></li>
+                                    <li><a href="<?php echo PUBLIC_PATH ?>empresa">Empresa Envio</a></li>
+                                    <li><a href="<?php echo PUBLIC_PATH ?>envios">Costos Envios</a></li>
+                                                        <li><a href="<?php echo PUBLIC_PATH ?>empleado">Empleados</a></li>
+                                <li><a href="<?php echo PUBLIC_PATH ?>usuario">Usuarios</a></li>
+                                                    </ul>
+                                </li>
+				<li><a href="">Reporte</a>
+                                <ul class="sub-menu">
+                                    <li><a href="<?php echo PUBLIC_PATH ?>reportes/inventarioInicial">Inventario Inicial</a></li>
+						<li><a href="">Existencias</a></li>
+						<li><a href="">Movimientos al Invenatrio</a></li>
+						<li><a href="">Existencias</a></li>
+                                                <li><a href="">Lotes</a></li>
+                                                
+					</ul>
+                                </li>
+				
+			</ul><?php
+                                                    break;
+                                                
+                                            }
+                                        }?>
+			
+                    
+                    
+			<div class="header-right">
+				<a href="index.html" class="site-logo" style="padding: 0">
+			<img src="<?php echo PUBLIC_PATH ?>img/logo.png"  />
+		</a>
+			</div>
+		</nav>
+                                      
+	</header>
+    <section class="why-section spad">
+		<div class="container">
+  <?php View::content() ?>
+                </div>
+    </section>
+  <?php View::partial('kumbia/footer') ?>
+</div>
+</body>
+</html>
+<script languaje="JavaScript">
+
+        function salir() {
+            
+                    location.href = '<?php echo PUBLIC_PATH . "index/salir"; ?>';
+               
+        }
+        
+        </script>

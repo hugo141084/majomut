@@ -1,0 +1,189 @@
+
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+<br/>
+    <h1><a></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Nuevo  Producto" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                        echo Html::linkAction('',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    
+                    
+                    ?>
+                </div>
+            </div>
+    </div>
+    <?php echo Form::open("producto/" . $accion); ?>
+ <?php echo Form::hidden("producto.id"); ?>
+
+   
+    
+    <div id="margen" >
+        
+        
+        <div class="col-sm-12">                  
+    <div class="panel panel-primary">
+        <div class="panel-heading">DATOS </div>
+        <div class="panel-body">
+<div class="form-row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">   Clave:
+                        </div>
+                        
+                        <?php echo Form::text('producto.clave', 'class="form-control" '); ?>
+                       
+
+                    </div>
+                </div>
+            </div> 
+
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">     Descripción:    
+                        </div>
+                        <?php echo Form::text('producto.descripcion', 'class="form-control"  '); ?>
+                    </div>
+                </div>
+            </div> 
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">Tipo:    
+                        </div>
+                        <?php echo Form::dbSelect("producto.presentacion_id","descripcion",array("presentacion","listar", '0'),'Seleccione..',' class="form-control"  ');?>
+                    </div>
+                </div>
+            </div>
+            
+            
+    
+</div>
+            <div class="form-row">
+                
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">Presentacion:    
+                        </div>
+                        <?php echo Form::dbSelect("producto.calidad_id","descripcion",array("calidad","listar", '0'),'Seleccione..',' class="form-control"  ');?>
+                    </div>
+                </div>
+            </div>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">     Preparacion:    
+                        </div>
+                        <?php echo Form::dbSelect("producto.preparacion_id","descripcion",array("preparacion","listar", '0'),'Seleccione..','class="form-control" ');?>
+                    </div>
+                </div>
+            </div>
+<div class="col-sm-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">     Empaque:    
+                        </div>
+                        <?php echo Form::dbSelect("producto.empaque_id","descripcion",array("embalaje","listar", '0'),'Seleccione..',' class="form-control"  ');?>
+                    </div>
+                </div>
+            </div>
+            
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">     Unidad de Medida:    
+                        </div>
+                        <?php echo Form::dbSelect("producto.medida_id","descripcion",array("medida","listar", '0'),'Seleccione..',' class="form-control"  ');?>
+                    </div>
+                </div>
+            </div>
+           <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">       Peso:    
+                        </div>
+<?php echo Form::text('producto.peso', 'class="form-control"  '); ?>
+                    </div>
+                </div>
+            </div> 
+            
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">       Peso Neto:    
+                        </div>
+<?php echo Form::text('producto.peso_neto', 'class="form-control"  '); ?>
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">       Precio:    
+                        </div>
+<?php echo Form::text('producto.precio', 'class="form-control"  '); ?>
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">       Existencia:    
+                        </div>
+<?php echo Form::text('producto.existencia', 'class="form-control" readonly ','0'); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">       Impuesto:    
+                        </div>
+<?php echo Form::number('producto.impuesto', 'class="form-control" ','0'); ?>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </div> 
+    </div>
+</div>
+ 
+        </br>
+            <?php $url = "'" . PUBLIC_PATH . "producto'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+            <?php echo Form::reset('Reiniciar', 'class="CSSButton"'); //Crea un botón con el texto 'reiniciar';?>
+            </td>
+            <td width="33%">
+            <?php echo Form::submit((($accion == 'crear') ? 'Guardar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            </td>
+        </tr>
+     </table>
+     
+  </div> 
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>
+
+
+
+        

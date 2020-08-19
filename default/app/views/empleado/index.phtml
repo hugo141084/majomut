@@ -1,0 +1,133 @@
+
+
+
+<?php
+
+View::content();
+
+echo Tag::js('jquery-1.9.1');
+echo Tag::js('popper');
+echo Tag::js('bootstrap.min');
+echo Tag::js('jquery-ui.min');
+echo Tag::js('jquery.blockUI');
+echo Tag::js('fileinput.min');
+
+Tag::css('bootstrap.min');
+Tag::css('jquery-ui.min');
+Tag::css('fileinput');
+?>
+
+
+
+
+<div id="container" >
+    <div id="form_container" style="width:100%;" >
+        <h1 class="lineaSuperior"><a></a></h1>
+        <div class="form_description">
+            <h2>Listado de Empleados</h2><br>
+        </div>
+        <br/>
+        <ul class="nav nav-tabs">
+            <br>
+            <li class="active">
+                <a href="#home"   data-toggle="tab"    >Empleados Activos</a>
+            </li>
+            <li class="">
+                <a href="#organismos" class="menuSolicitud"    data-tipo="organismos"  >Empleados Inactivos</a>
+            </li>
+
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane   active" id="home"  aria-labelledby="home-tab">
+                <div id="dt_example" style="margin:0 auto; padding:10px 20px; background-color:#ffffff; ">      
+                    <br />
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default">
+
+                            <div class="panel-body">
+                             <div class="col-md-12">
+          <?php View::partial("formato",false,array('Encabezado'=>$encabezado,'Model'=>$empleado,'Campos'=>$campos,'ctrleditar'=>"editar/", 'ctrlInactivo' => "bloquear/", 'ctrlcrear'=>"crear/")); ?>
+
+        </div>     
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="organismos"  aria-labelledby="organismos-tab">
+                  <div id="dt_example" style="margin:0 auto; padding:10px 20px; background-color:#ffffff; ">      
+        <br />
+        <div style="text-align:center; width:100%;">
+            
+            <br /><br />
+        </div>
+        <table  border="0" width="100%" id="display" class="display">
+            <thead>
+                <tr  style="font-size: 9px;letter-spacing: -0.8px;">
+                    <th width='5%'> #</th>
+                    <th width='30%'> NOMBRE</th>
+                    <th width='30%'>RFC</th>
+                    
+                   
+                    <th width='13%'>E-MAIL</th>
+                    <th width='13%'>TELEFONO</th>
+                    <th width='13%'>F. BAJA</th>
+                    <th width='13%'>ACCION</th>
+                    </tr>
+            </thead>
+            <tbody>
+<?php
+
+           $i=1;
+            foreach($result1 as $res){
+
+              
+                       echo "<tr>";
+                        echo "<td>".$res->id."</td>";
+                            echo "<td>".$res->nombre."</td>";
+                            echo "<td>".$res->rfc."</td>";
+                            echo "<td>".$res->correo."</td>"; 
+                            echo "<td>".$res->telefono."</td>"; 
+                            echo "<td>".$res->fecha_baja."</td>"; 
+                            echo "<td>";
+                           echo Html::linkAction("activar/" . $res->id, Html::img('desbloquear.png', 'cancel', 'style="text-align:center;width:32px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea activarlo?\')"'));
+                            echo "</td>";
+                            echo "</tr>";  
+                             
+                        $i++; 
+               }
+            ?>
+            </tbody>
+        </table>
+        
+       
+    </div>
+            </div>
+            <br/>
+        </div>
+
+       
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    $(".menuSolicitud").on("click", comprobarEstado);
+    function comprobarEstado() {
+        var tipo = $(this).data("tipo");
+        var elemento = $(this);
+
+        if (tipo == "organismos") {
+
+            $('a[href="#organismos"]').attr('data-toggle', 'tab');
+            $('a[href="#organismos"]').tab('show');
+
+        }
+
+
+    }
+</script>    

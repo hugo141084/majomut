@@ -1,0 +1,399 @@
+﻿<?php Tag::css('demo_page'); ?>
+<?php Tag::css('demo_table'); ?>
+<?php Html::includeCss() ?>
+<?php echo Tag::js('jquery.dataTables.min'); ?>
+<?php
+ ini_set('memory_limit', '512M');
+ ini_set('max_execution_time', '-1');
+ ?>
+
+
+
+<div id="dt_example" style="margin:0 auto; padding:10px 20px 20px; background-color:#ffffff; ">    
+    <div id="container"  style="width:100%;">
+        <div id="demo">
+            <div id="titulo_superior"> 
+            <h3><?php echo $Encabezado ?></h3>
+            <div style="text-align:right;margin: 0 0; width:100%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                    if (isset($ctrlcrear)) {                        
+                          echo Html::linkAction('crear',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');
+                    }
+                    
+                    if (isset($ctrlAlta)) {                        
+                          echo Html::linkAction('crear'.$ventana,Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'rel="shadowbox;width=400px;height=200px;"');
+                    }
+                    if (isset($ctrlActualizar)) {                        
+                      //    echo Form::button('Actualizar',Html::img('actualizar.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');
+                    }
+                    if (isset($ctrlcrearPD)) {
+                        echo Html::linkAction('crearPD', 'AGREGAR', 'class="CSSButton"');
+                    }
+                    //LINK PARA SUBIR LISTADO DE CONTRIBUYENTES
+                    if (isset($ctrlSubirC)) {
+                        echo Html::linkAction('subirC', 'IMPORTAR', 'class="CSSButton"');
+                    }
+                    //LINK PARA SUBIR LISTADO DE CUENTAS POR COBRAR
+                    if (isset($ctrlSubirCuenta)) {
+                        echo Html::linkAction('subirCuenta', 'IMPORTAR', 'class="CSSButton"');
+                    }
+                    //LINK PARA SUBIR LISTADO DEL PADRON DE AGUA
+                    if (isset($ctrlImportar)) {
+                         echo Html::linkAction('importar',Html::img('importar.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    }
+                    //LINK PARA SUBIR LISTADO DEL PADRON DE PREDIAL
+                    if (isset($ctrlExportar)) {
+                        echo Html::linkAction('crear',Html::img('exportar.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    }
+                    //LINK PARA IMPRIMIR TODOS LOS AVISOS
+                    if (isset($imprimirAvisos)) {
+                        echo Html::linkAction('imprimirAvisos', Html::img('printer.png', 'cancel', 'style="text-align:center;width:35px; padding:2px;"') . "<b>TODOS</b>", ('onclick="if(confirm(\'Está seguro de imprimir todos los avisos?\'))window.open(this.href,this.target);return false;"'));
+                    }
+                    //LINK PARA CREAR PAGO DE CLCS
+                    if (isset($crearPagoClc)) {
+                        echo Html::linkAction('crearPagoClc', 'AGREGAR', 'class="CSSButton"');
+                                         
+                    }
+                    
+                    ?>
+                </div>
+            </div> 
+            </div>
+            
+            <table  border="0" width="100%" id="table" class="display">
+                <thead>
+                    <tr><?php foreach ($Campos as $titulo => $valor): ?>
+                            <th><?php echo $titulo; ?></th>
+                        <?php endforeach; ?>
+                        <th> ACCION </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($Model as $model): ?>
+                        <tr>
+                            <?php
+                            foreach ($Campos as $campos):
+                                
+                                //PARA LISTADO CONTRIBUYENTES 
+                                if ($campos == "tipo_contribuyente")
+                                    if ($model->$campos == "F")
+                                        echo "<td>P. FISICA</td>";
+                                    else
+                                        echo "<td>P. MORAL</td>";
+                                
+                                else    if ($campos == "observacion")
+                                {
+                                    if ($model->$campos == "3")
+                                        echo "<td style='background:#00FF00'>". $model->$campos ."</td>";
+                                    
+                                 else   if ($model->$campos == "4")
+                                        echo "<td style='background:#FF0040'>". $model->$campos ."</td>";
+                                  
+                                 else   if ($model->$campos == "5")
+                                        echo "<td style='background:#FEEFB3'>". $model->$campos ."</td>";
+                                    else
+                                        echo "<td style='background:#00000'>". $model->$campos ."</td>";
+                                }//PARA ESTATUS EN PADRONES
+                                else if ($campos == "estatus"){
+                                    if ($model->$campos == "0")
+                                        echo "<td>INACTIVO</td>";
+                                    else
+                                        echo "<td>ACTIVO</td>";
+                                }else if ($campos == "Oestatus"){
+                                    if ($model->$campos == "2")
+                                        echo "<td>PENDIENTE</td>";
+                                    else
+                                        echo "<td></td>";
+                                //PARA ESTADO DE LOS AVISOS
+                                }else if ($campos == "estado_aviso")
+                                    switch ($model->$campos) {
+                                        case "P":
+                                            echo "<td>PARA IMPRIMIR</td>";
+                                            break;
+                                        case "I":
+                                            echo "<td>IMPRESA</td>";
+                                            break;
+                                        case "E":
+                                            echo "<td>ENTREGADA</td>";
+                                            break;
+                                        case "C":
+                                            echo "<td>CANCELADA</td>";
+                                            break;
+                                        case "R":
+                                            echo "<td>NO FUE ENTREGADA</td>";
+                                            break;
+                                    } else
+                                    echo "<td>" . $model->$campos . "</td>";
+                            endforeach;
+                            ?>
+                            <td align="center">
+                                <?php
+                                if (isset($calendar)) {
+                                    $ancho = "width:65px";
+                                } else {
+                                    $ancho = "width:60px";
+                                }
+                                if (isset($ctrlAceptar)) {
+                                    $ancho = "width:115px";
+                                } else {
+                                    $ancho = "width:120px";
+                                }
+                                
+                                ?>
+                                <div style="<?php echo$ancho; ?>">
+                                    <?php
+                                    if (isset($ctrlListar)) {
+                                        echo Html::linkAction($ctrlListar . $model->id, Html::img('lista.png', 'cancel', 'style="text-align:center;width:35px; padding:2px;"'));
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($ctrleditar)) {
+                                        echo Html::linkAction($ctrleditar . $model->id, Html::img('pencil.png', 'cancel', 'style="text-align:center;width:20px; padding:2px;"'));
+                                    }
+                                   
+                                    
+                                    if (isset($ctrlImprimir)) {
+                                        if($ctrlImprimir='cotizacionPdf/'){
+                                            
+                                            echo Html::linkAction($ctrlImprimir.$model->id, Html::img('printer.png', 'cancel', 'style="text-align:center;width:17px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir ésta Cotización...?\'))window.open(this.href,this.target);return false;"'));
+                                        }
+                                   } ?>
+                                    <?php
+                                    if ($campos == "estatus") {
+                                        if ($model->$campos == "1") {
+                                            if (isset($editandoAct)) {
+                                                echo Html::linkAction($editandoAct . $model->id, Html::img('credencial.png', 'cancel', 'style="text-align:center;width:32px; padding:2px;" title="Consultar Datos "'));
+                                            }
+                                        }
+                                    }
+                                    ?>                                    
+                                    <?php
+                                    if ($campos == "ESTADO") {
+                                        if ($model->$campos == "Activo") {
+                                            if (isset($editandoAct)) {
+                                                echo Html::linkAction($editandoAct . $model->id, Html::img('pencil_32.png', 'cancel', 'style="text-align:center;width:15px; padding:2px;"'));
+                                            }
+                                            if (isset($ctrlbloquear)) {
+                                                echo Html::linkAction($ctrlbloquear . $model->id, Html::img('bloquear.png', 'cancele', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Bloquear  el Usuario?\')"'));
+                                            }
+                                            
+                                    if (isset($eliminar)) {
+                                        echo Html::linkAction($eliminar.$tipoVale.'/'. $model->id, Html::img('close_32.png', 'cancel', 'style="text-align:center;width:15px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"'));
+                                    }
+                                  
+                                        } else if ($model->$campos == "Inactivo") {
+                                            ?>
+                                            <?php
+                                            if (isset($ctrldesbloquear)) {
+                                                echo Html::linkAction($ctrldesbloquear . $model->id, Html::img('desbloquear.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Desbloquear  el Usuario?\')"'));
+                                            }
+                                        }
+                                    }
+                                    if ($campos == "estatus") {
+                                        
+                                    if (@$ctrlbloquear) {
+                                       
+                                        if ($model->$campos == "1")
+                                            echo Html::img('bloquear.jpg', 'bloquear', 'title="Bloquear" style="text-align:center;width:25px;padding:2px;cursor:pointer;" onclick=cambiaestado('.$model->id.',1); ');
+                                        else
+                                            echo Html::img('check.png', 'desbloquear', 'title="Desbloquear" style="text-align:center;width:25px;padding:2px;cursor:pointer;" onclick=cambiaestado('.$model->id.',2); ');
+                                    }
+                                    }
+                                    
+                                    ?>
+                                    <?php
+                                    if (isset($calendar)) {
+                                        echo Html::linkAction($calendar . $model->id, Html::img('calendar1.png', 'cancel', 'style="text-align:center;width:15px;padding:2px;"'));
+                                    }
+                                    ?>
+
+                                    <?php
+                                    if (isset($vale)) {
+                                        echo Html::linkAction($vale.$tipoVale.'/'.$model->ID, Html::img('printer.png', 'cancel', 'style="text-align:center;width:17px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir éste Vale?\'))window.open(this.href,this.target);return false;"'));
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($impPdf)) {
+                                        if($model->nombre_xml==""){$model->nombre_xml="1";}
+                                      //  echo Html::linkAction("descargar/" . $model->nombre_xml."/pdf", Html::img('pdf_icon.png', 'cancel', 'style="text-align:center;width:25px; padding:1px;"'));                              
+                                        echo Html::linkAction('reciboPdf?var='.$model->id, Html::img('printer.png', 'cancel', 'style="text-align:center;width:17px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir éste Recibo?\'))window.open(this.href,this.target);return false;"'));
+                                        
+                                        }
+                                    ?> 
+                                      <?php
+                                    if (isset($impXml)) {
+                                        if($model->nombre_xml==""){$model->nombre_xml="1";}
+                                          echo Html::linkAction("descargar/" . $model->nombre_xml."/xml", Html::img('xmlD.ico', 'cancel', 'style="text-align:center;width:25px; padding:1px;"'));  
+                                    }
+                                    ?>  
+                                    <?php
+                                    if (isset($entrega)) {
+                                        echo Html::linkAction('avisosEntregados/' . $model->id, Html::img('check.png', 'cancel', 'style="text-align:center;width:15px;padding:1px;"'), 'rel="shadowbox;width=850;height=450;"');
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($ctrlCredencial)) {
+                                        echo Html::linkAction('credencial/' . $model->id, Html::img('credencial.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Consultar Datos "'), 'rel="shadowbox;width=850;height=450;"');
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($cancelar)) {
+                                        echo Html::linkAction('cancelarAvisos/' . $model->id . '', Html::img('cancel.png', 'cancel', 'style="text-align:center;width:15px;padding:1px;"'), 'rel="shadowbox;width=850;height=450;"');
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($activarAvisos)) {
+                                        echo Html::linkAction('activarAvisos/' . $model->id . '', Html::img('add.png', 'cancel', 'style="text-align:center;width:15px;padding:1px;"'), 'rel="shadowbox;width=850;height=450;"');
+                                    }
+                                    ?>
+                                    <?php
+                                    
+                                        
+                                            if (isset($ctrlInactivo)) {
+                                                echo Html::linkAction($ctrlInactivo . $model->id, Html::img('bloquear.png', 'cancele', 'style="text-align:center;width:32px;padding:2px;" title="Bloquear Registro "'), ('onclick="return confirm(\'Está Seguro que desea dar de baja?\')"'));
+                                            }
+                                            if (isset($ctrlAcceso)) {
+                                                echo Html::linkAction($ctrlAcceso . $model->id, Html::img('acceso.png', 'cancele', 'style="text-align:center;width:32px;padding:2px;" title="Cambiar Contraseña "'), ('onclick="return confirm(\'Está Seguro que desea cambiar su contraseña?\')"'));
+                                            }
+                                          if ($model->$campos == "0") {
+                                            ?>
+                                            <?php
+                                            if (isset($ctrlActivo)) {
+                                                echo Html::linkAction($ctrlActivo . $model->id, Html::img('desbloquear.png', 'cancel', 'style="text-align:center;width:32px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea activarlo?\')"'));
+                                            }
+                                        }
+                                    
+                                    if (isset($ctrlborrar)) {
+                                        echo Html::linkAction($ctrlborrar. $model->id, Html::img('cancel.png', 'cancel', 'style="text-align:center;width:30px; padding:2px;"'), 'target="_blank"');
+                                    }
+                                    if (isset($reactivarEmpleado)) {
+                                        echo Html::linkAction($reactivarEmpleado . $model->id, Html::img('desbloquear.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea activar al empleado?\')"'));
+                                    }
+                                    
+                                    if(isset($ctrlasignar)){
+                                        echo Html::linkAction($ctrlasignar. $model->id, Html::img('asignar.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'));
+                                    }
+                                    
+                                    if(isset($ctrlasignarInspector)){
+                                        if($model->autorizaI != 1){
+                                            echo Html::linkAction($ctrlasignarInspector . $model->id, Html::img('asignar.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'));
+                                        }
+                                    }//$ctrlasignarInspector
+                                    if(isset($ctrlasignarRevision)){
+                                        echo Html::linkAction($ctrlasignarRevision . $model->id, Html::img('asignar.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'));
+                                    }//$ctrlasignarInspector
+                                    if (isset($ctrlRevisar)) {
+                                        if($model->estatus == '1')
+                                            echo Html::linkAction($ctrlRevisar . $model->id , Html::img('revisar.png', 'cancel', 'style="text-align:center;width:15px;padding:1px;"'));
+                                        
+                                        if (isset($ctrlVer)) {
+                                            if($model->archivo != "") {
+                                                $operador = $model->entidad_id;
+                                                $raiz = "../../../mayadato/$operador/solicitud/";
+                                                echo Html::linkAction($raiz . $model->archivo, Html::img('pdf.png', 'cancel', 'style="text-align:center;width:20px; padding:2px;"'),'target="_blank"');
+                                            } 
+                                        }
+                                    }
+                                    if (isset($ctrlCotizar)) {
+                                        if($model->estatus == '1')
+                                            echo Html::linkAction($ctrlCotizar . $model->id , Html::img('moneda.png', 'cancel', 'style="text-align:center;width:30px;padding:1px;"'));
+                                        
+                                        if (isset($ctrlVer)) {
+                                            if($model->archivo != "") {
+                                                $operador = $model->entidad_id;
+                                                $raiz = "../../../mayadato/$operador/solicitud/";
+                                                echo Html::linkAction($raiz . $model->archivo, Html::img('pdf.png', 'cancel', 'style="text-align:center;width:20px; padding:2px;"'),'target="_blank"');
+                                            } 
+                                        }
+                                    }
+                                    if(isset($ctrldetalle)){
+                                        echo Html::linkAction($ctrldetalle . $model->solicitud_id, Html::img('pdf.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), 'target="_blank"');
+                                    }
+                                    if(isset($ctrlAceptar)){
+                                        //echo Form::button('Agregar', 'class="btn btn-success btn-xs" onclick="aceptar(' . $model->inspectorsolicitud_id . ')"');
+                                        if($model->estado==1){
+                                            echo Html::linkAction($ctrlAceptar . $model->inspectorsolicitud_id, Form::button('Aceptar', 'class="btn btn-success btn-xs" '), 'target="_self"');
+                                        }
+                                    }
+                                    if(isset($ctrlDeclinar)){
+                                        if($model->estado==1 && $model->tipo!=3){
+                                            echo Html::linkAction($ctrlDeclinar . $model->inspectorsolicitud_id, Form::button('Declinar', 'class="btn btn-default btn-xs" '), 'target="_self"');
+                                        }
+                                    }
+                                    if(isset($ctrlOficioA)){
+                                        if($model->autorizaI==1){
+                                            echo Html::linkAction($ctrlOficioA . $model->solicitud_id . "/1", Html::img('pdf32.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), 'target="_blank"');
+                                          
+                                            echo Html::linkAction("formato/" . $model->solicitud_id, Html::img('catalogo.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'));
+                                        }
+                                    }
+                                    if(isset($ctrlItinerario)){
+                                        if($model->autorizaI==1 && $model->planeada!=1 && $model->tipo==1){
+                                            echo Html::linkAction($ctrlItinerario . $model->inspectorsolicitud_id, Html::img('asignar.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'));
+                                        }
+                                    }
+                                    if(isset($ctrlPlan)){
+                                        if($model->planeada==1){
+                                            echo Html::linkAction($ctrlPlan . $model->solicitud_id . "/1", Html::img('pdf32.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), 'target="_blank"');
+                                            }
+                                    }
+                                    if(isset($ctrlCancelaI)){
+                                        echo Html::linkAction($ctrlCancelaI . $model->solicitud_id, Html::img('quitar.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'¿Está Seguro que desea cancelar la inspeccion?\')"'), 'target="_blank"');
+                                    }
+                                    if(isset($ctrlGenerico)){
+                                        echo Html::linkAction($ctrlGenerico . $model->id, Html::img('check.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'));
+                                    }
+                                    if(isset($ctrlAsignarD)){
+                                        echo Html::linkAction($ctrlAsignarD . $model->id, Html::img('check.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'));
+                                    }
+                                    if(isset($ctrlAceptarD)){
+                                        //echo Form::button('Agregar', 'class="btn btn-success btn-xs" onclick="aceptar(' . $model->inspectorsolicitud_id . ')"');
+                                        if($model->estado==1 && $model->tipo!=3){
+                                            echo Html::linkAction($ctrlAceptarD . $model->dictaminadorsolicitud_id, Form::button('Aceptar', 'class="btn btn-success btn-xs" '), 'target="_self"');
+                                        }
+                                    }
+                                    if(isset($ctrlAceptarModulo)){
+                                        echo Html::linkAction($ctrlAceptarModulo . $model->id, Html::img('listaAceptar.png', 'cancel', 'style="text-align:center;width:35px;padding:2px;"'));
+                                    }
+                                    
+                                    ?>
+
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br  />
+<script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(".display").dataTable({ 
+            "aaSorting": [[0,"desc"]],
+            "bAutoWidth": true,
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "aProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encuentran resultados",
+                "sInfo": "Mostrando desde _START_ hasta _END_ registros",
+                "sInfoEmpty": "Mostrando desde 0 hasta 0 de 0 registros",
+                "sInfoFiltered": "(filtrando de _MAX_ registros en total)",
+                "sSearch": "Buscar",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Ultimo"
+                }
+            }
+        });
+    });
+    
+</script>

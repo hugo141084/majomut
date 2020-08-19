@@ -1,0 +1,60 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+class detalle_compra extends ActiveRecord {
+
+    
+
+    protected function initialize() {
+        
+    }
+
+    public function listar() {
+        return $this->find();
+    }
+    public function listarXCompra($id) {
+        return $this->find_all_by_sql("select * from detalle_compra where COMPRA_ID=$id");
+    }
+    public function listarXid($id) {
+        return $this->find_by_sql("select * from almacen where ID=$id");
+    }
+    public function listarProductoCompra($compraId) {
+         $sqlProducto = "SELECT det.id, pro.clave, pro.descripcion, det.cantidad, det.lote_serie, alm.almacen, pre.descripcion AS unidad_entrada, det.numero_inventario
+FROM detalle_compra AS det, producto AS pro, almacen AS alm, presentacion AS pre
+WHERE det.compra_id =$compraId
+AND det.producto_id = pro.ID
+AND det.almacen_id = alm.ID
+";
+        return $this->find_all_by_sql($sqlProducto);
+    }
+    public function listarProductoAlmacen($id) {
+         $sqlProducto = "SELECT inv.id, pro.clave, pro.descripcion, inv.existencia, inv.cantidad_minima, inv.cantidad_maxima
+FROM inventario as inv, producto as pro  WHERE almacen_id =$id and inv.producto_id= pro.ID ";
+        return $this->find_all_by_sql($sqlProducto);
+    }
+    public function guardarDatos($compraId,$productoId,$cantidad,$unidadXpaquete,$almacenId,$loteSerie,$fechaCaducidad,$numInventario){
+        $detalleCompra = new detalle_compra();
+        $detalleCompra->COMPRA_ID=$compraId; 
+        $detalleCompra->PRODUCTO_ID=$productoId; 
+        $detalleCompra->CANTIDAD=$cantidad;
+        $detalleCompra->ALMACEN_ID=$almacenId;
+        $detalleCompra->LOTE_SERIE=$loteSerie;
+        $detalleCompra->NUMERO_INVENTARIO=$numInventario;
+        $detalleCompra->FECHA_CADUCIDAD = strftime("%Y-%m-%d", strtotime($fechaCaducidad));
+        $detalleCompra->USUARIO_ID=Session::get('id'); 
+        $detalleCompra->save();
+        
+    }
+    
+    public function buscarAlmacen($condicion) {
+            return $this->find_all_by_sql("SELECT distinct(alm.id), alm.descripcion
+FROM almacen as alm, inventario as inv
+WHERE inv.almacen_id = alm.ID
+AND $condicion");
+        }
+}   
+?>

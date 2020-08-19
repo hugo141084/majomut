@@ -1,0 +1,98 @@
+<?php View::content(); ?>
+<?php view::template('fondo'); ?>
+
+
+<body id="principal">
+<br/>  
+<div id="form_container" >
+
+    
+
+    <?php echo Form::open("venta/envio/".$venta); ?>   
+    <?php echo Form::hidden("envio.id"); ?>
+    <?php echo Form::hidden( 'envio.venta_id', 'class="form-control"',@$venta); ?>
+    <div id="form">
+      <div class="col-sm-12">                  
+    <div class="panel panel-primary">
+        <div class="panel-heading">Datos de Envio</div>
+        <div class="panel-body">
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Empresa:
+                        </div>
+                        <?php if (@$envio->empresa_id==null)@$envio->empresa_id=0;?>
+<?php echo Form::dbSelect("envio.empresa_id", 'nombre', array('empresa', 'datosEmpresa', @$envio->empresa_id), '- Seleccione -'," class='form-control '  ");?>
+
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Numero de Rastreo:
+                        </div>
+<?php echo Form::text( 'envio.numero_rastreo', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Fecha Envio:
+                        </div>
+<?php echo Form::text( 'envio.fecha_envio', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Fecha Entrega:
+                        </div>
+<?php echo Form::text( 'envio.fecha_entrega', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Observaciones:
+                        </div>
+<?php echo Form::textarea( 'envio.observaciones', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>       
+            
+        <table width="100%">
+        <tr align="center">
+            <td width="50%">     
+            <?php  echo Form::button("Cancelar", "id='Salir' class='btn btn-danger btn-lg'"); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="50%">
+            <?php echo Form::submit(((@$accion == 'crearLote') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-success btn-lg"'); ?>       
+            </td>
+        </tr>
+     </table>
+     <?php echo Form::close(); ?>
+  </div> 
+</div>
+
+</body>
+<script>
+    $("#Salir").click(function(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+ });
+</script>

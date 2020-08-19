@@ -1,0 +1,86 @@
+<?php View::content(); ?>
+<?php view::template('fondo'); ?>
+
+
+<body id="principal">
+<br/>  
+<div id="form_container" >
+
+    
+
+    <?php echo Form::open("catalogo/" . $accion); ?>   
+    <?php echo Form::hidden("lote.id"); ?>
+    <div id="form">
+      <div class="col-sm-12">                  
+    <div class="panel panel-primary">
+        <div class="panel-heading">Nuevo Lote</div>
+        <div class="panel-body">
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Ciclo:
+                        </div>
+<?php echo Form::text( 'lote.ciclo', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Num. Lote:
+                        </div>
+<?php echo Form::text( 'lote.num_lote', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Codigo:
+                        </div>
+<?php echo Form::text( 'lote.codigo', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Fecha Caducidad:
+                        </div>
+<?php echo Form::text( 'lote.codigo', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>       
+            
+        <table width="100%">
+        <tr align="center">
+            <td width="50%">     
+            <?php  echo Form::button("Cancelar", "id='Salir' class='btn btn-danger btn-lg'"); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="50%">
+            <?php echo Form::submit((($accion == 'crearLote') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-success btn-lg"'); ?>       
+            </td>
+        </tr>
+     </table>
+     <?php echo Form::close(); ?>
+  </div> 
+</div>
+
+</body>
+<script>
+    $("#Salir").click(function(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+ });
+</script>

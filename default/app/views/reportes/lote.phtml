@@ -1,0 +1,67 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+
+    <h1><a>Crear</a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Lotes" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    
+                </div>
+            </div>
+    </div>
+    <?php echo Form::open("reportes/" . $accion); ?>
+
+
+   
+    
+    <div id="margen" >
+<fieldset>     
+<table width="50%" border="0" class="letra">
+  <tr>
+    <td >Clasificacion</td>
+    <td width="29%"><?php echo Form::dbSelect("existencia.CLASIFICACION_PRODUCTO_ID","DESCRIPCION",array("clasificacionProducto","listar"),'Seleccione..','type="text"  class="element  text" style="width:425px"');?></td>
+  </tr>
+  
+  
+  
+ 
+</table>
+</fieldset>
+
+
+        </br>
+            <?php $url = "'" . PUBLIC_PATH . "resportes"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+            <?php echo Form::reset('Reiniciar', 'class="CSSButton"'); //Crea un botón con el texto 'reiniciar';?>
+            </td>
+            <td width="33%">
+            <?php echo Form::submit((($accion == 'lote') ? 'Generar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            </td>
+        </tr>
+     </table>
+     
+  </div> 
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>

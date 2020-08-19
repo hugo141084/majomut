@@ -1,0 +1,14 @@
+<footer>
+    <div class="col-6">
+        <ul class="inline" >
+        	<li><a href='http://www.union.majomut.org/'>©  <?= date('Y'); ?> Copyright</a> |</li>
+            <li><a href='http://www.union.majomut.org/'>©  <?= date('Y'); ?>  Union Majomut</a> |</li>
+        </ul>
+    </div>
+    
+    <div class="col-12 text-center">
+        <a href=''>Produciendo café orgánico desde 1992</a>
+        
+    </div>
+    <div class="col-12 text-center"> <?= 'Ejecutado en ', round((microtime(1) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 4), ' ms. usando ', number_format(memory_get_usage() / 1048576, 3), ' MB de memoria'; ?></div>
+</footer>

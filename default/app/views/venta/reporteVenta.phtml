@@ -1,0 +1,321 @@
+<?php
+$id = $_GET['var'];
+
+$d=count($destino);
+$i=1;
+foreach ($destino as $des){
+    if($i<$d) $alma .=$des->descripcion.", ";
+    else $alma .=$des->descripcion.".";
+}
+$d=count($ciclo);
+$i=1;
+foreach ($ciclo as $cic){
+    if($i<$d) $cicl .=$cic->ciclo.", ";
+    else $cicl .=$cic->ciclo.".";
+}
+Load::lib('tcpdf');
+Load::lib('funciones');
+class reporte extends TCPDF {
+
+  
+
+    public function Header() {
+        
+    }
+
+    
+
+}
+
+
+
+ $pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter'); 
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('');
+$pdf->SetTitle('Reportes');
+$pdf->SetSubject('');
+
+$logo='./img/logoReporte.png';
+
+$pdf->SetFooterData('',array(190,190,190),"Teléfonos 967 678 31 96 y 967 678 81 06 \ www.majomut.org \ mail: directivosmajomut@prodigy.net.mx \  info@majomut.org"." "."");
+//set margins
+$pdf->SetMargins(10,10,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('10');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+$pdf->AddPage();
+
+$matrixPointSize = 10;
+$errorCorrectionLevel = 'L';
+$importeSubtotal=0;
+$logo='./img/logoReporte.png';
+
+/* ############################################################################################################################################################################################## */
+$html="";
+$html .= '<style>
+	table.first {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 8pt;
+        
+    }
+    table.second {
+        
+        font-family: helvetica;
+        font-size: 7pt;
+        
+    }
+    table.thirty {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 6pt;
+      
+    }
+    table.four {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 15pt;
+       
+    }
+        p.first {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 10pt;
+        text-align: center;
+        font-weight: bold;
+    }
+        </style>';
+
+//echo $raiz;
+
+$html.='<div style=" width:100%; background-color: #706f6f; margin: 0; min-height: 0; padding: 0;text-decoration: none; color:#FFF; text-align:center;" >  NOTA DE REMISION  </div> ';
+$html .= '<table class="first" width="100%" border="0">
+   
+  <tr>
+    <td  align="center" style="width:20%;padding-top:3px" ><img src="'.$logo.'" width="70" height="80" alt="logo" style="padding-top:1px;" /> </td>
+	
+    <td  align="center" valign="middle" style="width:70%;  vertical-align:middle" ><br/> UNION DE PRODUCTORES  ORGANICOS <br/>BENEFICIO MAJOMUT, S. DE P.R. DE R.L <br /> R.F.C. : UPO111114BJ7<br />	
+    1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. C.P. 29247 <br/>
+        Lugar de Expedicion: 70790 - OAX</td>
+        
+        <td  align="left" style="width:10%;padding-top:15px"  valign="top" >  <br/> Venta No. '.$datosCompra->documento.'</td>      
+  </tr>
+    
+</table>';
+
+$html.='
+
+<table width="100%" border="0" class="second">
+  <tr style="font-weight:bold;color:#FFF;" bgcolor="#e94e1b" height="20" >
+    <td height="20" colspan="4" style=" background-color:#33a936; color:#FFF"><div align="center">Datos del Cliente </div></td>
+    <td height="20"  width="20%" style=" background-color:#33a936; color:#FFF"><div align="center">Num. Cliente </div></td>
+  </tr>
+  <tr height="20" >
+    <td width="15%">Nombre:</td>
+    <td width="25%">'.$datosCompra->nombrecompleto.'</td>
+    <td width="15%">&nbsp;</td>
+    <td width="25%">&nbsp;</td>
+    <td rowspan="2"><div align="center"> CM-'.str_pad($datosCompra->clienteId,4,0,STR_PAD_LEFT).'</div></td>
+  </tr>
+  <tr height="20" >
+    <td>RFC:</td>
+    <td>'.$datosCompra->rfc.'</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr height="20" >
+    <td>Direccion:</td>
+    <td>'.$datosCompra->direccion.'</td>
+    <td>Colonia:</td>
+    <td>'.$datosCompra->colonia.'</td>
+    <td width="20%" ><div align="center"></div></td>
+  </tr>
+  <tr height="20" >
+    <td>Ciudad;</td>
+    <td>'.$datosCompra->ciudad.'</td>
+    <td>C.P.:</td>
+    <td>'.$datosCompra->codigopostal.'</td>
+    <td rowspan="2"><div align="center">  </div></td>
+  </tr>
+  <tr height="20" >
+    <td style="font-weight:bold;color:#FFF;" bgcolor="#33a936">Correo Elec. </td>
+    <td colspan="3">'.$datosCompra->correoelectronico.'</td>
+  </tr>
+</table>
+
+ ' ;
+
+$html .='<div> </div>';
+    
+$html .='<table class="second" border="0"  style="width: 100%">
+    <tr style="font-weight:bold;color:#FFF;" bgcolor="#33a936"   >
+    <td style="width: 15%">CODIGO <br>PRODUCTO</td>
+<td style="width: 15%">CANTIDAD</td>
+<td style="width: 40%">PRODUCTO</td>
+<td style="width: 15%">VALOR UNITARIO</td>
+<td style="width: 15%">VALOR UNITARIO</td>
+    </tr>
+   ';
+$i=1;
+$c1=0;$c2=0;$c3=0;$c4=0;
+foreach ($detalleCompra as $datos){
+ $c1=$datos->cantidad * $datos->precio;
+ 
+$html .=' <tr align="center">
+<td style="width: 15%; " height="20" style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;" >'.$datos->clave.' </td>
+<td style="width: 15%" height="20" style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;">'.$datos->cantidad.'</td>
+<td style="width: 40%" height="20" style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;">'.$datos->descripcion.'</td>
+<td style="width: 15%" height="20" style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"align="right">'.$datos->precio.'</td>
+<td style="width: 15%" height="20" style="border-right: 0.5px solid #636262; border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"align="right">'. number_format($c1,2).'</td>
+
+</tr>'; 
+$i++;
+}
+
+if($i<5){
+for($j=$i;$j<=5;$j++){
+ $html .=' <tr align="center">
+<td style="width: 15%;height: 20px;" height="20" style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+<td style="width: 15%" height="20" style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+<td style="width: 40%" height="20" style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+<td style="width: 15%" height="20" style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+<td style="width: 15%" height="20" style="border-right: 0.5px solid #636262; border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+
+</tr>';    
+}    
+}
+
+
+$descuento=0;
+$importeTotal=$datosCompra->subtotal-$descuento+$datosCompra->costo_envio;
+$decimales = $importeTotal - (int) $importeTotal;
+$decimales = round($decimales, 2);
+$decimales = $decimales * 100;
+$decimales = ($decimales == 0) ? "00": $decimales;
+$num_letras = new EnLetras();
+
+$numletras = '(' . utf8_decode(strtoupper($num_letras->ValorEnLetras((int) $importeTotal, "PESOS"))) . " " . $decimales . '/100 M.N.)';
+$txtmetpago = array("01"=>"EFECTIVO", "02"=>"CHEQUE NOMINATIVO", "03"=>"TRANSFERENCIA ELECTRÓNICA DE FONDOS", "04"=>"TARJETA DE CRÉDITO",
+                    "05"=>"MONEDERO ELECTRÓNICO", "06"=>"DINERO ELECTRÓNICO", "08"=>"VALES DE DESPENSA", "28"=>"TARJETA DE DÉBITO",
+                    "29"=>"TARJETA DE SERVICIO", "99"=>"OTROS");
+
+    $html .= '<tr>
+                
+                <td align="center" valing="center" width="70%"  rowspan = "5" colspan="3"  style=" border-bottom: 0.5px solid #636262; border-left: 1px solid #e94e1b;"> Total con Letra: <br> '.$numletras.'</td>
+                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">SUBTOTAL: $</td> 
+                <td width="15%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right">'.number_format($datosCompra->subtotal, 2, '.', ',').'</td> 
+              </tr>
+              
+              <tr>
+                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" >IVA: + $</td> 
+                <td width="15%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right" >'.number_format($datosCompra->iva, 2, '.', ',').'</td> 
+              </tr>
+              <tr>
+                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">ANTICPOS -: $</td>    
+                <td width="15%" align="right" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">'.number_format($anticipo, 2, '.', ',').'</td>
+              </tr>
+              <tr>
+                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">COSTO DE ENVIO +: $</td>    
+                <td width="15%" align="right" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">'.number_format($datosCompra->costo_envio, 2, '.', ',').'</td>
+              </tr>
+              <tr>
+                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">TOTAL: $</td> 
+                <td width="15%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right">'.number_format($importeTotal, 2, '.', ',').'</td> 
+              </tr>
+              
+              ';
+$html .= '</table>';  
+
+$html .='
+    
+ <table width="100%" border="0" class="second">
+  <tr>
+    <td style="  border-top: 0.5px solid #636262; border-left: 1px solid #e94e1b;" width="20%"><p>Moneda:</p>    </td>
+    <td  style="  border-top: 0.5px solid #636262;" width="50%" >MXN</td>
+    <td  width="30%" rowspan="5" align="center" valign="middle" style="  border-top: 0.5px solid #636262; border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;"> </td>
+  </tr>
+  <tr>
+    <td style=" border-left: 1px solid #e94e1b;" ><p>Tipo de Cambio: </p>    </td>
+    <td>0.00</td>
+  </tr>
+  <tr>
+    <td style=" border-left: 1px solid #e94e1b;">Metodo de Pago: </td>
+    <td>Pago en una sola exhibición </td>
+  </tr>
+  <tr>
+    <td style=" border-left: 1px solid #e94e1b;">Forma de Pago: </td>
+    <td>'.$formaPago->concepto.'</td>
+  </tr>
+  <tr>
+    <td style=" border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">Motivo de Descuento: </td>
+    <td style=" border-bottom: 0.5px solid #636262;">'.$motivoDescuento.'</td>
+  </tr>
+</table>';
+if ($comentarios != NULL) {
+    $html .= '<table border="0" class="second" width="100%">
+        <tr >
+                  <td width="15%">OBSERVACION(ES):</td>
+                  
+                  <td >'.  $comentarios.'</td>
+                 
+                  </tr>
+                
+    </table>';
+}
+$html.='<BR>
+<BR>
+<p>Los datos para depositar son los siguientes:</p>
+<table style="width: 80%" class="second" border="1"   cellpadding="3">
+<tr>
+<td style="width: 30%"> Nombre </td>
+<td style="width: 70%"> Unión de Productores Orgánicos Beneficio Majomut, S. de P.R. de R.L. </td>
+</tr>
+<tr>
+<td> No. Cuenta </td>
+<td> 0190410128 </td>
+</tr>
+<tr>
+<td> CLABE Interbancaria </td>
+<td> 012130001904101289 </td>
+</tr>
+<tr>
+<td> Banco </td>
+<td> BBVA Bancomer, S.A. </td>
+</tr>
+<tr>
+<td> Sucursal </td>
+<td> 4439 </td>
+</tr>
+</table>';
+
+echo $html;
+
+//echo $html;
+if($dr->estatus=='0'){
+// start a new XObject Template
+$template_id = $pdf->startTemplate(95, 165);
+// create Template content
+// ...................................................................
+$border = array('LRTB' => array('width' => 0.1, 'cap' => 'square', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)));
+$pdf->Image('img/cancelado.png', 0, 0, 95, 0, 'PNG', '', '', false, 300, '', false, false, $border, false, false, false);
+// ...................................................................
+// end the current Template
+$pdf->endTemplate();
+// print the selected Template various times
+$pdf->printTemplate($template_id, 50, 50, 0, 0, '', '', false);
+}
+ob_end_clean();    
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+ob_end_clean();
+// ---------------------------------------------------------
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+$pdf->Output('reportePedido.pdf', 'I');
+ 
+
+//============================================================+
+// END OF FILE
+//============================================================+
+?>

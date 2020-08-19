@@ -1,0 +1,39 @@
+<?php
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+ <?php require_once APP_PATH . 'libs/funciones.php';?>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        
+        <title>TITULO</title>
+       
+        <?php  Tag::css('form_css') ?>
+        <?php Tag::css('estiloHache') ?>
+        <?php Tag::css('jquery.alerts') ?>
+       <?php echo Tag::js('funciones_personalizadas'); ?><!--para convertir a mayusculas!-->
+        <?php Tag::css('bootstrap'); ?>
+        <?php Tag::css('bootstrap.min'); ?>
+        <?php echo Html::includeCss() ?>
+        <?php echo Tag::js('jquery/jquery.min'); ?>
+         <?php echo Tag::js('jquery/jquery.alerts'); ?>
+<?php echo Tag::js('bootstrap'); ?>
+
+        <?php echo Tag::js('bootstrap.min'); ?>
+    </head>
+ 
+   
+    <body>
+              <div class="content_text" >
+
+    
+                    <?php View::content(); ?>
+    
+
+                </div>       
+    </body>
+    

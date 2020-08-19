@@ -1,0 +1,42 @@
+<?php   
+        $fecha = strtotime($fecha_nac);
+        $anio=date("Y", $fecha); // Year (2003)
+        $mes=date("m", $fecha); // Month (12)
+        $dia= date("d", $fecha); // day (14)
+        $empleadosDatos->SetDatos($nombre,$ape_pat,$ape_mat,$sexo,$dia,$mes,$anio,$estado_nac);
+?>
+
+<label class="description">DATOS DE IDENTIFICACI&Oacute;N:</label>
+<div class="tres_a" >
+    <?php echo Form::text('empleados.rfc','type="text" required class="element text medium"',$empleadosDatos->generarRFC($nombre,$ape_pat,$ape_mat,$fecha_nac));?>
+    <label>R.F.C.</label>
+</div>
+
+<div class="tres_b">
+    <?php echo Form::text('empleados.curp','class="element text medium"',$empleadosDatos->CURP);?>
+    <label>C.U.R.P.</label>
+</div>
+
+<div class="tres_b">
+    <?php echo Form::text('empleados.ife','class="element text medium"');?>
+    <label>I.F.E</label>
+</div>
+
+<div class="tres_a">
+    <?php echo Form::text('empleados.numero_seguro','class="element text medium"');?>
+    <label>N.S.S.</label>
+</div>
+
+<div class="tres_b">
+    <?php if ($accion=='crear'){$select='0';}else{$select=$empleados->estado_civil;}?>
+    <?php $arregloSexo = array('Seleccione...','SOLTERO'=>'SOLTERO','CASADO'=>'CASADO','DIVORCIADO'=>'DIVORCIADO','VIUDO'=>'VIUDO');?>
+    <?php echo Form::Select('empleados.estado_civil', $arregloSexo,'class="element text medium"',$select); ?>       
+    <label>Estado civil</label>
+</div>
+
+<div class="tres_b">
+    <?php if ($accion=='crear'){$select='0';}else{$select=$empleados->tipo_sangre;}?>
+    <?php $arregloTipoS = array('Seleccione...','O-'=>'O-','O+'=>'O+','A−'=>'A−','A+'=>'A+','B−'=>'B−','B+'=>'B+','AB−'=>'AB−','AB+'=>'AB+');?>
+    <?php echo Form::Select('empleados.tipo_sangre', $arregloTipoS,'class="element text" style="width:102px"',$select); ?>       
+    <label>Tipo de Sangre</label>
+</div>

@@ -1,0 +1,50 @@
+<?php View::content(); ?>
+<?php view::template('fondo'); ?>
+
+
+<body id="principal">
+<h1></h1>    
+<div id="form_container" >
+
+    
+
+    <?php echo Form::open("catalogo/" . $accion); ?>   
+    
+    <div id="form">
+      <ul>
+        <li>
+            <label class="description">Zona:</label>
+            </br>
+            <span>
+                <?php echo Form::text('zona.DESCRIPCION', ' required class="element text" size="25" style="text-transform:uppercase" onkeyup="Mayusculas(this)"'); ?>
+                </br> <label>Descripcion de la zona.</label>
+            </span> 
+        </li> 
+       
+        <li></li>  
+     </ul>        
+            
+        <table width="100%">
+        <tr align="center">
+            <td width="50%">     
+            <?php  echo Form::button("Cancelar", "id='Salir' class='CSSButton'"); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="50%">
+            <?php echo Form::submit((($accion == 'crearZona') ? 'Guardar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            </td>
+        </tr>
+     </table>
+     <?php echo Form::close(); ?>
+  </div> 
+</div>
+
+</body>
+<script>
+    $("#Salir").click(function(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+ });
+</script>

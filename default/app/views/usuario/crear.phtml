@@ -1,0 +1,260 @@
+<?php
+View::content();
+?>
+<div id="form_container" style="width:100%;" >
+    <h1 class="lineaSuperior"><a></a></h1>
+<div id="titulo_superior"> 
+            <div id="texto_superior">
+                <?php
+             $tit = ($accion == "crear") ? "Alta " : "Actualización";
+                echo $tit . " de Usuarios"
+                ?>
+            </div>
+            <div style="text-align:right;margin: 0 0; width:40%; float: left; ">
+                <div class='btn'>
+                    <?php   echo Html::linkAction('',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');?>
+                </div>
+            </div>
+        </div>
+<?php
+    echo Form::hidden('prefijo', NULL, @$prefijo);
+    echo Form::hidden('funcion', NULL, @$accion);
+    echo Form::hidden($prefijo . '.id');
+?>
+<div class="grid-form">
+    <div class="grid-form1">
+        
+        <div class="tab-content">
+            <div class="tab-pane active" id="horizontal-form">
+                <form class="form-horizontal">
+                    
+                    <div class="form-group">
+                        <label for="focusedinput" class="col-sm-1 control-label"></label>
+                        <div class="col-sm-3">
+                            <?php if(!isset(${$prefijo}->id)) { ?>
+                            <?php echo Form::button("Buscar Empleado", 'class="btn-primary btn" onclick="buscaemp(); " '); }?>
+                            <?php echo Form::hidden($prefijo.'.empleado_id');?>
+                        </div>
+                        <label for="focusedinput" class="col-sm-1 control-label">RFC</label>
+                        <div class="col-sm-2">
+                            <?php echo Form::text($prefijo.'.rfc','type="text" class="form-control1" disabled placeholder="RFC" ');?>
+                        </div>
+                        <label for="focusedinput" class="col-sm-1 control-label">CURP</label>
+                        <div class="col-sm-2">
+                            <?php echo Form::text($prefijo.'.curp','type="text" class="form-control1" disabled placeholder="CURP" ');?>
+                        </div>
+                        <label for="focusedinput" class="col-sm-1 control-label"></label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="focusedinput" class="col-sm-1 control-label">Apellido Paterno</label>
+                        <div class="col-sm-2">
+                            <?php echo Form::text($prefijo.'.apellidoPaterno','type="text" class="form-control1" disabled placeholder="Apellido Paterno" ');?>
+                        </div>
+                        <label for="focusedinput" class="col-sm-1 control-label">Apellido Materno</label>
+                        <div class="col-sm-2">
+                            <?php echo Form::text($prefijo.'.apellidoMaterno','type="text" class="form-control1" disabled placeholder="Apellido Materno" ');?>
+                        </div>
+                        <label for="focusedinput" class="col-sm-1 control-label">Nombre(s)</label>
+                        <div class="col-sm-3">
+                            <?php echo Form::text($prefijo.'.nombre','type="text" class="form-control1" disabled placeholder="Nombres" ');?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Tipo de Usuario</label>
+                        <div class="col-sm-2">
+                        <?php
+                        $tipo_valor = array("ADMINISTRADOR"=>"ADMINISTRADOR", "CAJERO"=>"CAJERO");
+                        $select = (@${$prefijo}->tipo != "") ? @${$prefijo}->tipo : "";
+                        echo Form::Select($prefijo.".tipo", $tipo_valor, " class='form-control' ", $select);
+                        ?>
+                        </div>
+                        <label class="col-sm-1 control-label">Usuario</label>
+                        <div class="col-sm-2"> <?php echo Form::text($prefijo.'.usuario','type="text" class="form-control"  ');?> </div>
+                        <label class="col-sm-1 control-label">Contraseña</label>
+                        <div class="col-sm-2"> <?php echo Form::pass($prefijo.'.clave','type="text" class="form-control"  ');?> </div>
+                        <label class="col-sm-1 control-label">Repetir Contraseña</label>
+                        <div class="col-sm-2"> <?php echo Form::pass($prefijo.'.clave2','type="text" class="form-control"  ');?> </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="tab-content" id="buscar">
+            <div class="col-md-6 form-group1">
+                <label for="focusedinput" class="col-sm-1 control-label">Nombre</label>
+                <?php echo Form::text('nombrecont','type="text" class="form-control1" placeholder="Inserte el nombre del Empleado" onkeypress="obtener(this)" style="width:250px" ');?>
+            </div>
+        </div>
+        
+        
+       <?php $url = "'" . PUBLIC_PATH . "usuarios'"; ?>
+       <table width="100%">
+        <tr align="center">
+            <td width="50%">     
+            <?php echo Form::button("Guardar", 'class="btn-primary btn" onclick="guardar();" ');?>
+            </td>
+            
+            <td width="50%">
+            <?php echo Form::button("Cancelar", 'class="btn-default btn" onclick="window.location = ' . $url . '" '); ?>       
+            </td>
+        </tr>
+     </table>
+        </form>
+    </div>
+</div>
+</div>
+    
+<script type="text/javascript" charset=UTF-8">
+
+    function guardar() {
+        funcion = $("#funcion").val();
+        prefijo = $("#prefijo").val();
+        var datos = "";
+        if(funcion == "crear")
+            url = "<?php echo PUBLIC_PATH . 'usuarios/crear/'; ?>";
+        else if(funcion == "editar") {
+            url = "<?php echo PUBLIC_PATH . 'usuarios/editar/'; ?>";
+            id = $("#"+prefijo+"_id").val();
+            datos += "id=" + id + "&";
+        }
+        datos += "funcion=guardar";
+        nombre = $("#"+prefijo+"_nombre").val();
+        apellidoPaterno = $("#"+prefijo+"_apellidoPaterno").val();
+        apellidoMaterno = $("#"+prefijo+"_apellidoMaterno").val();
+        empleado_id = $("#"+prefijo+"_empleado_id").val();
+        usuario = $("#"+prefijo+"_usuario").val();
+        tipo = $("#"+prefijo+"_tipo").val();
+        clave = $("#"+prefijo+"_clave").val();
+        clave2 = $("#"+prefijo+"_clave2").val();
+        
+        msj = "";
+        if(empleado_id == "")
+            msj += "* Debe Seleccionar un empleado. \n"
+        if(usuario == "")
+            msj += "* Debe Insertar un nombre de usuario. \n"
+        if((clave == "" || clave2 == "") && funcion == "crear") 
+            msj += "* Debe rellenar los campos de Contraseñas. \n"
+        if(clave != clave) 
+            msj += "* Las contraseñas deben coincidir. \n"
+        
+        datos += "&empleados_id="+empleado_id+"&clave="+clave+"&tipo="+tipo+"&usuario="+usuario+"&nombre="+nombre+"&apellidoPaterno="+apellidoPaterno+"&apellidoMaterno="+apellidoMaterno;
+        
+        //alert(datos);
+        if(msj == "") {
+            jConfirm("¿Está seguro de guardar los datos?", "Clientes",function(r){
+                if(r){
+                    //
+                    //alert(datos);
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        url: url,
+                        data: datos,
+                        beforeSend: function(respuesta){
+                            pantalla_espera();
+                        },
+                        error: function(respuesta){
+                            jAlert("Se presentó un problema al guardar los datos. Contacte con su Administrador", "Contribuyentes");
+                        },
+                        success: function(respuesta){
+                            if (respuesta.exito == "si") {
+                                jAlert("Usuario Creado");
+                                window.location.replace("<?php echo PUBLIC_PATH . 'usuarios/';?>");
+                            }
+                        }
+                    });
+                }
+            });
+        } else
+            jAlert(msj);
+    }
+    
+    function buscaemp(){
+        $('#buscar').dialog("open");
+    }
+    
+    $("#buscar").dialog({
+        autoOpen: false,
+        modal: true,
+        title: "Empleados",
+        buttons: {
+            'Aceptar': function () {
+                if($("#nombrecont").val()=="" || $("#nombrecont").val()=="SIN VALORES") {
+                    jAlert('Debe seleccionar un empleado');
+                    $("#nombrecont").val('');
+                } else {
+                   $(this).dialog("close");
+                   $("#nombrecont").val('');
+                   prefijo = $("#prefijo").val();
+                   buscar($("#"+prefijo+"_empleado_id").val());
+               }
+               
+            },
+            'Cancelar': function () {
+                $("#buscar").dialog("close");
+                $("#nombrecont").val('')
+            }
+        }
+    });
+    
+    function obtener(elem) {
+        elemento = $(elem);
+        //LIMPIAR EL CAMPO NOMBRE AL HACER CLIC
+        elemento.click(function() {
+            $(this).val('');
+        }).focusout(function() {
+            if ($(this).val() === "")
+                $(this).val('');
+        });
+        elemento.autocomplete({
+            source: function(request, response) {
+                var url = "<?php echo PUBLIC_PATH ?>usuarios/buscarempleado";
+                $.post(url, {'texto': request.term}, response, 'json');
+            },
+            focus: function(event, ui) {
+                elemento.val(ui.item.label);
+                return false;
+            },
+            minLength: 1,
+            select: function(event, ui) {
+                elemento.val(ui.item.label);
+                if (elemento.val() !== 'SIN VALORES') {
+                    var id = ui.item.id;
+                    prefijo = $("#prefijo").val();
+                    $("#"+prefijo+"_empleado_id").val(id);
+                    //alert($("#datos_empleado_id").val());
+                } else {
+                    elemento.val('');
+                    $("#nombrecont").val('');
+                }  
+            }
+        });
+    }
+    
+    function buscar(id) {
+        url = "<?php echo PUBLIC_PATH . 'usuarios/buscaempleado/'; ?>";
+        prefijo = $("#prefijo").val();
+        datos = "id="+id;
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: url,
+            data: datos,
+            beforeSend: function(respuesta){
+                pantalla_espera();
+            },
+            error: function(respuesta){
+                jAlert("Se presentó un problema al realizar la consulta. Contacte con su Administrador", "Usuarios");
+            },
+            success: function(respuesta){
+                $("#"+prefijo+"_rfc").val(respuesta.rfc);
+                $("#"+prefijo+"_curp").val(respuesta.curp);
+                $("#"+prefijo+"_apellidoPaterno").val(respuesta.apellidop);
+                $("#"+prefijo+"_apellidoMaterno").val(respuesta.apellidom);
+                $("#"+prefijo+"_nombre").val(respuesta.nombres);
+            }
+        });
+    }
+    
+</script>

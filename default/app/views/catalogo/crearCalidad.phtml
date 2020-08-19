@@ -1,0 +1,84 @@
+<?php View::content(); ?>
+<?php view::template('fondo'); ?>
+<script>
+    
+    function cerrar(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+    }
+    
+   
+</script>
+<?php
+if($accion=="editarCalidad"){
+if($var==5){
+    echo "<script> cerrar() </script>";
+}
+}
+    
+
+?>
+
+<body id="principal">
+<h1></h1>    
+<div id="form_container" >
+
+    
+
+    <?php echo Form::open("catalogo/" . $accion); ?>   
+     <?php echo Form::hidden("calidad.id"); ?>
+    <div id="form">
+      <div class="col-sm-12">                  
+    <div class="panel panel-primary">
+        <div class="panel-heading">Nueva Calidad</div>
+        <div class="panel-body">
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Codigo:
+                        </div>
+<?php echo Form::text( 'calidad.codigo', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Descripcion:
+                        </div>
+<?php echo Form::text( 'calidad.descripcion', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+           
+        </div>
+    </div>
+</div>          
+            
+        <table width="100%">
+        <tr align="center">
+            <td width="50%">     
+            <?php  echo Form::button("Cancelar", "id='Salir' class='CSSButton'"); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="50%">
+            <?php echo Form::submit((($accion == 'crearCalidad') ? 'Guardar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            </td>
+        </tr>
+     </table>
+     <?php echo Form::close(); ?>
+  </div> 
+</div>
+
+</body>
+<script>
+    $("#Salir").click(function(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+ });
+</script>

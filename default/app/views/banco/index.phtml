@@ -1,0 +1,63 @@
+<?php View::content(); ?>
+<br>
+  <div class="row">
+     <div class="col-md-12">
+       
+     </div>
+  </div>
+   <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>Agregar Cuenta Bancaria</span>
+         </strong>
+        </div>
+        <div class="panel-body">
+          <?php echo Form::open("banco/index/"); ?>
+            <div class="form-group">
+                Banco <br> 
+             <?php echo Form::dbSelect("cuenta.bancos_id", 'nombre_banco', array('bancos', 'datosBanco', 0), '- Seleccione -'," class='form-control '  ");?>
+        </div>
+              <div class="form-group">
+                Cuenta <br> 
+             <?php echo Form::text('cuenta.numero_cuenta', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Fecha de apertura <br> 
+           <?php echo Form::text('cuenta.fecha_apertura', ' class="element text"  ',date('d-m-Y')); ?>
+        </div>
+              <div class="form-group">
+                Sucursal <br> 
+           <?php echo Form::text('cuenta.sucursal', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Clabe Interbancaria <br> 
+           <?php echo Form::text('cuenta.clabe_interbancaria', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Telefono <br> 
+           <?php echo Form::text('cuenta.telefono', ' class="element text"  '); ?>
+        </div>
+            <button type="submit" name="add_cat" class="btn btn-primary">Agregar Cuenta</button>
+        <?php echo Form::close(); ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>
+          <span class="glyphicon glyphicon-th"></span>
+          <span>Lista de Cuentas Bancarias</span>
+       </strong>
+      </div>
+        <div id="form_container" style="width:100%">   
+<?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos));  ?>
+</div>
+    </div>
+    </div>
+   </div>
+  
+

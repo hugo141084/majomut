@@ -1,0 +1,593 @@
+<script>
+    function imprime_lista()
+    {
+        var operacion = 'MOSTRAR_LISTA_VENTA'
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "operacion=" + operacion,
+            success: function (html) {
+                $("#resultado").html(html);
+            }
+        });
+
+    }
+    function buscaAlmacen() {
+        var productoId = $('#venta_producto_id').val();
+
+        var operacion = "BUSCA_ALMACEN";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#almacen").html(html);
+            }
+        });
+    }
+    function buscaProveedor() {
+        var proveedorId = $('#venta_proveedor_id').val();
+        if (proveedorId > 0) {
+            var operacion = "BUSCA_PROVEEDOR";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+                data: "proveedorId=" + proveedorId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#proveedor").html(html);
+                }
+            });
+        }
+    }
+    function buscaDetalle()
+    {
+        var productoId = $('#venta_producto_id').val();
+        var operacion = 'MOSTRAR_DETALLE'
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+                html = "lote";
+                html = html.replace(/^\s+|\s+$/g, "");
+                $('#opcion').val(html);
+                if (html == "lote") {
+                    $('#loteProducto').show();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').hide();
+                    $('#serie').val('');
+                    $('#numInventario').val('');
+
+                } else if (html == "serie") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').show();
+                    $('#inventarioProducto').hide();
+                    $('#numInventario').val('');
+                    $('#lote').val('');
+                } else if (html == "loteInventario") {
+                    $('#loteProducto').show();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').show();
+                    $('#serie').val('');
+                } else if (html == "serieInventario") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').show();
+                    $('#inventarioProducto').show();
+                    $('#lote').val('');
+                } else if (html == "soloInventario") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').show();
+                    $('#lote').val('');
+                    $('#serie').val('');
+                } else {
+                    $('#inventarioProducto').hide();
+                    $('#loteProducto').hide();
+                    $('#serieProducto').hide();
+                    $('#serie').val('');
+                    $('#lote').val('');
+                    $('#numInventario').val('');
+
+                }
+                //  $("#detalleProducto").html(html);
+            }
+        });
+
+    }
+    function buscaUnidadPrecio() {
+        var productoId = $('#venta_producto_id').val();
+
+        var operacion = "BUSCA_UNIDADPRECIO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+
+                separador = ","
+                cadena = html.split(separador)
+                $("#etiqueta").html(cadena[0]);
+                var valor = cadena[1];
+                $("#venta_precio").val(valor);
+
+            }
+        });
+    }
+    function buscaCliente() {
+        var clienteId = $('#venta_cliente_id').val();
+        if (clienteId > 0) {
+            var operacion = "BUSCA_CLIENTE";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "clienteId=" + clienteId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#cliente").html(html);
+                }
+            });
+        }
+    }
+    function agregarPartida()
+    {
+
+        var operacion = 'AGREGAR_PARTIDA_VENTA';
+        var cantidad = $('#venta_cantidad').val();
+        var productoId = $('#venta_producto_id').val();
+        var precio = $('#venta_precio').val();
+        var almacenId = $('#venta_almacen_id').val();
+        var serie = "";
+        var lote = $('#lote').val();
+        var opcion = 'lote';
+        var mens = "";
+        var re = /,/g;
+        cantidad = cantidad.replace(re, "");
+
+        if (cantidad == "") {
+            mens += "\n- Inserte una cantidad valida";
+        }
+        if (productoId == "") {
+            mens += "\n- Elija un producto";
+        }
+
+
+
+        if (mens != "") {
+            alert('Verifique los siguientes campos:\n' + mens);
+
+        } else
+        {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion + "&almacenId=" + almacenId,
+                success: function (html) {
+
+                    html = html.replace(/^\s+|\s+$/g, "");
+                    if (html == 'Si') {
+                        alert('Esta partida ya existe.......!');
+                    } else {
+
+                        imprime_lista();
+                    }
+                }
+            });
+        }
+    }
+
+    function quitar_partida(linea)
+    {
+
+        var operacion = 'QUITAR_PARTIDA_VENTA'
+        var linea = linea;
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "operacion=" + operacion + "&linea=" + linea,
+            success: function (html) {
+                imprime_lista();
+            }
+        });
+
+
+    }
+</script>    
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+    <div id="form_container" style="width:100%;" >
+        <br>
+        <h1><a></a></h1>
+        <div id="titulo_superior"> 
+            <div id="texto_superior"  >
+                <?php echo "VENTA DIRECTA" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                    echo Html::linkAction('listadoVenta', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php echo Form::open("venta/" . $accion); ?>
+        <?php echo Form::hidden("venta.id"); ?>
+
+
+
+        <div id="margen" >
+            <div class="form-row">
+
+
+                <?php echo Form::hidden('venta.tipo_documento', 'maxlength="20" required class="form-control"   ', "VENTA"); ?>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Origen:    
+                            </div>
+                            <?php
+                            $ar2 = array('OFICINA SAN CRISTOBAL' => 'OFICINA SAN CRISTOBAL', 'BODEGA TUXTLA' => 'BODEGA TUXTLA');
+                            echo Form::Select('venta.origen', $ar2, 'OFICINA SAN CRISTOBAL');
+                            ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Documento:    
+                            </div>
+<?php echo Form::text('venta.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ', $num); ?>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Fecha:    
+                            </div>
+<?php echo form::text('venta.fecha_documento', 'placeholder="dd-mm-aa" required class="form-control"', date('d-m-Y')); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">    Cliente:    
+                            </div>
+<?php echo Form::dbSelect("venta.cliente_id", "nombrecompleto", array("cliente", "listar"), 'Seleccione..', ' class="form-control" '); ?>
+                        </div>
+                    </div> 
+                </div>
+
+
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Datos Cliente </div>
+                <div class="panel-body">
+                    <div id="cliente">
+                        <table width="100%" border="0">
+                            <tr>
+                                <td width="104"><label> Nombre:</label></td>
+                                <td width="551"><input name="nombre" id="nombre" type="text" size="40"  class="letra" readonly="readonly"/></td>
+                            </tr>
+                            <tr>
+                                <td><label> Direccion:</label></td>
+                                <td><input type="text" name="direccion" id="direccion" size="50"  class="letra" readonly="readonly"/></td>
+                            </tr>
+                            <tr>
+                                <td><label> RFC:</label></td>
+                                <td><input name="rfc" id="rfc" type="text" size="15"   class="letra" readonly="readonly"/></td> 
+                            </tr>
+                        </table>
+                    </div>   
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Datos Producto </div>
+                <div class="panel-body">
+                    <div class="form-row">
+                        <div class="col-md-2 ">
+                            <label for="validationCustomUsername">Producto</label>
+                            <div class="input-group">
+
+<?php echo Form::dbSelect("venta.producto_id", "descripcion", array("producto", "listarEntrada"), 'Seleccione..', ' class="form-control"'); ?>
+
+                            </div>
+                        </div> 
+                        <div class="col-md-2 ">
+                            <label >cantidad</label>
+                            <div class="input-group">
+
+<?php echo Form::number('venta.cantidad', ' class="form-control"  ', '0'); ?>
+
+                            </div>
+                        </div> 
+
+
+                        <div class="col-md-1 ">
+                            <label >.</label>
+                            <div class="input-group">
+                                <div  id="etiqueta" >
+
+                                </div>
+                            </div>
+                        </div> 
+
+
+
+
+
+
+                        <div class="col-md-2 ">
+                            <label >Lote</label>
+                            <div class="input-group">
+                                <div  id="loteProducto" >
+<?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'class="form-control" '); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="col-md-2 ">
+                            <label >Almacen</label>
+                            <div class="input-group">
+                                <div id="almacen">
+<?php echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="form-control" '); ?>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="col-md-2 ">
+                            <label >precio</label>
+                            <div class="input-group">
+                                <div id="almacen">
+<?php echo Form::text("venta.precio",  'class="form-control" '); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 ">
+                            <label >.</label>
+                            <div class="input-group">
+<?php echo Form::button("Agregar", "id='Agregar' style='width:98%;' class='btn-success btn' ") ?>
+                            </div>
+                        </div> 
+
+                    </div>      
+                    <br>
+
+                    <div id="resultado" style="min-height: 300px;max-height: 300px;   border-bottom-color:#fff;overflow: auto;position: relative;  "> <?php print"<script> imprime_lista() </script>"; ?></div>
+                    </br>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> SubTotal $ </td>
+                            <td><?php echo Form::text('dsubtotal', ' required class="form-control"   '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Impuesto $ </td>
+                            <td><?php echo Form::text('dimpuesto', ' required class="form-control"   '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Total $ </td>
+                            <td><?php echo Form::text('dtotal', ' required class="form-control"   '); ?> </td>
+                        </tr>
+                    </table>
+
+                    <br>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">       Costo Envio:    
+                                </div>
+<?php echo Form::number('venta.costo_envio', ' required class="form-control"   '); ?>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">       Capturo:    
+                                </div>
+<?php echo Form::text('venta.capturo', ' required class="form-control"   '); ?>
+                            </div>
+                        </div> 
+                    </div>
+
+                </div>
+            </div>
+<?php $ar2 = array('Contado', 'Credito'); ?>
+            <fieldset style="padding: 15px;">
+                <legend><b>Datos del Pago :</b></legend> 
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Condiciones de pago:    
+                            </div>
+<?php echo Form::Select('condiciones', $ar2, 'Contado'); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div id="cajaCondiciones">
+
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Forma de pago:
+                            </div>
+<?php echo Form::dbSelect("concepto_id", 'concepto', array('conceptos', 'listar', 0), '- Seleccione -', " class='element text' "); ?>
+                        </div>
+                    </div> 
+                </div>
+
+                    <div id="cajaDetalle" style="display: none">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Referencia:    
+                            </div>
+<?php echo Form::text('referencia', 'maxlength="30" class="form-control"  '); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Fecha de documento:    
+                            </div>
+<?php echo Form::text('fecha_referencia', 'type="text" class="form-control" placeholder="dd-mm-aa" '); ?> 
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Cuenta Bancaria:    
+                            </div>
+<?php echo Form::dbSelect("cuenta_id", 'cuenta', array('bancosCuentas', 'listarCuentasBancos', 0), '- Seleccione -', " class='form-control '  "); ?>
+                        </div>
+                    </div> 
+                </div>
+                    </div>
+                    
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Uso del CFDI :    
+                            </div>
+<?php echo Form::dbSelect("uso_id", 'descripcion', array('usoCfdi', 'listar', 0), '- Seleccione -', " class='form-control input-sm'  "); ?>
+                        </div>
+                    </div> 
+                </div>
+                <table width="100%" border='0'>
+
+
+
+                    <tr>
+                        <td colspan="2" rowspan="3" width="60%">
+                            <label class="description"> Observaciones </label>  <br/>
+<?php echo Form::textarea('venta.observacion', '  class="form-control"  '); ?>
+                        </td> 
+                        <td width="20%" style="text-align: right">Importe recibido $</td>
+                        <td width="20%" >
+                            <div style="margin-left: 4px" class="input-group">
+
+<?php echo Form::text('importe_recibido', 'maxlength="20" class="form-control" size="10" style="text-align:right;"', 0); ?>
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td width="20%" style="text-align: right">Cambio           $</td>
+                        <td width="20%">
+                            <div style="margin-left: 4px" class="input-group">
+
+<?php echo Form::text('cambio', 'readonly="readonly" maxlength="20" class="form-control" size="10" style="text-align:right;"', 0); ?>                   
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>    
+        </div>
+
+    </fieldset>
+
+
+<?php $url = "'" . PUBLIC_PATH . "venta/listadoVenta'"; ?>
+    <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+<?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+
+            </td>
+            <td width="33%">
+<?php echo Form::submit((($accion == 'crearVenta') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+            </td>
+        </tr>
+    </table>
+
+</div> 
+</div>
+</br>
+<?php echo Form::close(); ?>
+
+</body>
+
+<script type="text/javascript">
+    $("#venta_producto_id").change(function () {
+        buscaUnidadPrecio();
+        buscaAlmacen();
+        buscaDetalle();
+    });
+    $("#venta_cliente_id").change(function () {
+        buscaCliente();
+
+    });
+
+    $("#Agregar").click(function () {
+
+        agregarPartida();
+
+    });
+    $("#condiciones").change(function () {
+      var condiciones = $('#condiciones').val();  
+      if(condiciones=="1"){
+           $('#cajaCondiciones').hide();
+      }else {
+           $('#cajaCondiciones').show();
+      }
+   });
+    $("#concepto_id").change(function () {
+        var idConcepto = $('#concepto_id').val();
+        if (idConcepto != '') {
+            operacion = 'BUSCA_MOVIMIENTO';
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/funciones'; ?>",
+                data: "operacion=" + operacion + "&idConcepto=" + idConcepto,
+                success: function (html) {
+                    var aux = html;
+                    aux = aux.replace(/^\s+|\s+$/g, "");
+                    $('#tipo_operacion').val(aux);
+                    if (aux != "C") {
+                        $('#cambio').hide();
+                        $('#etiqCb').hide();
+                        $('#p').hide();
+                        //MUESTRA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
+                        $('#cajaDetalle').hide();
+                        operacion = 'BUSCA_BANCO';
+                        $.ajax({
+                            type: "POST",
+                            url: "<?php echo PUBLIC_PATH . 'venta/funciones'; ?>",
+                            data: "operacion=" + operacion,
+                            success: function (html) {
+
+                                $("#bancoI").html(html);
+                            }
+                        });
+
+
+                    } else {
+                        $('#cambio').show();
+                        $('#etiqCb').show();
+                        $('#p').show();
+                        //OCULTA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
+                        $('#cajaDetalle').hide();
+                       
+
+
+                    }
+                }
+            });
+        }
+
+    });
+</script>  
+
+
+
+
+
+

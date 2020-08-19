@@ -1,0 +1,297 @@
+<?php View::content(); ?>
+
+<body id="cuerpo_principal">
+<div class="content">
+    <div class="content_text">
+        
+
+        <div id="form_container" style="width:100%;">
+            <h1><a></a></h1> 
+            <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Nuevo  Cliente" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                        echo Html::linkAction('',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    
+                    
+                    ?>
+                </div>
+            </div>
+    </div>
+            <br/>
+
+            
+
+
+            <?php echo Form::open("cliente/" . $accion); ?>
+             <?php
+           
+                        echo Form::hidden('cliente.id');
+            ?>
+            <div class="col-sm-12">                  
+                <div class="panel panel-primary">
+                    <div class="panel-heading">DATOS DE CONTACTO</div>
+                    <div class="panel-body">
+<div class="col-sm-12"> 
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">   Tipo de Cliente:
+                                    </div>
+                                    <?php
+                                    $tipo_valor = array("F" => "FÍSICA", "M" => "MORAL");
+                                    echo Form::Select("cliente.tipoente", $tipo_valor, "class='form-control'  ");
+                                    ?>
+
+
+                                </div>
+                            </div>
+                        </div> 
+</div>
+    <div class="col-sm-12"> 
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">Nombre / Razon Social
+                                    </div>
+                                    <?php echo Form::text('cliente.nombrecompleto', 'class="form-control"  placeholder="Nombre/Razón social" pattern="[a-zA-Z ]{1,50}" title="Ingrese su razon social.(solamente letras)" '); ?>
+
+
+                                </div>
+                            </div>
+                        </div> 
+    </div>
+                        <div class="col-sm-12"> 
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <div class="input-group">
+                                   
+                                        <div class="input-group-addon">Propietario/Representante Legal
+                                        </div>
+                                        <?php echo Form::text('cliente.propietario', 'class="form-control"  placeholder="Propietario/Representante legal" pattern="[a-zA-Z ]{1,50}" title="Ingrese su razon social.(solamente letras)" '); ?>
+                                    
+                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                        <div class="form-group">
+                            <div class="input-group">
+
+
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                        <div class="col-sm-12"> 
+            <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+
+                                <div class="input-group-addon">Pais            </div>
+                                <?php echo Form::text('cliente.pais', 'class=" form-control"  ', "MEXICO"); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <div class="input-group">
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+
+                                <div class="input-group-addon">Estado           </div>
+                                <?php echo Form::text('cliente.estado', 'class=" form-control" placeholder="estado"'); ?>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                        <div class="col-sm-12"> 
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+
+                                <div class="input-group-addon">Ciudad            </div>
+                                <?php echo Form::text('cliente.municipio', 'class=" form-control" placeholder="municipio"'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+
+                                <div class="input-group-addon">Colonia            </div>
+                                <?php echo Form::text('cliente.colonia', 'class=" form-control" placeholder="colonia"'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+
+                                <div class="input-group-addon">Codigo Postal           </div>
+                                <?php echo Form::text('cliente.codigopostal', 'class=" form-control" placeholder="codigo Postal"'); ?>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                        <div class="col-sm-12"> 
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+
+                                <div class="input-group-addon">Calle            </div>
+                                <?php echo Form::text('cliente.calle', 'class=" form-control" placeholder="Calle"'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+
+                                <div class="input-group-addon">No. Exterior            </div>
+                                <?php echo Form::text('cliente.numeroexterior', 'class=" form-control" placeholder="No. Ext."'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+
+                                <div class="input-group-addon">No. Interior          </div>
+                                <?php echo Form::text('cliente.numerointerior', 'class=" form-control" placeholder="No. Int."'); ?>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                        <div class="col-sm-12"> 
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Telefono          </div>
+                                <?php echo Form::text('cliente.telefono', 'type="tel" pattern="[0-9]{7,13}" class=" form-control" placeholder="No.Teléfono" title="Mínimo 7 digitos máximo 13(Solamente Nùmeros)" maxlength="13" '); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <div class="form-group">
+                            <div class="input-group">
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">E-mail: <i class="glyphicon glyphicon-envelope"></i>       </div>
+                                <?php echo Form::email('cliente.correoelectronico', 'type="email" required class=" form-control" placeholder="E-mail"'); ?>
+                            </div>
+                        </div>
+                    </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Forma de pago: <i class="glyphicon glyphicon-envelope"></i>       </div>
+                            <?php echo Form::dbSelect("cliente.concepto_id", "concepto", array("conceptos", "listar"), 'Seleccione..', 'class="form-control" '); ?>
+                            </div>
+                            
+                            </div>
+                        </div>
+                            <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Credito <i class="glyphicon glyphicon-envelope"></i>       </div>
+                            <?php $ar2 = array('N'=>'NO', 'S'=>'SI');
+                            echo Form::Select('cliente.credito', $ar2, 'SI'); ?>  
+                            </div>
+                            
+                            </div>
+                        </div>
+                            <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Dias Credito <i class="glyphicon glyphicon-envelope"></i>       </div>
+                           <?php echo Form::number('cliente.dias', 'type="tel" pattern="[0-9]{7,13}" class=" form-control" placeholder=""  '); ?>
+                             
+                            </div>
+                            
+                            </div>
+                        </div>
+                    </div>      
+                            
+                       
+                              
+                        </div>
+          
+            </div>
+</div>
+            </div>
+           
+            <br/>
+            <div class="col-sm-12">                  
+                <div class="panel panel-primary">
+                    <div class="panel-heading">COMPLEMENTO DATOS FISCALES</div>
+                    <div class="panel-body">
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">  R.F.C:
+                                    </div>
+                                    <?php echo Form::text('cliente.rfc', 'class="form-control"'); ?>
+
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">  Uso del CFDI:
+                                    </div>
+                                    <?php echo Form::dbSelect('cliente.uso_cfdi_id', 'descripcion', array('uso_cfdi', 'listar'), '- seleccione -', 'class="form-control" ', ""); ?>
+
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+<table width="100%"  border="0">
+
+
+    <tr>
+
+    <tr>
+        <?php $url = "'" . PUBLIC_PATH . "cliente'"; ?>
+        <td width="50%" style="text-align: center;  "><?php echo Form::button('Regresar', 'id="btnSig" class="btn btn-danger"  onclick="window.location = ' . $url . '"'); ?> </td>
+        <td width="50%"  style="text-align: center;    "><?php echo Form::submit('Guardar', 'id="editar" class="btn btn-primary"  '); ?> </td>
+
+
+    </tr>
+</tr>  
+</table>
+
+        </div>  
+    </div>       
+</div>
+</body>
+<?php echo Form::close(); ?>
+<script type="text/javascript" charset="UTF-8">
+    function regresar() {
+
+        window.location.replace("<?php echo PUBLIC_PATH; ?>");
+    }
+    
+ 
+
+</script>

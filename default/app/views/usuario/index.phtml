@@ -1,0 +1,46 @@
+<div id="container" >
+       <div id="form_container" style="width:100%;" >
+<h1 class="lineaSuperior"><a></a></h1>
+            <div class="col-md-12">
+                <?php View::partial("formato",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos, 'ctrlbloquear'=>"bloquear"));  ?>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript" charset="utf-8">
+    
+    
+    
+    function cambiaestado(id, tipo) {
+        urls = "<?php echo PUBLIC_PATH . 'usuarios/cambiaestado/'; ?>";
+        redir = "<?php echo PUBLIC_PATH . 'usuarios/';?>";
+        tit = "Usuarios";
+        /*jConfirm("¿Está seguro de eliminar el registro?", tit,function(r){
+            if(r){*/
+                url = urls;
+                datos = "id="+id+"&tipo="+tipo;
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: url,
+                    data: datos,
+                    beforeSend: function(respuesta){
+                        pantalla_espera();
+                    },
+                    error: function(respuesta){
+                        alert("Se presentó un problema al realizar la operación. Contacte con su Administrador", "Datos Generales");
+                    },
+                    success: function(respuesta){
+                        idcliente = "";
+                        if (respuesta.exito == "si"){
+                            alert("Operación Efectuada.");
+                            window.location.replace(redir);
+                        } else 
+                            alert("No fue posible realizar la operación.");
+                    }
+                });
+            /*}
+        });*/
+    }
+    
+    </script>

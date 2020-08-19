@@ -1,0 +1,101 @@
+
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+
+    <h1><a>Crear</a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Distribucion por Coordinaciones" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    
+                </div>
+            </div>
+    </div>
+    <div id="margen" >
+    <?php echo Form::open("reportes/" . $accion,"Post","id='consulta' method = 'POST'"); ?>
+<table width="100%" border="0" class="letra">
+  <tr>
+    <td colspan="5" bgcolor="#adb5ce"><h5><a id="letra1">Periodo </a></h5> </td>
+    </tr>
+  <tr>
+    <td  align="center">Desde el dia</td>
+    <td ><?php echo Calendar::text('movimiento.FECHA_INICIO','required style="width:87px"', ''); ?> 
+          </td>
+      <td>&nbsp;</td>    
+    <td align="center">Hasta el dia</td>
+    <td ><?php echo Calendar::text('movimiento.FECHA_FIN','required style="width:87px"',''); ?></td>
+    
+  </tr>
+  <tr >
+    <td width="40%" colspan="2" bgcolor="#adb5ce"><h5><a id="letra1">Producto </a></h5></td>
+    <td></td>
+    <td width="40%" colspan="2" bgcolor="#adb5ce"><h5><a id="letra1">Departamento </a></h5></td>
+    </tr>
+  
+  <tr>
+    <td colspan="2"><label>
+      <?php echo Form::dbSelect("movimiento.PRODUCTO_ID","DESCRIPCION",array("producto","listar"),'Seleccione..','type="text"  class="element text" style="width:325px"');?>
+    </label></td>
+    <td colspan="1"><label>
+      
+    </label></td>
+    <td colspan="2"><label>
+      <?php echo Form::dbSelect("movimiento.DEPARTAMENTO_ID","DESCRIPCION",array("departamento","listar"),'Seleccione..','type="text"  class="element text" style="width:325px"');?>
+    </label></td>
+    
+   
+  </tr>
+  <!--
+  <tr>
+    <td colspan="5" bgcolor="#adb5ce"><h5><a id="letra1">Agrupar Por: </a></h5></td>
+    </tr>
+  <tr>
+    <td colspan="5" width="50%">
+  <?php  $arregloAgrupar = array(''=>'Seleccione...','Fecha'=>'Fecha','Vale'=>'Vale Salida');?>
+                <?php echo Form::Select('movimiento.AGRUPAR', $arregloAgrupar,'type="text" class="element text medium"',""); ?>    
+    </td>
+    
+    </tr>
+  !-->
+  
+  <tr>
+    <td colspan="5" bgcolor="#adb5ce"><h5><a id="letra1">Titulo </a></h5></td>
+    </tr>
+  <tr>
+    <td colspan="5" width="50%">
+    <?php echo form::text('movimiento.titulo',"style='width:90%'","DISTRIBUCCION POR COORDINACIONES");?>    
+    </td>
+    
+    </tr>
+  
+</table>
+        
+        </br>
+        
+ <?php $url = "'" . PUBLIC_PATH . "'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="33%">
+            <?php echo Form::submit((($accion == 'departamento') ? 'Generar' : 'Actualizar'), 'type="submit" class="CSSButton" '); ?>       
+            </td>
+        </tr>
+     </table>   
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>
+
+
+
+ 

@@ -1,0 +1,730 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+
+<?php
+
+if (($operacion) == "MOSTRAR") {
+    ?>
+
+    <div class="cabecera">
+       
+     <h5><a id="letra1">Produtos</a></h5> 
+   
+        
+    </div>
+
+
+
+
+  <table width="100%" border="0" class="letra">
+ <tr align="center">
+        <td width="5%">#</td>
+        <td width="10%">Clave</td>
+        <td width="40%">Descripcion</td>
+        <td width="10%">C. MINIMA.</td>
+        <td width="10%">C. MAXIMA.</td>
+        <td width="10%">&nbsp;</td>
+        </tr>
+        
+</table>
+     
+   <div class="contenido6">
+ 		
+  <table  width="100%"  border="0" class="estilo_almacen"  >
+      <?php 
+      $i=1;
+      $color = "";
+    foreach ($listar as $datos){
+if($color == "#ebf3ff"){
+				$color = "#ffffff";
+			}else{
+				$color = "#ebf3ff";
+			}
+		
+
+ echo"<tr bgcolor='".$color."' class=\"letra\" >";	
+ echo"<td width='5%' align=\"center\"  >".$i."</td>";
+ echo"<td  width='10%' class=\"letra\" >".$datos->clave."</td>";  
+ echo"<td  width='40%' class=\"letra\" >".$datos->nombre."</td>"; 
+ echo"<td  width='10%' class=\"letra\" ><input type='text' name=\"minimo$i\" id=\"minimo$i\" value='0' size='6' style='visibility:true; background-color:".$color.";  text-align:right ' class='letra' ></td>"; 
+ echo"<td  width='10%' class=\"letra\" align=\"letf\"><input type='text' name=\"maxima$i\" id=\"maxima$i\" value='0' size='6' style='visibility:true; background-color:".$color."; width=50%; text-align:right ' class='letra' ></td>"; 
+ echo"<td  width='10%' class=\"letra\" align=\"center\" ><input type='button' name=\"agregar$i\" id=\"agregar$i\" value='Agregar' style=\"visibility:true\" class='letra' onclick=agregar_producto('$datos->id',$i)></td>"; 
+
+
+ echo"</tr>";
+$i++;
+ }
+
+
+?>
+    </table>
+                </div>
+    
+    <?php
+}
+else if (($operacion) == "MOSTRAR_ALMACEN") {
+    ?>
+
+    <div class="cabecera">
+       
+     <h5><a id="letra1">Existencia  Almacen </a></h5> 
+   
+        
+    </div>
+
+
+
+
+  <table width="100%" border="0" class="letra">
+ <tr align="center">
+        <td width="5%">#</td>
+        <td width="10%">Clve. Art.</td>
+        <td width="40%">Descripcion</td>
+        <td width="10%">Existencia</td>
+        <td width="10%">C. Minimo.</td>
+        <td width="10%">C. Maxima.</td>
+        <td width="10%">&nbsp;</td>
+        </tr>
+        
+</table>
+     
+   <div class="contenido6">
+ 		
+  <table  width="100%"  border="0" class="estilo_almacen"  >
+      <?php 
+      $i=1;
+      $color = "";
+    foreach ($listar as $datos){
+if($color == "#ebf3ff"){
+				$color = "#ffffff";
+			}else{
+				$color = "#ebf3ff";
+			}
+		
+
+ echo"<tr bgcolor='".$color."' class=\"letra\" >";	
+ echo"<td width=\"5%\" align=\"center\"  >".$i."</td>";
+ echo"<td  width='10%' class=\"letra\" >".$datos->clave."</td>";  
+ echo"<td  width='40%' class=\"letra\" >".$datos->descripcion."</td>"; 
+ echo"<td  width='10%' class=\"letra\" >".$datos->existencia."</td>"; 
+ echo"<td  width='10%' class=\"letra\" >".$datos->cantidad_minima."</td>"; 
+ echo"<td  width='10%' class=\"letra\" >".$datos->cantidad_maxima."</td>"; 
+ echo"<td  width='10%' class=\"letra\" ><input type='button' name=\"quitar$i\" id=\"quitar$i\" value='Quitar' style=\"visibility:true\" class='letra' onclick=quitar_producto('$datos->id','$datos->EXISTENCIA','$i')></td>"; 
+
+
+ echo"</tr>";
+$i++;
+ }
+
+
+?>
+    </table>
+                </div>
+    
+    <?php
+}
+else if (($operacion) == "MOSTRAR_INICIAL") {
+    ?>
+<?php Tag::css('estiloHache') ?>
+    <div class="cabecera">
+        
+     <h5><a id="letra1">Existencia  Almacen </a></h5> 
+   
+        
+    </div>
+
+
+
+
+  <table width="100%" border="0" class="letra">
+ <tr bgcolor="#CCCCCC" style="height: 30px;">
+    <td width="5%"><label>#</label></td>        
+    <td width="35%"><label>Descripcion</label></td>
+    <td width="10%"><label>Unidad</label></td>       
+    <td width="10%"><label>Existencia</label></td>
+    <td width="10%"><label>Cantidad</label></td>
+    <td width="10%"><label>Lote/Serie</label></td>
+    <td width="10%"><label>F. Caducidad</label></td>
+    
+    </tr>
+</table>
+     
+<div  >
+ 		
+  <table  width="100%"  border="0" class="estilo_almacen"  >
+      <?php 
+      $i=1;
+      $color = "";
+    foreach ($listar as $datos){
+if($color == "#ebf3ff"){
+				$color = "#ffffff";
+			}else{
+				$color = "#ebf3ff";
+			}
+		
+echo  Form::hidden('productoId'.$i, 'maxlength="20" required class="element text medium"  ',$datos->producto_id);
+ echo"<tr bgcolor='".$color."' class=\"letra\" >";	
+ echo"<td width=\"5%\" align=\"center\"  >".$i."</td>";
+ echo"<td  width='35%' class=\"letra\" >".$datos->descripcion."</td>";  
+ echo"<td  width='10%' class=\"letra\" >".$datos->unidad_salida."</td>"; 
+ echo"<td  width='10%' class=\"letra\" >".$datos->existencia."</td>"; 
+ echo"<td  width='10%' class=\"letra\" ><input type='text' name=\"cantidad$i\" id=\"cantidad$i\" value='0' size='7' style='visibility:true; background-color:".$color.";  text-align:right ' class='letra' ></td>"; 
+ if($datos->NUMERO_SERIE=="S"){
+     echo  Form::hidden('opcion'.$i, 'maxlength="20" required class="element text medium"  ','serie');
+ echo"<td  width='10%' class=\"letra\" ><input type='text' name=\"loteSerie$i\" id=\"loteSerie$i\" value='' size='6' style='visibility:true; background-color:".$color.";  text-align:right ' class='letra' ></td>"; 
+ }  else  if($datos->LOTE=="S"){
+  echo  Form::hidden('opcion'.$i, 'maxlength="20" required class="element text medium" ','lote');  
+  echo"<td  width='10%' class=\"letra\" ><input type='text' name=\"loteSerie$i\" id=\"loteSerie$i\" value='' size='6' style='visibility:true; background-color:".$color.";  text-align:right ' class='letra' ></td>"; 
+ }else{
+    echo  Form::hidden('opcion'.$i, 'maxlength="20" required class="element text medium"  ','ninguno'); 
+    echo"<td  width='10%' class=\"letra\" ></td>";   
+ }
+ if($datos->LOTE=="S"){
+ echo"<td  width='10%' class=\"letra\" >".Calendar::text('fechaCaducidad'.$i,'required style="width:87px"','')."</td>"; 
+ }else{
+    echo"<td  width='10%' class=\"letra\" ></td>";  
+ }
+
+ echo"</tr>";
+$i++;
+ }
+ echo Form::hidden('partidas', 'maxlength="20" required class="element text medium"  ',$i); 
+
+?>
+    </table>
+                </div>
+    
+    <?php
+} 
+else if (($operacion) == "AGREGAR_PRODUCTO") {
+    echo $resultado;
+}
+else if (($operacion) == "MOSTRAR_LISTA") {
+        
+    ?>
+
+    <div class="cabecera">
+       
+        
+    </div>
+
+
+
+<div class="cabecera" >
+    <table width="100%" border="0">
+        <tr bgcolor="#CCCCCC" style="height: 30px;">
+    <td width="5%"><label>#</label></td>
+    <td width="5%"><label></label></td>
+    <td width="10%"><label>Codigo</label></td>
+    <td width="10%"><label>Cantidad</label></td>
+    <td width="30%"><label>Descripcion</label></td>
+    <td width="10%"><label>V. Unitario</label></td>   
+    <td width="10%"><label>V. total</label></td>
+   
+    
+    
+    </tr>
+  
+</table>
+   </div>                    
+ 		<div class="ventanillaCobro">
+<table width="100%" border="0" align="center" class="Estilo">
+    <?php
+  
+    $array_productos=Session::get('array_cotizacion');
+ $longitud=count($array_productos);
+
+ $color="#0098CD";
+ $importeTotal=0;
+ $indice=0;
+ $partidaTotal=0;
+ $cantidad=0;
+ $precio=0;
+    for ($i = 0; $i < $longitud; $i++) {
+  
+    
+        
+        
+
+ if($color=="#0098CD")
+        {
+$color="#FFFFFF";
+}
+else
+{
+$color="#0098CD";
+} 
+
+$indice ++;
+$codigo=$array_productos[$i]['CLAVE'];
+$descripcion=$array_productos[$i]['DESCRIPCION'];
+$cantidad=$array_productos[$i]['CANTIDAD'];
+$precio=$array_productos[$i]['PRECIO'];
+$partidaTotal=$cantidad*$precio;
+    $importeTotal=$partidaTotal+$importeTotal;
+	echo "<tr valign=center style='background-color:$color'>";		
+        echo "<td width='5%' align='center'>" . $indice . "</td>";
+        echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida($i)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
+        echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $codigo  . "</FONT></td>";
+        echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,0,'.',',')."  ".$array_productos[$i]['MEDIDA']. "</FONT></td>";
+        echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion  . "</FONT></td>";
+        echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $precio  . "</FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $partidaTotal . "</FONT></td>";
+        
+        
+        echo "</tr>";
+    }
+    
+    
+
+    ?>	
+
+    </table>
+                </div>
+  
+
+
+    <?php
+}
+else if (($operacion) == "MOSTRAR_LISTA_PEDIDO") {
+        
+    ?>
+
+    <div class="cabecera">
+       
+        
+    </div>
+
+
+
+<div class="cabecera" >
+    <table width="100%" border="0">
+        <tr bgcolor="#CCCCCC" style="height: 30px;">
+    <td width="5%"><label>#</label></td>
+    <td width="5%"><label></label></td>
+    <td width="10%"><label>Codigo</label></td>
+    <td width="10%"><label>Cantidad</label></td>
+    <td width="30%"><label>Descripcion</label></td>
+    <td width="10%"><label>V. Unitario</label></td>   
+    <td width="10%"><label>V. total</label></td>
+   
+    
+    
+    </tr>
+  
+</table>
+   </div>                    
+ 		<div class="ventanillaCobro">
+<table width="100%" border="0" align="center" class="Estilo">
+    <?php
+  
+    $array_productos=Session::get('array_pedido');
+ $longitud=count($array_productos);
+
+ $color="#0098CD";
+ $importeTotal=0;
+ $indice=0;
+ $partidaTotal=0;
+ $cantidad=0;
+ $precio=0;
+    for ($i = 0; $i < $longitud; $i++) {
+  
+    
+        
+        
+
+ if($color=="#0098CD")
+        {
+$color="#FFFFFF";
+}
+else
+{
+$color="#0098CD";
+} 
+
+$indice ++;
+$codigo=$array_productos[$i]['CLAVE'];
+$descripcion=$array_productos[$i]['DESCRIPCION'];
+$cantidad=$array_productos[$i]['CANTIDAD'];
+$precio=$array_productos[$i]['PRECIO'];
+$partidaTotal=$cantidad*$precio;
+    $importeTotal=$partidaTotal+$importeTotal;
+	echo "<tr valign=center style='background-color:$color'>";		
+        echo "<td width='5%' align='center'>" . $indice . "</td>";
+        echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida($i)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
+        echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $codigo  . "</FONT></td>";
+        echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,0,'.',',')."  ".$array_productos[$i]['MEDIDA']. "</FONT></td>";
+        echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion  . "</FONT></td>";
+        echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $precio  . "</FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $partidaTotal . "</FONT></td>";
+        
+        
+        echo "</tr>";
+    }
+    
+    
+
+    ?>	
+
+    </table>
+                </div>
+  
+
+
+    <?php
+}
+else if (($operacion) == "MOSTRAR_LISTA_VENTA") {
+        
+    ?>
+
+    <div class="cabecera">
+       
+        
+    </div>
+
+
+
+<div class="cabecera" >
+    <table width="100%" border="0">
+        <tr bgcolor="#CCCCCC" style="height: 30px;">
+    <td width="5%"><label>#</label></td>
+    <td width="5%"><label></label></td>
+    <td width="10%"><label>Cantidad</label></td>
+    <td width="30%"><label>Descripcion</label></td>
+    <td width="10%"><label>U. Entrada</label></td>   
+    <td width="10%"><label>Almacen</label></td>
+    <td width="10%"><label>Lote</label></td>
+    <td width="5%"><label>P. Unitario</label></td>
+    <td width="5%"><label>Impuesto</label></td>
+    <td width="10%"><label>P. Total</label></td>
+    
+    </tr>
+  
+</table>
+   </div>                    
+ 		<div class="ventanillaCobro">
+<table width="100%" border="0" align="center" class="Estilo">
+    <?php
+  
+    $array_productos=Session::get('array_venta');
+ $longitud=count($array_productos);
+
+ $color="#0098CD";
+ $importeTotal=0;
+ $partidaTotal=0;
+ $indice=0;
+ $cantidad=0;
+ $precio=0;
+ $impuesto=0;
+ $subtotal=0;
+ $impuestoTotal =0;
+    for ($i = 0; $i < $longitud; $i++) {
+  
+    
+        
+        
+
+ if($color=="#0098CD")
+        {
+$color="#FFFFFF";
+}
+else
+{
+$color="#0098CD";
+} 
+
+$indice ++;
+$codigo=$array_productos[$i]['CLAVE'];
+$descripcion=$array_productos[$i]['DESCRIPCION'];
+$cantidad=$array_productos[$i]['CANTIDAD'];
+$unidad_entrada=$array_productos[$i]['UNIDAD_ENTRADA'];
+$almacen=$array_productos[$i]['ALMACEN']." - ".$array_productos[$i]['DESCRIPCION_ALMACEN'];;
+$lote_serie=$array_productos[$i]['LOTE_CODIGO'];
+$precio=$array_productos[$i]['PRECIO'];
+$tasa=$array_productos[$i]['TASA'];
+if($tasa=="")$tasa=0;
+$impuesto=(($cantidad*$precio)*$tasa)/100;
+$subtotal=$subtotal+($cantidad*$precio);
+$impuestoTotal= $impuestoTotal+$impuesto;
+$partidaTotal=$cantidad*$precio+$impuesto;
+$importeTotal=$partidaTotal+$importeTotal;
+	echo "<tr valign=center style='background-color:$color'>";		
+        echo "<td width='5%' align='center'>" . $indice . "</td>";
+        echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida($i)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
+        echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,0,'.',',')."  ".$array_productos[$i]['MEDIDA']. "</FONT></td>";
+        echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion  . "</FONT></td>";
+        echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $unidad_entrada  . "</FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $almacen . "</FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $lote_serie . "</FONT></td>";
+        echo "<td width='5%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($precio,2) . "</FONT></td>";
+        echo "<td width='5%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " .$tasa."% </FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($partidaTotal,2) . "</FONT></td>";
+        
+        echo "</tr>";
+    }
+    
+    
+
+    ?>	
+
+    </table>
+                    <?php echo Form::hidden("iTotal","",$importeTotal); ?>
+                </div>
+  
+
+
+    <?php
+}
+else if (($operacion) == "MOSTRAR_LISTA_SALIDA") {
+        
+    ?>
+
+    <div class="cabecera">
+       
+        
+    </div>
+
+
+
+<div class="cabecera" >
+    <table width="100%" border="0">
+        <tr bgcolor="#CCCCCC" style="height: 30px;">
+    <td width="5%"><label>#</label></td>
+    <td width="5%"><label></label></td>
+    <td width="10%"><label>Cantidad</label></td>
+    <td width="30%"><label>Descripcion</label></td>
+    <td width="10%"><label>U. Salida</label></td>   
+    <td width="10%"><label>Almacen</label></td>
+    <td width="10%"><label>Lote</label></td>
+    
+    
+    </tr>
+  
+</table>
+   </div>                    
+ 		<div class="ventanillaCobro">
+<table width="100%" border="0" align="center" class="Estilo">
+    <?php
+  
+    $array_salida=Session::get('array_salida');
+ $longitud=count($array_salida);
+
+ $color="#0098CD";
+ $importeTotal=0;
+ $indice=0;
+
+    for ($i = 0; $i < $longitud; $i++) {
+  
+    
+        
+        
+
+ if($color=="#0098CD")
+        {
+$color="#FFFFFF";
+}
+else
+{
+$color="#0098CD";
+} 
+
+$indice ++;
+$descripcion=$array_salida[$i]['CLAVE']." - ".$array_salida[$i]['DESCRIPCION'];
+$cantidad=$array_salida[$i]['CANTIDAD'];
+$unidad_entrada=$array_salida[$i]['UNIDAD_SALIDA'];
+$almacen=$array_salida[$i]['ALMACEN']." - ".$array_salida[$i]['DESCRIPCION_ALMACEN'];;
+$lote_serie=$array_salida[$i]['LOTE_SERIE'];
+$fecha_caducidad=$array_salida[$i]['FECHA_CADUCIDAD'];
+$numInventario=$array_salida[$i]['NUMERO_INVENTARIO'];
+	echo "<tr valign=center style='background-color:$color'>";		
+        echo "<td width='5%' align='center'>" . $indice . "</td>";
+        echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida_salida($i)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
+        echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,0,'.',',')."  ".$array_salida[$i]['MEDIDA'] . "</FONT></td>";
+        echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion  . "</FONT></td>";
+        echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $unidad_entrada  . "</FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $almacen . "</FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $lote_serie . "</FONT></td>";
+       
+        echo "</tr>";
+    }
+    
+    
+
+    ?>	
+
+    </table>
+                </div>
+  
+
+
+    <?php
+}
+else if ($operacion=="BUSCA_UNIDADPRECIO"){
+ echo $producto->medida.",".$producto->precio;   
+ }else if ($operacion=="BUSCA_ALMACEN"){
+ echo Form::dbSelect("venta.almacen_id", 'descripcion', array('almacen', 'buscarAlmacen',$condicion), '- Seleccione -',"style='font-size:10px;  padding:1px;' ");   
+ }
+ else if ($operacion=="BUSCA_ALMACEN_SALIDA"){
+ echo Form::dbSelect("entrega.almacen_id", 'descripcion', array('almacen', 'buscarAlmacen',$condicion), '- Seleccione -',"style='font-size:10px;  padding:1px;' ");   
+ ?>
+<script>
+
+$("#entrega_ALMACEN_ID").change(function(){
+	buscaDetalleSalida();
+       buscaExistenciaAlmacen();
+});
+
+
+</script>
+ <?php
+ }
+ else if (($operacion) == "BUSCA_CLIENTE") {
+ ?><table width="100%" border="0">
+  <tr>
+    <td width="104"><label> Nombre:</label></td>
+    <td width="551"><input name="nombre" id="nombre" type="text" size="40"  class="letra" readonly="readonly" value="<?php echo $cliente->nombrecompleto; ?>"/></td>
+  </tr>
+  <tr>
+    <td><label> Direccion:</label></td>
+    <td><input type="text" name="direccion" id="direccion" size="50"  class="letra" readonly="readonly" value="<?php echo $cliente->direccion; ?>"/></td>
+  </tr>
+  <tr>
+    <td><label> RFC:</label></td>
+    <td><input name="rfc" id="rfc" type="text" size="15"   class="letra" readonly="readonly" value="<?php echo $cliente->rfc; ?>"/></td> 
+  </tr>
+</table>
+  <?php   
+ }
+ else if ($operacion=="AGREGAR_PARTIDA"){
+   echo $mensaje;  
+ } 
+ else if ($operacion=="AGREGAR_PARTIDA_PEDIDO"){
+   echo $mensaje;  
+ } 
+ else if ($operacion=="MOSTRAR_DETALLE"){
+   echo $var; 
+ }
+ else if ($operacion=="MOSTRAR_DETALLE_SALIDA"){
+ if($detalle->NUMERO_SERIE=="S"){
+ $condicion="ALMACEN_ID=".$almacenId." and PRODUCTO_ID= ".$productoId." and EXISTENCIA !=0";
+ ?>
+
+<table border="0">
+    <tr>
+    <td>Num. Serie</td>
+    <?php if($detalle->NUMERO_INVENTARIO=="S"){ ?>
+    
+    <td>Num. Inventario</td>
+   
+    <?php } ?>
+    </tr>
+    <tr>
+        <td><?php echo Form::dbSelect("entrega.SERIE_ID", 'SERIE', array('serie', 'buscarXconsulta',$condicion), '- Seleccione -',"style='font-size:10px;width:120px;  padding:1px;' "); ?> </td>   
+    <?php if($detalle->NUMERO_INVENTARIO=="S"){ ?>
+    
+    <td><?php echo Form::dbSelect("ID", 'NUMERO_INVENTARIO', array('numeroInventario', 'buscarXconsulta',$condicion), '- Seleccione -',"style='font-size:10px;width:120px;  padding:1px;' "); ?></td>
+  <?php echo Form::hidden("opcion",'',"serieInventario");?>
+ <?php }else {?><?php echo Form::hidden("opcion",'',"serie"); }?>
+    </tr>
+</table> 
+ <script>
+
+$("#entrega_SERIE_ID").change(function(){
+	
+       buscaExistenciaLS();
+});
+
+
+</script>
+<?php
+ }else if ($detalle->LOTE=="S"){
+     $condicion="almacen_id=".$almacenId." and producto_id= ".$productoId." and existencia !=0";
+     ?>
+ 
+<table border="0">
+    <tr>
+    <td>lote</td>
+    <?php if($detalle->NUMERO_INVENTARIO=="S"){ ?>
+    
+    <td>Num. Inventario</td>
+   
+    <?php } ?>
+    </tr>
+    <tr>
+        <td><?php echo Form::dbSelect("entrega.LOTE_ID", 'LOTE', array('lote', 'buscarXconsulta',$condicion), '- Seleccione -',"style='font-size:10px;width:120px;  padding:1px;' "); ?> </td>   
+    <?php if($detalle->NUMERO_INVENTARIO=="S"){ ?>
+    
+    <td><?php echo Form::dbSelect("ID", 'NUMERO_INVENTARIO', array('numeroInventario', 'buscarXconsulta',$condicion), '- Seleccione -',"style='font-size:10px;width:120px;  padding:1px;' "); ?></td>
+  <?php echo Form::hidden("opcion",'',"loteInventario");?>
+    <?php }else { ?> <?php echo Form::hidden("opcion",'',"lote");}?>
+    </tr>
+</table>
+
+ <script>
+
+$("#entrega_LOTE_ID").change(function(){
+	
+       buscaExistenciaLS();
+});
+
+
+</script>
+
+<?php   
+ }else{
+    ?>
+  <?php if($detalle->NUMERO_INVENTARIO=="S"){ 
+      $condicion="ALMACEN_ID=".$almacenId." and PRODUCTO_ID= ".$productoId." and EXISTENCIA !=0"; ?>
+   <table border="0">
+    <tr>   
+    <td>Num. Inventario</td>   
+    </tr>
+    <tr>      
+    <td><?php echo Form::dbSelect("ID", 'NUMERO_INVENTARIO', array('numeroInventario', 'buscarXconsulta',$condicion), '- Seleccione -',"style='font-size:10px;width:120px;  padding:1px;' "); ?></td>
+  
+ <?php echo Form::hidden("opcion",'',"inventario"); }else {?><?php echo Form::hidden("opcion",'',"ninguno"); }?>
+    </tr>
+</table>  
+   
+<?php }
+ 
+ }
+ else if ($operacion=="AGREGAR_INICIAL"){
+   echo $mensaje; 
+ }
+ else if (($operacion) == "BUSCA_EMPLEADO") {
+ ?><table width="100%" border="0">
+  <tr>
+    <td width="104"><label> Solicitante:</label></td>
+    <td width="551"><input name="nombre" id="nombre" type="text" size="40"  class="letra" readonly="readonly" value="<?php echo $empleado->NOMBRE; ?>"/></td>
+  </tr>
+  <tr>
+    <td><label> Destinatario:</label></td>
+    <td><input type="text" name="direccion" id="direccion" size="50"  class="letra" readonly="readonly" value="<?php echo $departamento->DESCRIPCION; ?>"/></td>
+  </tr>
+  <tr>
+    <td><label> Lugar:</label></td>
+    <td><input name="rfc" id="rfc" type="text" size="15"   class="letra" readonly="readonly" value="<?php echo "OAXACA"; ?>"/></td> 
+  </tr>
+</table>
+<?php echo Form::hidden("entrega.DEPARTAMENTO_ID",'',$empleado->DEPARTAMENTO_ID);?>
+  <?php   
+ }
+ else if (($operacion) == "BUSCA_EXISTENCIA_GENERAL") {
+   echo $producto->EXISTENCIA;
+ }
+ else if (($operacion) == "BUSCA_EXISTENCIA_ALMACEN") {
+   echo $inventario->suma;
+ }
+ else if (($operacion) == "BUSCA_EXISTENCIA_LS") {
+   echo $resultado->EXISTENCIA;
+ }
+?>
+
+

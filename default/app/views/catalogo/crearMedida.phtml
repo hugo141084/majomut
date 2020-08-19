@@ -1,0 +1,59 @@
+<?php View::content(); ?>
+<?php view::template('fondo'); ?>
+
+
+<body id="principal">
+<br/>  
+<div id="form_container" >
+<br/> <br/> 
+    
+
+    <?php echo Form::open("catalogo/" . $accion); ?>   
+    <?php echo Form::hidden("medida.id"); ?>
+    <div id="form">
+      <div class="col-sm-12">                  
+    <div class="panel panel-primary">
+        <div class="panel-heading">Nueva Unidad de Media</div>
+        <div class="panel-body">
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Unidad de Medida:
+                        </div>
+<?php echo Form::text( 'medida.descripcion', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+            
+            
+            
+        </div>
+    </div>
+</div>       
+            
+        <table width="100%">
+        <tr align="center">
+            <td width="50%">     
+            <?php  echo Form::button("Cancelar", "id='Salir' class='btn btn-danger btn-lg'"); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="50%">
+            <?php echo Form::submit((($accion == 'crearMedida') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-success btn-lg"'); ?>       
+            </td>
+        </tr>
+     </table>
+     <?php echo Form::close(); ?>
+  </div> 
+</div>
+
+</body>
+<script>
+    $("#Salir").click(function(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+ });
+</script>
