@@ -1,0 +1,259 @@
+<?php Tag::css('demo_page'); ?>
+<?php Tag::css('demo_table'); ?>
+<?php Html::includeCss() ?>
+<?php echo Tag::js('jquery.dataTables.min'); ?>
+<?php
+ ini_set('memory_limit', '512M');
+ ini_set('max_execution_time', '-1');
+ ?>
+
+
+<div id="dt_example" style="margin:0 auto; padding:10px 20px 20px; background-color:#ffffff; ">    
+    <div id="container"  style="width:95%;">
+        <div id="demo">
+            <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo $Encabezado ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                    if (isset($ctrlcrear)) {                        
+                          echo Html::linkAction('crear',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');
+                    }
+                    if (isset($ctrlcrear1)) {                        
+                          echo Html::linkAction('crear'.$ventana,Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');
+                    }
+                    if (isset($ctrlAlta)) {                        
+                          echo Html::linkAction('crear'.$ventana,Html::img('nuevo.png','cancel','style="text-align:center;width:65px;  padding:1px;"'),'rel="shadowbox;width=600px;height=310px;"');
+                    }
+                    if (isset($ctrlActualizar)) {                        
+                       //   echo Form::button('Actualizar',Html::img('actualizar.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');
+                    }
+                    if (isset($ctrlcrearPD)) {
+                        echo Html::linkAction('crearPD', 'AGREGAR', 'class="CSSButton"');
+                    }
+                    //LINK PARA SUBIR LISTADO DE CONTRIBUYENTES
+                    if (isset($ctrlSubirC)) {
+                        echo Html::linkAction('subirC', 'IMPORTAR', 'class="CSSButton"');
+                    }
+                    //LINK PARA SUBIR LISTADO DE CUENTAS POR COBRAR
+                    if (isset($ctrlSubirCuenta)) {
+                        echo Html::linkAction('subirCuenta', 'IMPORTAR', 'class="CSSButton"');
+                    }
+                    //LINK PARA SUBIR LISTADO DEL PADRON DE AGUA
+                    if (isset($ctrlImportar)) {
+                         echo Html::linkAction('crear',Html::img('importar.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    }
+                    //LINK PARA SUBIR LISTADO DEL PADRON DE PREDIAL
+                    if (isset($ctrlExportar)) {
+                        echo Html::linkAction('crear',Html::img('exportar.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    }
+                    //LINK PARA IMPRIMIR TODOS LOS AVISOS
+                    if (isset($imprimirAvisos)) {
+                        echo Html::linkAction('imprimirAvisos', Html::img('printer.png', 'cancel', 'style="text-align:center;width:35px; padding:2px;"') . "<b>TODOS</b>", ('onclick="if(confirm(\'Está seguro de imprimir todos los avisos?\'))window.open(this.href,this.target);return false;"'));
+                    }
+                    //LINK PARA CREAR PAGO DE CLCS
+                    if (isset($crearPagoClc)) {
+                        echo Html::linkAction('crearPagoClc', 'AGREGAR', 'class="CSSButton"');
+                    }
+                    ?>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+            </div> 
+            </div>
+            
+            <table  border="0" width="100%" id="table" class="display">
+                <thead>
+                    <tr><?php foreach ($Campos as $titulo => $valor): ?>
+                            <th><?php echo $titulo; ?></th>
+                        <?php endforeach; ?>
+                        <th> ACCION </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($Model as $model): ?>
+                        <tr>
+                            <?php
+                            foreach ($Campos as $campos):
+                                //PARA LISTADO CONTRIBUYENTES 
+                                if ($campos == "tipo_contribuyente")
+                                    if ($model->$campos == "F")
+                                        echo "<td>P. FISICA</td>";
+                                    else
+                                        echo "<td>P. MORAL</td>";
+                                //PARA ESTATUS EN PADRONES
+                                else if ($campos == "estatus")
+                                    if ($model->$campos == "0")
+                                        echo "<td>INACTIVO</td>";
+                                    else
+                                        echo "<td>ACTIVO</td>";
+                                //PARA ESTADO DE LOS AVISOS
+                                else if ($campos == "estado_aviso")
+                                    switch ($model->$campos) {
+                                        case "P":
+                                            echo "<td>PARA IMPRIMIR</td>";
+                                            break;
+                                        case "I":
+                                            echo "<td>IMPRESA</td>";
+                                            break;
+                                        case "E":
+                                            echo "<td>ENTREGADA</td>";
+                                            break;
+                                        case "C":
+                                            echo "<td>CANCELADA</td>";
+                                            break;
+                                        case "R":
+                                            echo "<td>NO FUE ENTREGADA</td>";
+                                            break;
+                                    } else
+                                    echo "<td>" . $model->$campos . "</td>";
+                            endforeach;
+                            ?>
+                            <td align="center">
+                                <?php
+                                if (isset($calendar)) {
+                                    $ancho = "width:65px";
+                                } else {
+                                    $ancho = "width:60px";
+                                }
+                                ?>
+                                <div style="<?php echo$ancho; ?>">
+                                    <?php
+                                    if (isset($ctrleditar)) {
+                                        echo Html::linkAction($ctrleditar . $model->id, Html::img('pencil_32.png', 'cancel', 'style="text-align:center;width:15px; padding:2px;"'));
+                                    }
+                                    ?>
+                                   
+                                    <?php
+                                    if ($campos == "estatus") {
+                                        if ($model->$campos == "1") {
+                                            if (isset($editandoAct)) {
+                                                echo Html::linkAction($editandoAct . $model->id, Html::img('pencil_32.png', 'cancel', 'style="text-align:center;width:15px; padding:2px;"'));
+                                            }
+                                        }
+                                    }
+                                    ?>                                    
+                                    <?php
+                                    if ($campos == "ESTADO") {
+                                        if ($model->$campos == "Activo") {
+                                            if (isset($editandoAct)) {
+                                                echo Html::linkAction($editandoAct . $model->id, Html::img('pencil_32.png', 'cancel', 'style="text-align:center;width:15px; padding:2px;"'));
+                                            }
+                                            if (isset($ctrlbloquear)) {
+                                                echo Html::linkAction($ctrlbloquear . $model->id, Html::img('bloquear.png', 'cancele', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Bloquear  el Usuario?\')"'));
+                                            }
+                                            
+                                    if (isset($eliminar)) {
+                                        echo Html::linkAction($eliminar.$tipoVale.'/'. $model->id, Html::img('close_32.png', 'cancel', 'style="text-align:center;width:15px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"'));
+                                    }
+                                  
+                                        } else if ($model->$campos == "Inactivo") {
+                                            ?>
+                                            <?php
+                                            if (isset($ctrldesbloquear)) {
+                                                echo Html::linkAction($ctrldesbloquear . $model->id, Html::img('desbloquear.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Desbloquear  el Usuario?\')"'));
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($calendar)) {
+                                        echo Html::linkAction($calendar . $model->id, Html::img('calendar1.png', 'cancel', 'style="text-align:center;width:15px;padding:2px;"'));
+                                    }
+                                    ?>
+
+                                    <?php
+                                    if (isset($vale)) {
+                                        echo Html::linkAction($vale.$tipoVale.'/'.$model->id, Html::img('printer.png', 'cancel', 'style="text-align:center;width:17px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir éste Vale?\'))window.open(this.href,this.target);return false;"'));
+                                    }
+                                    ?>
+
+                                    <?php
+                                    if (isset($entrega)) {
+                                        echo Html::linkAction('avisosEntregados/' . $model->id, Html::img('check.png', 'cancel', 'style="text-align:center;width:15px;padding:1px;"'), 'rel="shadowbox;width=850;height=450;"');
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($cancelar)) {
+                                        echo Html::linkAction('cancelarAvisos/' . $model->id . '', Html::img('cancel.png', 'cancel', 'style="text-align:center;width:15px;padding:1px;"'), 'rel="shadowbox;width=850;height=450;"');
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($activarAvisos)) {
+                                        echo Html::linkAction('activarAvisos/' . $model->id . '', Html::img('add.png', 'cancel', 'style="text-align:center;width:15px;padding:1px;"'), 'rel="shadowbox;width=850;height=450;"');
+                                    }
+                                    ?>
+                                    <?php
+                                    if (isset($envio)) {
+                                        echo Html::linkAction('envio/' . $model->id . '', Html::img('envio.png', 'cancel', 'style="text-align:center;width:20px;padding:1px;" title="Consultar Datos de Envio"'), 'rel="shadowbox;width=650;height=370;" ');
+                                    }
+                                    ?>
+                                    <?php
+                                    if ($campos == "estatus") {
+                                        if ($model->$campos == "1") {
+                                            if (isset($ctrlInactivo)) {
+                                                echo Html::linkAction($ctrlInactivo . $model->id, Html::img('bloquear.png', 'cancele', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea dar de baja?\')"'));
+                                            }
+                                        } else if ($model->$campos == "0") {
+                                            ?>
+                                            <?php
+                                            if (isset($ctrlActivo)) {
+                                                echo Html::linkAction($ctrlActivo . $model->id, Html::img('desbloquear.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea activarlo?\')"'));
+                                            }
+                                        }
+                                    }
+                                    
+                                    if (isset($reactivarEmpleado)) {
+                                        echo Html::linkAction($reactivarEmpleado . $model->id, Html::img('desbloquear.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea activar al empleado?\')"'));
+                                    }
+                                    ?>
+
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br  />
+<script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(".display").dataTable({ 
+          
+            "bAutoWidth": true,
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "aProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encuentran resultados",
+                "sInfo": "Mostrando desde _START_ hasta _END_ registros",
+                "sInfoEmpty": "Mostrando desde 0 hasta 0 de 0 registros",
+                "sInfoFiltered": "(filtrando de _MAX_ registros en total)",
+                "sSearch": "Buscar",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Ultimo"
+                }
+            }
+        });
+    });
+    Shadowbox.init({
+             overlayColor:   "#000",
+              overlayOpacity: '0.6',
+              modal:          true,
+              handleOversize: "rezise",
+              enableKeys:     false,
+              onClose:        function(){                 
+                              }
+          });
+</script>

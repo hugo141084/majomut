@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+	<title>LOANS2GO | Loans HTML Template</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="loans HTML Template">
+	<meta name="keywords" content="loans, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<!-- Favicon -->
+	<link href="<?php echo PUBLIC_PATH ?>img/favicon.ico" rel="shortcut icon"/>
+
+	<!-- Google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
+ 
+	<!-- Stylesheets -->
+	
+        
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+    <div id="preloder">
+		<div class="loader"></div>
+	</div>
+	<!-- Page Preloder -->
+	
+
+	<!-- Header Section -->
+	
+	<!-- Header Section end -->
+
+	<!-- Hero Section end -->
+        <section class="hero-section" style="position: initial" >
+		<div class="container">
+                   <div class="hero-slider ">
+                <img style="max-width: none"   src="<?php echo PUBLIC_PATH ?>img/hero-slider/3.jpg"  />
+                
+            </div> 
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="hs-text">
+						<h2>Unión Majomut</h2>
+						<p>Es una organización sin fines de lucro que agrupa a cerca de 1,000 familias de productores de café de 35 comunidades indígenas, de las etnias Tsotzil y Tseltal, de la región de los Altos de Chiapas, México.</p>
+						
+					</div>
+				</div>
+				<div class="col-lg-6">
+					
+                                       <?php     echo Form::open("index/index", 'POST', 'name="loguin" class="hero-form"'); 
+    echo Form::hidden("mode", "", "auth"); ?>
+						<div class="form-group  ">
+             <label class="description text-white" for="usr" ><i class="glyphicon glyphicon-user"></i>&nbsp;USUARIO:</label>
+             <?php echo Form::text('login', 'type="text" class="form-control" placeholder="Ingrese su nombre de usuario" required  title="Ingrese su nombre de usuario es obligario para iniciar sesión" id="usr"'); ?>
+</div>
+						<div class="form-group">
+  <label class="description text-white" for="pwd"><i class="glyphicon glyphicon-eye-open"></i>&nbsp;PASSWORD:</label>
+  <?php echo Form::pass('clave', 'type="password" class="form-control" placeholder="Ingrese su contraseña" required  title="Ingrese su contraseña es obligario para iniciar sesión" id="pwd" '); ?>
+ 
+                                                </div>
+                                    <div class="col-md-12 " >
+						<?php echo Form::submit('Ingresar', 'class=" btn btn-success btn-lg btn-block"'); ?>
+</div>
+					 <?php echo Form::close(); ?>
+				</div>
+			</div>
+		</div>
+            
+		
+	</section>
+	
+	
+
+	</body>
+</html>

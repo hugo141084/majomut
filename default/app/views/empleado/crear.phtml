@@ -1,0 +1,449 @@
+<?php 
+View::content(); 
+
+?>
+
+<?php Tag::css('demo_page'); ?>
+<?php Tag::css('demo_table'); ?>
+<?php Html::includeCss() ?>
+<?php echo Tag::js('jquery.dataTables.min'); ?>
+
+<?php echo Html::img('top.png','','id="top" style="width:100%"');?>
+<div id="form_container" style="width:100%">
+
+    <h1><a>Altas</a></h1>
+
+    <?php if(isset($llamada)){
+        echo Form::open("empleado/".$accion."/asiento" ,'POST','id=form1');
+    }else {
+        echo Form::open("empleado/".$accion  ,'POST','id=form1');
+    } ?>
+    <div class="form_description">
+        <?php if ($accion=='crear'){ echo "<h2>Alta de Empleados</h2>";}else { echo"<h2>Actualizaci&oacute;n de Empleados</h2>"; } ?>
+    </div>
+    
+    <?php 
+    if ($accion=='editar'){
+        echo Form::hidden('empleado.id');
+        echo Form::hidden('empleado.estatus');
+    }
+   
+    ?>
+            
+    <div id="form">
+      <ul>
+        <li>
+            <label class="description">NOMBRE DEL EMPLEADO:</label>
+            <div class="tres_a">
+                <?php echo Form::text('empleado.nombre','type="text" required  class="element text medium"  ');?>
+                <label>*Nombre </label>
+            </div>
+            <div class="tres_b">
+                <?php echo Form::text('empleado.ape_pat','type="text" required class="element text medium"  ');?>
+                <label>*Apellido Paterno</label>
+            </div>
+            <div class="tres_b">
+                <?php echo Form::text('empleado.ape_mat','type="text" class="element text medium"  ');?>
+                <label>Apellido Materno</label>
+            </div>
+        </li>
+        
+        <li class="section_break"></li>
+        <li id="li_2" >
+            <label class="description">DATOS DE ORIGEN:</label>
+            <div class="tres_a">
+                <?php $arrEstado = array(""=>"Seleccione...","AS"=>"AGUASCALIENTES","BC"=>"BAJA CALIFORNIA NTE.","BS"=>"BAJA CALIFORNIA SUR","CC"=>"CAMPECHE","CL"=>"COAHUILA","CM"=>"COLIMA","CS"=>"CHIAPAS","CH"=>"CHIHUAHUA","DF"=>"CIUDAD DE MÉXICO","DG"=>"DURANGO","GT"=>"GUANAJUATO","MN"=>"MICHOACAN","MS"=>"MORELOS","NT"=>"NAYARIT","NL"=>"NUEVO LEON","OC"=>"OAXACA","PL"=>"PUEBLA","QT"=>"QUERETARO","QR"=>"QUINTANA ROO","SP"=>"SAN LUIS POTOSI","SL"=>"SINALOA","SR"=>"SONORA","TC"=>"TABASCO","TS"=>"TAMAULIPAS","TL"=>"TLAXCALA","VZ"=>"VERACRUZ","YN"=>"YUCATAN","ZS"=>"ZACATECAS","GUA"=>"GUATEMALA","SM"=>"SERV. EXTERIOR MEXICANO","NE"=>"NACIDO EN EL EXTRANJERO");?>
+                <?php echo Form::Select('empleado.estado_nacimiento', $arrEstado,'type="text" class="element text medium"','OC'); ?>      
+                <label>Lugar de Nacimiento</label>
+            </div>
+
+            <div class="tres_b">
+                <?php if ($accion=='crear'){$select='0';}else{$select=$empleado->sexo;}?>
+                <?php $arregloSexo = array(''=>'Seleccione...','H'=>'MASCULINO','M'=>'FEMENINO');?>
+                <?php echo Form::Select('empleado.sexo', $arregloSexo,'type="text" class="element text medium"',$select); ?>       
+                <label>Sexo</label>
+            </div>
+            
+            <div class="tres_b">
+                <?php if ($accion=='editar'){$empleado->fecha_nac=strftime("%d-%m-%Y", strtotime($empleado->fecha_nac));}?> 
+                <?php echo  Form::text('empleado.fecha_nac','class="element text" style="width:87px"',"yearRange: '-100y:c+nn'");?>
+                <label>Fecha de Nacimiento</label>
+            </div>
+        </li>
+
+        <li class="section_break"></li>
+        <li  id="div_rfc">
+            <label class="description">DATOS DE IDENTIFICACI&Oacute;N:</label>
+            <div class="tres_a" >
+                <?php echo Form::text('empleado.rfc','type="text" required class="element text medium"  ');?>
+                <label>*R.F.C.</label>
+            </div>
+
+            <div class="tres_b">
+                <?php echo Form::text('empleado.curp','type="text" class="element text medium"  ' );?>
+                <label>C.U.R.P.</label>
+            </div>
+            
+            <div class="tres_b">
+                <?php echo Form::text('empleado.ife','class="element text medium"  ');?>
+                <label>I.F.E</label>
+            </div>
+            <br />
+            
+            <div class="tres_a">
+                <?php echo Form::text('empleado.numero_seguro','class="element text medium"  ');?>
+                <label>N.S.S.</label>
+            </div>
+
+            <div class="tres_b">
+                <?php if ($accion=='crear'){$select='0';}else{$select=$empleado->estado_civil;}?>
+                <?php $arregloSexo = array('Seleccione...','SOLTERO'=>'SOLTERO','CASADO'=>'CASADO','DIVORCIADO'=>'DIVORCIADO','VIUDO'=>'VIUDO');?>
+                <?php echo Form::Select('empleado.estado_civil', $arregloSexo,'class="element text medium"',$select); ?>       
+                <label>Estado civil</label>
+            </div>
+
+            <div class="tres_b">
+                <?php if ($accion=='crear'){$select='0';}else{$select=$empleado->tipo_sangre;}?>
+                <?php $arregloTipoS = array('Seleccione...','O-'=>'O-','O+'=>'O+','A−'=>'A−','A+'=>'A+','B−'=>'B−','B+'=>'B+','AB−'=>'AB−','AB+'=>'AB+');?>
+                <?php echo Form::Select('empleado.tipo_sangre', $arregloTipoS,'class="element text" ',$select); ?>
+                <label>Tipo de Sangre</label>
+            </div>
+        </li>
+
+        <li class="section_break"></li>
+        
+        
+        <li>
+            <div class="tres_a">
+                <?php if ($accion=='editar'){$empleado->fecha_ingreso=strftime("%d-%m-%Y", strtotime($empleado->fecha_ingreso));}?>
+                <?php echo Form::text('empleado.fecha_ingreso','class="element text" required style="width:87px"');?>
+               <label>Fecha de Ingreso</label> 
+            </div>
+            <div class="tres_b">
+                <?php if ($accion=='editar'){$empleado->fecha_baja=strftime("%d-%m-%Y", strtotime($empleado->fecha_baja));}?>
+                <?php echo Form::text('empleado.fecha_baja','class="element text" style="width:87px"');?>
+               <label>Fecha de Término</label> 
+            </div>
+        </li>
+
+        <li class="section_break"></li>
+        <li id="li_5" >
+            <label class="description">DATOS COMPLEMENTARIOS:</label>
+            <div class="left">
+                <?php echo Form::Select('empleado.estado_residencia', $arrEstado,'type="text" class="element text medium"','OC'); ?>      
+                <label>Estado de residencia</label>
+            </div>
+            <div class="right">
+                <?php echo Form::text('empleado.pais_residencia','class="element text large"  ' );?>
+                <label>País de residencia</label>
+            </div>
+            <div>
+                <?php echo Form::text('empleado.escolaridad','class="element text large"  ' );?>
+                <label>Titulo o Escolaridad</label>
+            </div>
+
+            <div>
+                <?php echo Form::text('empleado.domicilio','class="element text large"  ' );?>
+                <label>Domicilio: Calle, Num., Colonia, Ciudad.</label>
+            </div>
+
+            <div class="left">
+                <?php echo Form::text('empleado.telefono','type="text"  class="element text medium"' );?>
+                <label>Telefono (10 digitos)</label>
+            </div>
+
+            <div class="right">
+                <?php echo Form::text('empleado.correo','type="text" class="element text medium"' );?>
+                <label>Correo Electronico</label>
+            </div>
+            <br /> <br /><br />
+            <span>
+            <label class="description"> * Campos Obligatorios.</label>
+            </span>
+         </li>  
+        
+         <li class="section_break">
+           <div>
+                <?php echo Form::text('empleado.etiqueta','class="element text medium"  ' );?>
+                <label>Etiqueta</label>
+            </div>   
+         </li>
+        
+        
+        
+       
+        
+        <li class="section_break"></li>
+
+        <li class="buttons">
+            <?php echo Form::button("Cancelar", ' id="Cancelar" class="CSSButton" '); ?>
+            <?php echo Form::reset('Reiniciar','class="CSSButton"');?>
+            <?php echo Form::submit((($accion=='crear')?'Guardar':'Actualizar'),'type="submit" id="submitButton" class="CSSButton"'); //?>
+        </li>    
+      </ul>        
+    </div> 
+    <?php echo Form::close();?>
+  </div>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:700px'");?>
+
+<script type="text/javascript">
+
+$().ready(function() {
+      $("#form1").validate({
+        event: 'blur',
+        rules: {
+          'empleado[nombre]': 'required',
+          'empleado[ape_pat]': 'required',
+          'empleado[tipo_nomina]': 'required',
+          'empleado[clasif_administrativa_id]': 'required',
+          'empleado[fecha_ingreso]': 'required'
+       },
+       messages: {
+    	 'empleado[nombre]': {
+            required: "Por favor, ingrese el Nombre del Empleado"
+         },
+         'empleado[ape_pat]': {
+            required: "Por favor, ingrese el Apellido Paterno"
+         },
+         'empleado[tipo_nomina]': {
+            required: "Por favor, ingresa el tipo de nomina del Empleado"
+         }
+      }
+     });
+     
+     $(".display").dataTable({
+            "aaSorting": [],
+            "bAutoWidth": true,
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "aProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encuentran resultados",
+                "sInfo": "Mostrando desde _START_ hasta _END_ registros",
+                "sInfoEmpty": "Mostrando desde 0 hasta 0 de 0 registros",
+                "sInfoFiltered": "(filtrando de _MAX_ registros en total)",
+                "sSearch": "Buscar",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Ultimo"
+                }
+            }
+        });
+    });
+    
+    
+</script>
+
+<script type="text/javascript">
+    
+    $("#empleado_nombre").change(function(){       
+        $("#empleado_nombre").rfc_curp();
+    });
+    $("#empleado_ape_mat").change(function(){       
+        $("#empleado_ape_mat").rfc_curp();
+    });
+    $("#empleado_ape_pat").change(function(){       
+        $("#empleado_ape_pat").rfc_curp();
+    });   
+    $("#empleado_fecha_nac").change(function(){       
+        $("#empleado_fecha_nac").rfc_curp();
+    });
+    $("#empleado_estado_nacimiento").change(function(){       
+        $("#empleado_estado_nacimiento").rfc_curp();
+    });
+    $("#empleado_sexo").change(function(){       
+        $("#empleado_sexo").rfc_curp();
+    });
+    
+    jQuery(function($) {
+        $("#txtMonto").maskMoney({symbol:'$'});
+    });
+    
+    //$.fn.tufuncion = function(tus parametros) { // el resto de instrucciones } 
+    $.fn.rfc_curp= function(){
+        var ape_mat;
+        var ape_pat =   $('#empleado_ape_pat').val();
+        var nombre =   $('#empleado_nombre').val();
+        var fecha_nac =   $('#empleado_fecha_nac').val();
+        var estado_nac =   $('#empleado_estado_nacimiento').val();
+        var sexo =   $('#empleado_sexo').val();
+        var accion =($('#empleado_id').length)? "editar" : "crear";
+        var id_buscado =($('#empleado_id').length)? $('#empleado_id').val() : "NULL";
+        
+        if($('#empleado_ape_mat').val()!="")
+            ape_mat =   $('#empleado_ape_mat').val();
+        else
+            ape_mat="";
+        
+        if($('#empleado_ape_pat').val() && $('#empleado_ape_pat').val() && $('#empleado_fecha_nac').val()){
+        $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'empleado/getRFC_CURP/'; ?>",
+                data: "nombre=" + nombre +"&ape_pat=" + ape_pat +"&ape_mat=" + ape_mat +"&fecha_nac=" + fecha_nac +"&estado_nac=" + estado_nac +"&sexo=" + sexo +"&accion=" + accion + "&id_buscado=" + id_buscado,
+                success: function(html){
+                  $("#div_rfc").html(html);
+                }
+            });
+        }
+     }
+     
+   
+    
+    $("#Cancelar").click(function(){
+     window.location = '<?php echo PUBLIC_PATH."empleado"; ?>';
+        
+    });
+    
+    //VALIDACION CARGOS PRESIDENTE/TESORERO - ADMINISTRADORES
+    $("#empleado_fecha_ingreso").change(function() {
+        validarCargos();
+    });
+    
+     $("#empleado_cargos_id").change(function() {
+        validarCargos();
+    });
+    
+     function validarCargos() {
+        //obtenemos el id seleccionado
+        cargo = $("#empleado_cargos_id").val();
+        fecha_ini = $("#empleado_fecha_ingreso").val();
+        fecha_fin = $("#empleado_fecha_baja").val();
+        
+        //hace la búsqueda                                                                                  
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'empleado/validarCargo/'; ?>",
+            data: {cargo:cargo, fecha_ini:fecha_ini},
+            success: function(html) {
+                $("#validarCargo").html(html);
+                if ($("#cargoId").val()!= $("#cargoIdInicial").val()) {
+                    if ($("#verificar").val()==='1') {
+                        switch($("#tipo").val()){
+                            case '1':
+                                $("#mensajeCargo").text('Ya existe un cargo '+$("#nombreCargo").val()+' para Presidencia, elija otro.');break;
+                            case '2':
+                                $("#mensajeCargo").text('Ya existe un cargo '+$("#nombreCargo").val()+' para Tesoreria, elija otro');break;
+                        }
+                        $("#mensajeCargo").fadeIn("slow");
+                        $('#submitButton').prop('disabled', true);
+                        $('#submitButton').css({'color':'#CCCCCC','cursor':'default'});
+                       return false;
+                    } else {
+                        $("#mensajeCargo").fadeOut();
+                        $('#submitButton').prop('disabled', false);
+                        $('#submitButton').css({'color':'#777777','cursor':'pointer'});
+                        return false;
+                    }
+                }
+            }
+        });
+    }
+    
+    function ejecuta_ajax(datos, div, url){
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: datos,
+            success: function(html) {
+                div.html(html);
+            }
+        });
+    }
+    
+     $("#empleado_clasif_administrativa_id").change(function() {
+        var admivaId = $('#empleado_clasif_administrativa_id').val();
+        var planId   = $('#planId').val();
+        
+        if(admivaId != undefined && planId != undefined){
+            var datos = "planId="+planId+"&admivaId="+admivaId;
+            var div = $("#div_partida");
+            var url = "<?php echo PUBLIC_PATH . 'empleado/cmbPartida/'; ?>";
+            ejecuta_ajax(datos, div, url);
+        } else {
+            alert("Faltan datos");
+        }
+    });
+    
+    function muestra_clave(){
+        var pcp = $('#cmbPartida').val();
+        if(pcp != undefined){
+            var datos = "pcp="+pcp;
+            var div = $("#div_clave");
+            var url = "<?php echo PUBLIC_PATH . 'empleado/clave/'; ?>";
+            ejecuta_ajax(datos, div, url);
+        } else {
+            alert("Faltan datos");
+        }
+    }
+    
+    function muestra_partidas(opt){
+        var datos = "";
+        if(opt==1){
+            var id = $('#empleado_id').val();
+            datos = "id="+id+"&opt="+opt;
+        }
+        var div = $("#detalle_partidas");
+        var url = "<?php echo PUBLIC_PATH . 'empleado/detallePartidas/'; ?>";
+        ejecuta_ajax(datos, div, url);
+    }
+    
+    function agregar(){
+        var pcp   = $('#cmbPartida').val();
+        var monto = $('#txtMonto').val();
+        if(pcp != undefined && monto != undefined){
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "<?php echo PUBLIC_PATH . 'empleado/introduce_partida/'; ?>"+pcp+"/"+monto+"/",
+                    data: {},
+                    success: function(datos){
+                        if(datos.error==1){
+                            jAlert("Esta partida ya ha sido asignada anteriormente", 'Alert Dialog');
+                        } else {
+                            alert("La partida ha sido asignada.");
+                            muestra_partidas();
+                        }
+                    }
+                });
+            } else{
+            alert("Datos incorrectos");
+        }
+     }
+     
+    function quitar(num){
+       if(num!=null){
+            jConfirm('¿Esta seguro de quitar la partida?', 'Confirmation Dialog', function(res) {
+                if(res){
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo PUBLIC_PATH . 'empleado/quita_partida/'; ?>",
+                        data: { num:num },
+                        success: function(html){
+                            muestra_partidas();
+                        }
+                    });
+                }
+            });
+        }
+       else{
+           alert("Datos incorrectos");
+       }
+    }
+    
+</script>
+
+<script type="text/javascript">
+        Shadowbox.init({
+             overlayColor:   "#000",
+              overlayOpacity: '0.6',
+              modal:          true,
+              handleOversize: "rezise",
+              enableKeys:     false,
+              onClose:        function(){ //window.location.reload(); 
+                              <?php //echo Ajax::link('polizas/hola', 'Mostrar Saludo', 'capa_saludo'); ?>
+                              }
+          });
+</script>
+

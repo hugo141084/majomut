@@ -1,0 +1,350 @@
+<?php
+
+Load::lib('tcpdf');
+
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
+ob_end_clean();
+ $pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('');
+$pdf->SetTitle('Reportes');
+$pdf->SetSubject('');
+//================================================================
+//VARIABLES POR DECLARAR
+$numEvento="PENDIENTE";
+//================================================================
+//================ SE GENERAN DATOS DE LA POLIZA  ==================
+$logo='./img/logoReporte.png';
+
+$titulo=' ';
+$subtitulo1=''; 
+$subtitulo2='';
+$subtitulo3='DEL 01 AL  DE  DEL ';
+$usuarioCaptura="";
+$url='';
+
+// set default header data
+
+$pdf->SetHeaderData("", '1', "",  "",'',array(10,10,10));
+   
+// set default footer data
+    
+
+
+$pdf->SetFooterData('',array(190,190,190)," 1a Cerrada de la Era No.1 / Barrio Quinta San Martin|C.P. 29247 /San Cristobal de Las Casas, Chiapas/ 967 678 31 96 y 967 678 81 06 / www.majomut.org / info@majomut.org");
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN,'' , 8));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', 7));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+$pdf->SetMargins(10,5,2);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('5');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+
+
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+$pdf->setPageOrientation('P'); // PDF_PAGE_ORIENTATION---> 'L'= horizontal or 'P'=vertical
+// ---------------------------------------------------------
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+
+    // reciboNomina($dir,$archivo);
+  
+
+// Set font
+// dejavusans is a UTF-8 Unicode font, if you only need to
+// print standard ASCII chars, you can use core fonts like
+// helvetica or times to reduce file size.
+//$pdf->SetFont('dejavusans', , 8, , true);
+
+// Add a page
+// This method has several options, check the source code documentation for more information.
+$pdf->AddPage();
+   
+    ?>
+<?php
+ 
+    //set it to writable location, a place for temp generated PNG files
+
+
+//ofcourse we need rights to create temp dir
+
+
+
+//$longitud = count($datos);
+// Set some content to print
+$html="<style>
+        .mitabla{
+		font-size: 11px; 
+		color: #333; 
+	}
+        .mitabla1{
+		font-size: 9px; 
+		color: #333; 
+	}
+        .mitabla2{
+		font-size: 9px; 
+		color: #333; 
+                font:bold;
+	}
+        .resp{
+        
+        font-size:18px;
+        font-family:Courier,monospace;
+        font:bold;
+     }
+     .respTi{
+        
+        font-size:9px;
+        font-family:Courier,monospace;
+     }
+        </style>";
+
+
+
+
+
+$html .='
+ <table class="mitabla" >
+<thead>
+<tr>
+<th>
+</th>
+<th>
+</th>
+<th>
+</th>
+</tr>
+<tr>
+<th align="center" style="width: 20% ">
+
+<img src="'.$logo.'" width="100" height="110"  />
+</th>
+<th align="left" style="width: 80%; font-weigth:18px;">
+
+  <hr>
+<font align="center" class="resp"><br>
+UNION DE PRODUCTORES  ORGANICOS <br>
+BENEFICIO MAJOMUT, S. DE P.R. DE R.L <br>
+R.F.C.  UPO111114BJ7 <br>
+</font>
+ <hr>  
+ 
+<font align="center" class="resp"><br>
+VALE DE SALIDA DE CAFÉ VERDE<br>
+</font>
+</th>
+
+</tr>
+</thead>
+ <tbody>
+          <tr>
+          <td colspan="3">   
+          
+
+ 
+
+
+<table style="width: 100%" border="0" class="mitabla">   
+    <tr >
+        <td style="width: 15%" border="0" >   FOLIO ID:         </td>
+        <td style="width: 15%" border="0" >             </td>
+        <td style="width: 15%" border="0" >             </td>
+        <td style="width: 25%" border="0" >             </td>
+        <td style="width: 15%" border="0" >     No.:        </td>
+        <td style="width: 15%" border="0" >             </td>
+    </tr>
+       <tr>
+        <td  >          Organización:         </td>
+        <td  >Majomut </td>  
+        <td  >             </td>  
+        <td  >             </td>  
+        <td  >          Fecha:         </td>  
+        <td  >             </td>  
+    </tr>
+    <tr>
+        <td  >          Calidad:         </td>
+        <td  > </td>  
+        <td  >             </td>  
+        <td  >             </td>  
+        <td  >          Ciclo:         </td>  
+        <td  >             </td>  
+    </tr>
+    
+   <tr>
+        <td  >          Cliente:         </td>
+        <td  > </td>  
+        <td  >             </td>  
+        <td  >             </td>  
+        <td  >                   </td>  
+        <td  >             </td>  
+    </tr>
+     <tr>
+        <td  >          Destino:         </td>
+        <td  > </td>  
+        <td  >             </td>  
+        <td  >             </td>  
+        <td  >                 </td>  
+        <td  >             </td>  
+    </tr> 
+ </table>
+
+ </td>
+</tr>
+
+<tr>
+<td colspan="3">
+
+</td>
+</tr>
+
+<tr>
+<td colspan="3">
+<table style="width: 100%" border="1" class="mitabla1">
+<tr align="center" bgcolor="#CCCCCC" class="respTi">
+<td style="width: 5%">#</td>
+<td style="width: 10%">Lote</td>
+<td style="width: 10%">Tipo Preparacion</td>
+<td style="width: 45%">Presentación</td>
+<td style="width: 10%">Kilos Brutos</td>
+<td style="width: 10%">Tara</td>
+<td style="width: 10%">Kilos Netos</td>
+</tr>';
+$i=1;
+foreach ($detalleEntrega as $datos){
+  $datos->FECHA_CADUCIDAD=  strftime("%d-%m-%Y", strtotime($datos->FECHA_CADUCIDAD));
+ if($datos->FECHA_CADUCIDAD=="31-12-1969"){
+  $FECHA_CADUCIDAD="";   
+ }else{
+    $FECHA_CADUCIDAD =$datos->FECHA_CADUCIDAD;
+ }
+     
+$html .=' <tr align="center">
+<td style="width: 5%; height: 20px;" class="resp">'.$i.'</td>
+<td style="width: 10%" class="resp">'.$datos->CANTIDAD.'</td>
+<td style="width: 10%" class="resp">'.$datos->UNIDAD_SALIDA.'</td>
+<td style="width: 45%" class="resp">'.$datos->DESCRIPCION.'</td>
+<td style="width: 10%" class="resp">'.$datos->LOTE_SERIE.'</td>
+<td style="width: 10%" class="resp">'.$FECHA_CADUCIDAD.'</td>
+<td style="width: 10%" class="resp">'.$datos->NUMERO_INVENTARIO.'</td>
+</tr>'; 
+$i++;
+}
+
+if($i<5){
+for($j=$i;$j<=5;$j++){
+ $html .=' <tr align="center">
+<td style="width: 5%;height: 19px;"></td>
+<td style="width: 10%"></td>
+<td style="width: 10%"></td>
+<td style="width: 45%"></td>
+<td style="width: 10%"></td>
+<td style="width: 10%"></td>
+<td style="width: 10%" bgcolor="#CCCCCF"></td>
+</tr>';    
+}    
+}
+$html .=' <tr align="center" bgcolor="#CCCCCC">
+<td ></td>
+<td style="width: 10%"></td>
+<td style="width: 10%"></td>
+<td style="width: 45%"></td>
+<td style="width: 10%"></td>
+<td style="width: 10%"></td>
+<td style="width: 10%"></td>
+</tr>'; 
+$html .='</table> </td></tr>';
+
+$html .=' <tr><td colspan="3"> <table style="width: 100%" border="0" class="mitabla">
+<tr>
+<td> </td>
+</tr>
+</table>
+ 
+<table style="width: 100%" border="0" class="mitabla">
+<tr class="respTi">
+<td style="width: 14%" border="0"> Observaciones:</td>
+<td border="1" style="width: 86%"> '.$datosEntrega->OBSERVACION.' </td>
+</tr>
+</table> 
+
+    </td>   </tr>';    
+ 
+ $html .='<tr><td colspan="3"><table style="width: 100%" border="0" class="mitabla1">
+<tr>
+<td> </td>
+</tr>
+</table>
+ <table style="width: 100%" border="1" class="mitabla2">
+<tr align="center">
+<td style="width: 33%"> ENTREGO <BR>
+<BR>
+<BR>
+<BR>
+<BR>
+__________________________________
+<BR>
+'.$datosUsuario->ETIQUETA.' '.$datosUsuario->nombreEmpleado.' <BR>
+    Consejo de Vigilancia
+</td>
+<td style="width: 33%"> CONDUCTOR <BR>
+<BR>
+<BR>
+<BR>
+<BR>
+__________________________________
+<BR>
+'.$datosEmpleado->ETIQUETA.' '.$datosEmpleado->NOMBRE.' <BR>
+    CHOFER
+</td>
+<td > RECIBIO <BR>
+<BR>
+<BR>
+<BR>
+<BR>
+__________________________________
+<BR>'.$datosSalida->comercializacion.' <BR>
+    COMERCIALIZACIÓN
+</td>
+</tr>
+ 
+</table> 
+</td>
+</tr> 
+</tbody>
+</table>
+      ';    
+   
+  
+//print_r($datos);
+  
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+
+// ---------------------------------------------------------
+
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+ //$pdf->Output('reporte.pdf', 'I');
+
+
+   ob_end_clean();  
+
+ $pdf->Output('polizaPDF.pdf', 'I');
+
+?>
+

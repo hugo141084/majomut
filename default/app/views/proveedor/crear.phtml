@@ -1,0 +1,159 @@
+
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+    <br>
+    <h1><a></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Agregar Proveedor" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                        echo Html::linkAction('',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    
+                    
+                    ?>
+                </div>
+            </div>
+    </div>
+    <?php echo Form::open("proveedor/" . $accion); ?>
+ <?php echo Form::hidden("proveedor.id"); ?>
+
+   
+    
+    <div id="margen" >
+        
+        
+        <div class="col-sm-12">                  
+    <div class="panel panel-primary">
+        <div class="panel-heading">Datos </div>
+        <div class="panel-body">
+           <div class="form-row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">   Clave:
+                        </div>
+                        
+                        <?php echo Form::text('proveedor.clave', 'class="form-control" '); ?>
+                       
+
+                    </div>
+                </div>
+            </div> 
+
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">     Nombre/razon social:    
+                        </div>
+                        <?php echo Form::text('proveedor.nombre', 'class="form-control"  '); ?>
+                    </div>
+                </div>
+            </div> 
+     
+            
+            
+</div> 
+            <div class="form-row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">   R.F.C:
+                        </div>
+                        
+                        <?php echo Form::text('proveedor.rfc', 'class="form-control" '); ?>
+                       
+
+                    </div>
+                </div>
+            </div> 
+
+            <div class="col-sm-7">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">     Correo Electronico:    
+                        </div>
+                        <?php echo Form::text('proveedor.email', 'class="form-control"  '); ?>
+                    </div>
+                </div>
+            </div> 
+     
+            
+            
+</div>
+            <div class="col-sm-7">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">   Direccion:
+                        </div>
+                        
+                        <?php echo Form::textarea('proveedor.direccion', 'class="form-control" '); ?>
+                       
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Telefonos:
+                        </div>
+                        
+                        <?php echo Form::textarea('proveedor.telefono', 'class="form-control" '); ?>
+                       
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-7">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">   Comentarios:
+                        </div>
+                        
+                        <?php echo Form::textarea('proveedor.comentarios', 'class="form-control" '); ?>
+                       
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+        </div>
+        
+        
+        
+        
+ 
+        </br>
+            <?php $url = "'" . PUBLIC_PATH . "producto'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+            <?php echo Form::reset('Reiniciar', 'class="CSSButton"'); //Crea un botón con el texto 'reiniciar';?>
+            </td>
+            <td width="33%">
+            <?php echo Form::submit((($accion == 'crear') ? 'Guardar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            </td>
+        </tr>
+     </table>
+     
+  </div> 
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>
+
+
+
+   

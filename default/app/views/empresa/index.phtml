@@ -1,0 +1,60 @@
+<?php View::content(); ?>
+<br>
+  <div class="row">
+     <div class="col-md-12">
+       
+     </div>
+  </div>
+   <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>Agregar Empresa de Envios</span>
+         </strong>
+        </div>
+        <div class="panel-body">
+          <?php echo Form::open("empresa/index/"); ?>
+            <div class="form-group">
+                Empresa <br> 
+             <?php echo Form::text('empresa.nombre', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Direccion <br> 
+             <?php echo Form::text('empresa.direccion', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Telefono <br> 
+           <?php echo Form::text('empresa.telefono', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Numero de cuenta <br> 
+           <?php echo Form::text('empresa.numero_cuenta', ' class="element text"  '); ?>
+        </div>
+              <div class="form-group">
+                Clabe Interbancaria <br> 
+           <?php echo Form::text('empresa.clabe_interbancaria', ' class="element text"  '); ?>
+        </div>
+              
+            <button type="submit" name="add_cat" class="btn btn-primary">Agregar Empresa</button>
+        <?php echo Form::close(); ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>
+          <span class="glyphicon glyphicon-th"></span>
+          <span>Lista de Empresas de Envios</span>
+       </strong>
+      </div>
+        <div id="form_container" style="width:100%">   
+<?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos));  ?>
+</div>
+    </div>
+    </div>
+   </div>
+  
+

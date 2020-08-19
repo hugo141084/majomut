@@ -1,0 +1,260 @@
+<?php
+load::lib('tcpdf');
+
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
+ob_end_clean();
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('');
+$pdf->SetTitle('Reportes');
+$pdf->SetSubject('');
+//================================================================
+//VARIABLES POR DECLARAR
+$numEvento="PENDIENTE";
+//================================================================
+//================ SE GENERAN DATOS DE LA POLIZA  ==================
+$logo='img/logo.jpg';
+$titulo='INSTITUTO ESTATAL DE EDUCACION PARA ADULTOS';
+$subtitulo1=$tituloReporte;
+$subtitulo2='ALMACEN ESTATAL';
+$url='';
+
+// set default header data
+/*if ($miles==1){
+    $pdf->SetHeaderData($logo, 11, $titulo , $subtitulo1."\n".$subtitulo2."\n  (en miles de pesos)" ,"\n".$url,'',array(190,190,190));
+}else{*/
+    $pdf->SetHeaderData($logo, 11, $titulo , $subtitulo1."\n".$subtitulo2,$url,'',array(190,190,190));
+//}
+    
+
+// set default footer data
+$pdf->SetFooterData('',array(190,190,190),"");
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN,'' , 8));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+$pdf->SetMargins(10,20,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('5');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+
+
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+$pdf->setPageOrientation('P'); // PDF_PAGE_ORIENTATION---> 'L' or 'P'
+// ---------------------------------------------------------
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+// Set font
+// dejavusans is a UTF-8 Unicode font, if you only need to
+// print standard ASCII chars, you can use core fonts like
+// helvetica or times to reduce file size.
+//$pdf->SetFont('dejavusans', , 8, , true);
+
+// Add a page
+// This method has several options, check the source code documentation for more information.
+$pdf->AddPage();
+
+
+// Set some content to print
+$html ='<style>
+	.negrita{
+            font-size: 10px; 
+            color: #333;
+            font-weight:bold;
+	}
+        .nonegrita{
+            font-size: 10px; 
+            color: #333;
+            text-align: center; vertical-align: bottom;
+        }
+        .nonegrita1{
+            font-size: 7px; 
+            color: #333;
+            text-align: center; vertical-align: bottom;
+        }
+        .divcentrar{
+            font-size: 10px; 
+            color: #333;
+           
+        }
+        .mitabla{
+		font-size: 10px; 
+		color: #333; 
+	}
+        </style>
+
+
+
+    
+<table align="left" width="100%" border="0">
+    
+    <thead>
+     <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="20%" align="left" >Desde el dia:  '.strftime("%d-%m-%Y", strtotime($fechaInicial)).'</td>
+        <td width="20%" align="center" ></td>
+        <td width="20%" align="center" ></td>
+        <td width="20%" align="center" ></td>
+        <td width="20%" align="center" >Hasta el dia:  '.strftime("%d-%m-%Y", strtotime($fechaFinal)).'</td>
+        
+      </tr> 
+      </thead>
+      </table>
+      <table align="left" width="100%" border="0">
+   <tr class="negrita">
+        <td width="10%" align="center"> </td>
+        <td  align="center" width="55%"> </td>
+        <td  align="center" width="20%"> </td>
+        <td  align="center" width="15%"> </td>
+    </tr>
+    </table>
+      <table align="left" width="100%" border="0">
+    
+    <thead>
+  <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="10%" align="left" style="border-top:1px dashed #000000;">Producto</td>
+        <td  width="50%" colspan="2" align="center" style="border-top:1px dashed #000000;">Descripción </td>
+       <td width="40%" colspan="3" align="center" style="border-top:1px dashed #000000;">Almacen </td>
+       
+      </tr> 
+      <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="10%" align="left" style="border-bottom:1px dashed #000000;">Fecha</td>
+        <td width="30%" align="center" style="border-bottom:1px dashed #000000;">Docto</td>
+        <td width="20%" align="center" style="border-bottom:1px dashed #000000;">T. Movi.</td>
+        <td width="20%" align="center" style="border-bottom:1px dashed #000000;">Movimiento</td>
+        <td width="10%" align="center" style="border-bottom:1px dashed #000000;">Cantidad</td>
+       <td width="10%" align="center" style="border-bottom:1px dashed #000000;">Existencia</td>
+      </tr>
+      </thead>
+      
+     
+     
+      
+    
+    ';
+$clasificacionId="0";
+
+$total=0;
+$html.= '
+        
+            <tr class="negrita">
+                    <td width="10%"><div class="divcentrar"></div></td>
+                    <td width="50%" align="left"></td>
+                    <td width="40%"><div class="divcentrar"></div></td>
+                    
+            </tr>
+            ';
+foreach ($movimientos as $dato){
+    
+    
+    $html.= '
+        
+            <tr class="negrita">
+                    <td width="10%"><div class="divcentrar">'.$dato->clave.'</div></td>
+                    <td width="50%" align="left">'.'  '.$dato->descripcion.'</td>
+                    <td width="40%"><div class="divcentrar">'.$dato->descripcion_almacan.'</div></td>
+                    
+            </tr>
+            ';
+    $movi=new movimiento_inventario();
+        $detalle=$movi->detalleMovimiento($dato->producto_id,$dato->id_almacen,$fechaInicial,$fechaFinal);
+       $subtotal=0;
+        foreach ($detalle as $detalleLote){
+           
+             $concepto=Load::model('conceptoMovimiento')->listarXid($detalleLote->tipo_movimiento);
+             if($concepto->tipo_movimiento=="S"){
+             $detalleLote->cantidad=$detalleLote->cantidad * (-1);
+             } 
+             $subtotal+=$detalleLote->cantidad;
+        $html.= '
+            <tr class="nonegrita1">
+                    <td width="10%" align="right">'.strftime("%d-%m-%Y", strtotime($detalleLote->fecha_documento)).'</td>
+                    <td width="30%" align="right">'.$detalleLote->referencia.'</td>
+                    <td width="20%"><div class="divcentrar">'.$concepto->tipo_movimiento.'</div></td>
+                    <td  align="center" width="20%" align="right" >'.$concepto->descripcion.' </td>
+                    <td  width="10%" align="right">'.$detalleLote->cantidad.'</td>
+                    <td  width="10%" align="right">'.$detalleLote->existencia.'</td>    
+            </tr>
+            ';
+        } 
+        $total+=$subtotal;
+      $html.= '
+          
+<tr class="negrita">
+            
+                    <td width="10%" align="right"><div class="divcentrar"> </div></td>
+                    <td width="30%" align="left"></td>
+                    <td width="20%"><div class="divcentrar"></div></td>
+                    <td  width="20%"  ></td>
+                    <td  width="10%"></td>
+                    <td  width="10%"><div class="divcentrar" style="font-weight:bold"></div></td>
+            </tr>
+            <tr class="negrita">
+            
+                    <td width="10%" align="right"><div class="divcentrar"> </div></td>
+                    <td width="30%" align="left"></td>
+                    <td width="20%"><div class="divcentrar"></div></td>
+                    <td  width="20%"  align="right">SubTotal:</td>
+                    <td  width="10%" align="right">'.$subtotal.'</td>
+                    <td  width="10%"><div class="divcentrar" style="font-weight:bold"></div></td>
+            </tr>
+            ';  
+    
+    
+}
+ $html.= '
+     <tr class="negrita">
+                    <td width="10%" align="right"><div class="divcentrar"> </div></td>
+                    <td width="30%" align="left"></td>
+                    <td width="20%"><div class="divcentrar"></div></td>
+                    <td   width="20%"  > </td>
+                    <td  width="10%"></td>
+                    <td  width="10%"><div class="divcentrar" style="font-weight:bold"></div></td>
+            </tr>
+            <tr class="negrita">
+                    <td width="10%" align="right"><div class="divcentrar"> </div></td>
+                    <td width="30%" align="left"></td>
+                    <td width="20%"><div class="divcentrar"></div></td>
+                    <td   width="20%"  align="right">Total: </td>
+                    <td  width="10%" align="right">'.$total.'</td>
+                    <td  width="10%"><div class="divcentrar" style="font-weight:bold"></div></td>
+            </tr>
+            ';  
+$notas = "";
+//$html.= '<tr><td colspan="6"></td></tr></table> <p>
+//$html.= '</table> <p>';
+
+$html.= '   
+        </table> 
+        <p>
+
+
+        <p>
+';
+
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+
+// ---------------------------------------------------------
+
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+ $pdf->Output('imprime_perfil.pdf', 'I');
+
+//============================================================+
+// END OF FILE
+//============================================================+
+?>

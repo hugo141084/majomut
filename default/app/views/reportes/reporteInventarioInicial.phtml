@@ -1,0 +1,251 @@
+<?php
+Load::lib('tcpdf');
+class reporte extends TCPDF {
+
+    private $formato;
+
+    public function setFormato($formato) {
+        $this->formato = $formato;
+    }
+
+    public function Header() {
+        
+    }
+
+    public function Footer() {
+        /* establecemos el color del texto */
+        $this->SetTextColor(0, 0, 0);
+        $this->SetFont('helvetica', 'C', 7);
+
+       
+            $this->SetXY(10, 260);
+            $this->MultiCell(110, 1, "1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. 29247 \n  Teléfonos 967 678 31 96 y 967 678 81 06 \n San Cristóbal de Las Casas, Chiapas.", 0, 'C');
+            $this->SetXY(120, 260);
+            $this->MultiCell(60, 1, "www.majomut.org \n mail: directivosmajomut@prodigy.net.mx \n  info@majomut.org", 0, 'C');
+            $this->SetXY(182, 260);
+            $this->SetFont('helvetica', 'C', 7);
+            $this->MultiCell(30, 1, "" . $this->getAliasNumPage() . " / " . $this->getAliasNbPages() . " \n ", 0, 'C');
+        
+    }
+
+}
+$pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter');
+ob_end_clean();
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('');
+$pdf->SetTitle('Reportes');
+$pdf->SetSubject('');
+//================================================================
+//VARIABLES POR DECLARAR
+$numEvento="PENDIENTE";
+//================================================================
+//================ SE GENERAN DATOS DE LA POLIZA  ==================
+$logo='./img/logoReporte.png';
+$titulo='INSTITUTO ESTATAL DE EDUCACION PARA ADULTOS';
+$subtitulo1='INVENTARIO INICIAL';
+$subtitulo2='ALMACEN ESTATAL';
+$url='';
+
+// set default header data
+/*if ($miles==1){
+    $pdf->SetHeaderData($logo, 11, $titulo , $subtitulo1."\n".$subtitulo2."\n  (en miles de pesos)" ,"\n".$url,'',array(190,190,190));
+}else{*/
+    $pdf->SetHeaderData($logo, 11, $titulo , $subtitulo1."\n".$subtitulo2,$url,'',array(190,190,190));
+//}
+    
+
+// set default footer data
+
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN,'' , 8));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+$pdf->SetMargins(10,5,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('5');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+
+
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+$pdf->setPageOrientation('P'); // PDF_PAGE_ORIENTATION---> 'L' or 'P'
+// ---------------------------------------------------------
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+// Set font
+// dejavusans is a UTF-8 Unicode font, if you only need to
+// print standard ASCII chars, you can use core fonts like
+// helvetica or times to reduce file size.
+//$pdf->SetFont('dejavusans', , 8, , true);
+
+// Add a page
+// This method has several options, check the source code documentation for more information.
+$pdf->AddPage();
+
+
+// Set some content to print
+$html="<style>
+        .mitabla{
+		font-size: 11px; 
+		color: #333; 
+	}
+        .mitabla1{
+		font-size: 9px; 
+		color: #333; 
+	}
+        .mitabla2{
+		font-size: 9px; 
+		color: #333; 
+                font:bold;
+	}
+        .resp{
+        
+        font-size:18px;
+        font-family:Courier,monospace;
+        font:bold;
+     }
+     .respTi{
+        
+        font-size:9px;
+        font-family:Courier,monospace;
+     }
+        </style>";
+
+
+
+
+
+$html .='
+ <table class="mitabla" border="0" >
+<thead>
+
+<tr>
+<th align="center" style="width: 20% ">
+
+<img src="'.$logo.'" width="100" height="110"  />
+</th>
+<th align="left" style="width: 80%; font-weigth:18px;">
+
+  <hr>
+<font align="center" class="resp"><br>
+UNION DE PRODUCTORES  ORGANICOS <br>
+BENEFICIO MAJOMUT, S. DE P.R. DE R.L <br>
+R.F.C.  UPO111114BJ7 <br>
+</font>
+ <hr>  
+ 
+
+</th>
+
+</tr>
+<tr>
+<th colspan="2">
+<font align="center" class="resp">
+<strong>INVENTARIO INICIAL</strong>
+</font>
+</th>
+</tr>
+</thead>
+</table>  
+          
+
+ 
+
+<br>
+<br>
+
+
+<table align="left" width="100%" border="0">
+   <tr class="negrita">
+        <td width="10%" align="center"> </td>
+        <td  align="center" width="55%"> </td>
+        <td  align="center" width="20%"> </td>
+        <td  align="center" width="15%"> </td>
+    </tr>
+    </table>
+    
+<table align="left" width="100%" border="0" cellpadding="3">
+    
+    <thead> 
+  <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="5%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">#</td>
+        <td width="10%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Producto</td>
+        <td width="70%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Descripcion</td>
+        <td width="15%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Existencia Inicial</td>
+        
+      </tr> 
+      </thead>
+      
+     
+     
+      
+    
+    ';
+$clasificacionId="0";
+$tipo=$tipo;
+$total=0;
+$idMovimiento=8;
+$i=1;
+foreach ($existencia as $dato){
+    
+    if($clasificacionId==$dato->id){
+    $clasificacion="";    
+    }else{
+        $clasificacionId=$dato->id;
+        $clasificacion=Load::model('producto')->listarXid($clasificacionId);
+        $clasificacion=$clasificacion->descripcion;
+    }
+    $movi= new movimiento_inventario();
+    $cantidad=  $movi->listarXmovimiento($dato->id,$idMovimiento);
+    if(($cantidad->cantidad=="") || ($cantidad->cantidad == NULL)){$cantidad->cantidad=0;}
+    $html.= '
+            <tr class="nonegrita" style="font-size:12px;text-align:left;font-style:italic">
+                    <td width="5%"  align="right">'.$i.'</td>
+                    <td width="10%"><div class="divcentrar">'.$dato->clave.'</div></td>
+                    <td width="70%" align="left">'.$dato->descripcion.'</td>                    
+                    <td  width="15%"  align="right">'.number_format($cantidad->cantidad, 0, '.', ',').'</td>
+            </tr>
+            ';
+$i++;   
+    
+}
+
+$notas = "";
+//$html.= '<tr><td colspan="6"></td></tr></table> <p>
+//$html.= '</table> <p>';
+
+$html.= '   
+        </table> 
+        <p>
+
+
+        <p>
+';
+
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+
+// ---------------------------------------------------------
+
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+ $pdf->Output('inventarioInicial.pdf', 'I');
+
+//============================================================+
+// END OF FILE
+//============================================================+
+?>

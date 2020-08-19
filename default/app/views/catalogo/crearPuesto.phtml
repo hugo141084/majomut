@@ -1,0 +1,66 @@
+<?php View::content(); ?>
+<?php view::template('fondo'); ?>
+<script>
+    
+    function cerrar(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+    }
+    
+   
+</script>
+<?php
+if($accion=="editarPuesto"){
+if($var==5){
+    echo "<script> cerrar() </script>";
+}
+}
+    
+
+?>
+<body id="principal">
+<h1></h1>    
+<div id="form_container" >
+
+    
+
+    <?php echo Form::open("catalogo/" . $accion); ?>   
+     <?php echo Form::hidden("puesto.ID"); ?>
+    <div id="form">
+      <ul>
+        <li>
+            <label class="description">Puesto:</label>
+            </br>
+            <span>
+                <?php echo Form::text('puesto.DESCRIPCION', ' required class="element text" size="25" style="text-transform:uppercase" onkeyup="Mayusculas(this)"'); ?>
+                </br> <label>Nombre del puesto.</label>
+            </span> 
+        </li> 
+       
+        <li></li>  
+     </ul>        
+            
+        <table width="100%">
+        <tr align="center">
+            <td width="50%">     
+            <?php  echo Form::button("Cancelar", "id='Salir' class='CSSButton'"); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="50%">
+            <?php echo Form::submit((($accion == 'crearPuesto') ? 'Guardar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            </td>
+        </tr>
+     </table>
+     <?php echo Form::close(); ?>
+  </div> 
+</div>
+
+</body>
+<script>
+    $("#Salir").click(function(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+ });
+</script>

@@ -1,0 +1,344 @@
+<?php
+
+load::lib('tcpdf');
+
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
+ob_end_clean();
+ $pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('');
+$pdf->SetTitle('Reportes');
+$pdf->SetSubject('');
+//================================================================
+//VARIABLES POR DECLARAR
+$numEvento="PENDIENTE";
+//================================================================
+//================ SE GENERAN DATOS DE LA POLIZA  ==================
+$logo='img/logoEntrada.png';
+$logo='img/logoSalida.png';
+$logoIzq='img/logo.jpg';
+$logoDer='img/logoD.jpg';
+$titulo=' ';
+$subtitulo1=''; 
+$subtitulo2='';
+$subtitulo3='DEL 01 AL  DE  DEL ';
+$usuarioCaptura="";
+$url='';
+
+// set default header data
+
+$pdf->SetHeaderData("", '1', "",  "",'',array(10,10,10));
+   
+// set default footer data
+    
+
+
+$pdf->SetFooterData('',array(190,190,190),"           ALMACEN ESTATAL / CAMINO DE LA TOMA N|316, SAN MIGUEL, 2a SECCION / C.P. 682070 / TLALIXTAC DE CABRERA, OAXACA. / TEL:5200552");
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN,'' , 8));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', 7));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+$pdf->SetMargins(10,5,2);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('5');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+
+
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+$pdf->setPageOrientation('P'); // PDF_PAGE_ORIENTATION---> 'L'= horizontal or 'P'=vertical
+// ---------------------------------------------------------
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+
+    // reciboNomina($dir,$archivo);
+  
+
+// Set font
+// dejavusans is a UTF-8 Unicode font, if you only need to
+// print standard ASCII chars, you can use core fonts like
+// helvetica or times to reduce file size.
+//$pdf->SetFont('dejavusans', , 8, , true);
+
+// Add a page
+// This method has several options, check the source code documentation for more information.
+$pdf->AddPage();
+   
+    ?>
+<?php
+ 
+    //set it to writable location, a place for temp generated PNG files
+
+
+//ofcourse we need rights to create temp dir
+
+
+
+//$longitud = count($datos);
+// Set some content to print
+$html="<style>
+        .mitabla{
+		font-size: 11px; 
+		color: #333; 
+	}
+        .mitabla1{
+		font-size: 9px; 
+		color: #333; 
+	}
+        .mitabla2{
+		font-size: 9px; 
+		color: #333; 
+	}
+        .resp{
+        
+        font-size:11px;
+        font-family:Courier,monospace;
+     }
+     .respTi{
+        
+        font-size:9px;
+        font-family:Courier,monospace;
+     }
+        </style>";
+
+
+
+
+$html .='
+ <table class="mitabla" >
+<thead>
+<tr>
+<th>
+</th>
+<th>
+</th>
+<th>
+</th>
+</tr>
+<tr>
+<th align="center" style="width: 20% ">
+
+<img src="'.$logoIzq.'" width="100" height="120"  />
+</th>
+<th align="center" style="width: 60%; font-weigth:18px;">
+<BR>
+<BR>
+“2017,  AÑO DEL CENTENARIO DE LA PROMULGACIÓN DE LA CONSTITUCIÓN POLITICA  DE LOS ESTADOS UNIDOS MEXICANOS”
+<BR>
+<BR>
+ ALMACEN GENERAL
+ <BR>
+ <BR>
+ ENTRADA DE MATERIAL
+ <BR>
+ <BR>
+Instituto Estatal de Educación para Adultos      
+</th>
+<th align="center" style="width: 20%">
+<BR>
+<BR>
+<BR>
+
+<img src="'.$logoDer.'" width="120" height="60"  />
+</th>
+</tr>
+</thead>
+ <tbody>
+          <tr>
+          <td colspan="3">   
+          
+
+ 
+    
+
+<table style="width: 100%" border="1" class="mitabla">   
+    <tr >
+    <td>
+<table style="width: 100%" border="0" class="mitabla">   
+    <tr align="right" class="respTi">
+        <td style="width: 95%" border="0" colspan="3">          Vale N°: E - '. str_pad($datosCompra->ID, 8, '0', STR_PAD_LEFT).'         </td>
+        <td style="width: 5%" border="0" >             </td>
+    </tr>
+       <tr class="respTi">
+        <td style="width: 20%" border="0">          Proveedor:         </td>
+        <td style="width: 40%" border="0">: '.$datosProveedor->NOMBRE.' </td>  
+        <td style="width: 15%" border="0">          R.F.C.         </td>  
+        <td style="width: 25%" border="0">: '.$datosProveedor->RFC.'             </td>  
+    </tr>
+     <tr class="respTi">
+        <td>          Direccion      </td>
+        <td>    : '.$datosProveedor->DIRECCION.' </td>
+        <td>               </td>
+        <td>      </td>    
+     </tr>
+    <tr class="respTi">
+        <td>        Tipo de Documento       </td>
+        <td>     : '.$datosCompra->TIPO_DOCUMENTO.'   </td>
+        <td>          Referencia      </td>
+        <td>     : '.$datosCompra->DOCUMENTO.' </td>    
+   </tr> 
+   <tr class="respTi">
+        <td>        Fecha de Documento       </td>
+        <td>     : '.strftime("%d-%m-%Y", strtotime($datosCompra->FECHA_DOCUMENTO)).'     </td>
+        <td>                </td>
+        <td>      </td>    
+   </tr> 
+  <tr class="respTi">
+        <td>        Fecha de Recepción       </td>
+        <td>     : '.strftime("%d-%m-%Y", strtotime($datosCompra->FECHA_DOCUMENTO)).'     </td>
+        <td>    Estado            </td>
+        <td>  : '.$datosCompra->ESTADO.'    </td>    
+   </tr>     
+ </table>
+</td>    
+   </tr>     
+ </table>
+</td>
+</tr>
+<tr>
+          <td colspan="3">
+<table style="width: 100%" border="0" class="mitabla">
+<tr>
+<td> </td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+          <td colspan="3">
+<table style="width: 100%" border="1" class="mitabla1">
+<tr align="center" bgcolor="#CCCCCC" class="resp">
+<td style="width: 5%">#</td>
+<td style="width: 10%">CANTIDAD</td>
+<td style="width: 10%">UNIDAD ENTRADA</td>
+<td style="width: 45%">DESCRIPCION</td>
+<td style="width: 10%">ALMACEN</td>
+<td style="width: 10%">LOTE / SERIE</td>
+<td style="width: 10%">NUM. / INVENTARIO</td>
+</tr>';
+$i=1;
+foreach ($detalleCompra as $datos){
+    
+$html .=' <tr align="center" class="resp">
+<td style="width: 5%; height: 20px;">'.$i.'</td>
+<td style="width: 10%">'.$datos->CANTIDAD.'</td>
+<td style="width: 10%">'.$datos->UNIDAD_ENTRADA.'</td>
+<td style="width: 45%">'.$datos->DESCRIPCION.'</td>
+<td style="width: 10%">'.$datos->ALMACEN.'</td>
+<td style="width: 10%">'.$datos->LOTE_SERIE.'</td>
+<td style="width: 10%">'.$datos->NUMERO_INVENTARIO.'</td>    
+</tr>'; 
+$i++;
+}
+
+if($i<29){
+for($j=$i;$j<=29;$j++){
+ $html .=' <tr align="center" >
+<td style="width: 5%;height: 19px;"></td>
+<td style="width: 10%"></td>
+<td style="width: 10%"></td>
+<td style="width: 45%"></td>
+<td style="width: 10%"></td>
+<td style="width: 10%"></td>
+<td style="width: 10%"></td>
+</tr>';    
+}    
+}
+
+$html .='</table>  ' ;
+
+$html .='</td>
+</tr>
+<tr>
+          <td colspan="3"><table style="width: 100%" border="0" class="mitabla">
+<tr>
+<td> </td>
+</tr>
+</table></td>
+</tr>
+<tr>
+          <td colspan="3">
+ <table style="width: 100%" border="1" class="mitabla">
+<tr>
+<td><table style="width: 100%" border="0" class="mitabla">
+<tr  class="resp">
+<td style="width: 17%"> OBSERVACIONES</td>
+<td>: '.$datosCompra->OBSERVACION.' </td>
+</tr>
+</table> </td>
+</tr>
+</table>     
+       ';    
+ 
+ $html .='</td>
+</tr>
+<tr>
+          <td colspan="3"><table style="width: 100%" border="0" class="mitabla">
+<tr>
+<td> </td>
+</tr>
+</table></td>
+</tr>
+<tr>
+          <td colspan="3">
+ <table style="width: 100%" border="1" class="mitabla2">
+<tr align="center">
+<td style="width: 50%"> RECIBIO <BR>
+<BR>
+<BR>
+<BR>
+<BR>
+_______________________________________
+<BR>
+'.$datosUsuario->ETIQUETA.' '.$datosUsuario->nombreEmpleado.' 
+</td>
+<td> ENTREGO <BR>
+<BR>
+<BR>
+<BR>
+<BR>
+_______________________________________
+<BR>
+'.$datosProveedor->NOMBRE.' 
+</td>
+</tr>
+ 
+</table>     
+    </td>
+</tr> 
+</tbody>
+</table>'
+        ;    
+   
+  
+//print_r($datos);
+  
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+
+// ---------------------------------------------------------
+
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+ //$pdf->Output('reporte.pdf', 'I');
+
+
+     
+
+ $pdf->Output('prueba'.'.pdf','I');
+
+?>
+

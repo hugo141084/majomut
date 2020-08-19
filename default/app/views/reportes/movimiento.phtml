@@ -1,0 +1,238 @@
+<script>
+
+
+function cambiar_color(celda,i){ 
+ var objeto1 = document.getElementById(celda);
+ var  objeto = document.getElementById["alma[]"].value;
+alert(objeto[i])
+if(objeto1.style.backgroundColor=="#ffffff") 
+{
+objeto1.style.backgroundColor="#ccc";
+}
+else if(objeto1.style.backgroundColor=="#ccc") 
+{
+objeto1.style.backgroundColor="#FFFFFF";
+}
+
+return;
+}
+function cambiar_color2(celda){ 
+  var aux =document.forms.consulta["movimiento[]"];
+ var objeto1 = document.getElementById(celda);
+
+
+
+  var total= document.getElementById("total_i").value
+  var entro=1;
+  document.getElementById("movimiento_num_movimiento").value="";
+indice=0
+for(y=0;y<total;y++)
+{
+if((aux[y].checked==1)  )
+{
+	indice=indice+1
+}
+}
+
+z=0
+document.getElementById("movimiento_num_movimiento").value="(";
+for(y=0;y<total;y++)
+{
+	
+if(aux[y].checked==1)
+{
+	z++
+	
+	if ((z)==(indice))
+			{
+			document.getElementById("movimiento_num_movimiento").value=document.getElementById("movimiento_num_movimiento").value+"TM="+aux[y].value+")" 
+			}
+			else
+			{
+			document.getElementById("movimiento_num_movimiento").value=document.getElementById("movimiento_num_movimiento").value+"TM="+aux[y].value+" or " 
+			}
+ entro=0;                       
+}
+   
+}
+if(entro==1){
+ document.getElementById("movimiento_num_movimiento").value=""   
+        }
+
+return;
+}
+
+
+
+
+function selecciona_todo(i){ 
+
+var aux =document.forms.consulta["movimiento[]"];
+
+if (document.getElementById("almacen").value==1)
+{
+for(j=0;j<i;j++)
+ {
+	  
+  var objeto1 = document.getElementById(j);
+  
+ 
+ aux[j].checked=0
+ document.getElementById("movimiento_num_movimiento").value=""
+ }	
+ document.getElementById("almacen").checked=false
+ document.getElementById("almacen").value=0
+}
+else
+{
+
+ for(j=0;j<i;j++)
+ {
+	
+  var objeto1 = document.getElementById(j);
+  
+ 
+  aux[j].checked=1
+  document.getElementById("movimiento_num_movimiento").value=""
+ }
+ document.getElementById("almacen").checked=true
+ document.getElementById("almacen").value=1
+}
+
+ }
+ 
+function cerrar()
+{
+	window.close()
+}
+</script>
+
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+
+    <h1><a>Crear</a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "MOVIMIENTOS AL INVENTARIO" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    
+                </div>
+            </div>
+    </div>
+    <div id="margen" >
+    <?php echo Form::open("reportes/" . $accion,"Post","id='consulta' method = 'POST'"); ?>
+<table width="100%" border="0" class="letra">
+  <tr>
+    <td colspan="5" bgcolor="#adb5ce"><h5><a id="letra1">Periodo </a></h5> </td>
+    </tr>
+  <tr>
+    <td width="20%" align="center">Desde el dia</td>
+    <td ><?php echo form::text('movimiento.fecha_inicio','required style="width:87px"', ''); ?> 
+          </td>
+    <td align="center">Hasta el dia</td>
+    <td ><?php echo form::text('movimiento.fecha_fin','required style="width:87px"',''); ?></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr >
+    <td colspan="5" bgcolor="#adb5ce"><h5><a id="letra1">Producto </a></h5></td>
+    
+    </tr>
+  <tr>
+    <td colspan="5"><label>
+      <?php echo Form::dbSelect("movimiento.producto_id","descripcion",array("producto","listarEntrada"),'Seleccione..','type="text"  class="element text" style="width:325px"');?>
+    </label></td>
+    
+   
+  </tr>
+  
+  
+  <tr>
+    <td colspan="5" bgcolor="#adb5ce"><h5><a id="letra1">Conceptos </a></h5></td>
+    </tr>
+  <tr>
+    <td colspan="2" width="50%">
+        <div >
+      <table width="100%" border="0" class="letra">
+ <tr bgcolor="#CCCCCC" style="height: 30px;">
+    <td width="5%"><label>#</label></td>            
+    <td width="5%"><label></label></td>       
+    <td width="40%"><label>Descripcion</label></td>
+    
+    
+    </tr>
+</table>
+     <table  width="100%"  border="0" class="estilo_almacen"  >
+        <?php  
+		$i=0;
+                $color = "";
+                foreach ($conceptos as $datos)
+{
+if($color == "#ebf3ff"){
+				$color = "#ffffff";
+			}else{
+				$color = "#ebf3ff";
+			}
+		
+
+ echo"<tr bgcolor='".$color."' class=\"letra\" onclick=\"cambiar_color2('".$i."') \">";	
+ echo"<td width=\"5%\" align=\"center\"  >".($i+1)."</td>";
+ echo"<td  width='5%' class=\"letra\"  align=\"center\"><input type='checkbox' name=\"movimiento[]\" value='".$datos->num_cpto."' style=\"visibility:true\" checked=\"checked\"></td>";  
+
+ echo"<td  width='40%' class=\"letra\" >".$datos->descripcion."</td>"; 
+			
+ 
+
+ echo"</tr>";
+$i++;
+ }
+
+
+
+?>
+      </table>
+    </div></td>
+    <td>&nbsp;</td>
+    <td colspan="2" align="center">
+      <label> Titulo reporte </label><br /><br />      
+      <?php echo form::text('movimiento.titulo',"","MOVIMIENTOS AL INVENTARIO");?>
+    </td>
+    </tr>
+  <tr>
+    <td colspan="2" ><label><input type="radio" onClick="selecciona_todo(<?php  echo $i ?>)" name="almacen" id="almacen" value="1" checked="checked" />
+      Habilitar/Deshabilitar todos
+      </label> </td>
+    <td>
+    <?php echo form::hidden('movimiento.num_movimiento',"","");?>
+    </td>
+    <td colspan="2" ><input type="text" name="total_i" id="total_i" value="<?php  echo $i ?>" size="10" style="visibility:hidden"/></td>
+  </tr>
+ 
+  
+</table>
+ <?php $url = "'" . PUBLIC_PATH . "'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="33%">
+            <?php echo Form::submit((($accion == 'movimiento') ? 'Generar' : 'Actualizar'), 'type="submit" class="CSSButton" '); ?>       
+            </td>
+        </tr>
+     </table>   
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>
+
+
+
+ 
