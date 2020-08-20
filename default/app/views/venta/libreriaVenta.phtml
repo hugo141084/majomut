@@ -413,7 +413,9 @@ else if (($operacion) == "MOSTRAR_LISTA_VENTA") {
     <?php
   
     $array_productos=Session::get('array_venta');
- $longitud=count($array_productos);
+ $longitud=0;
+ 
+ if(!empty($array_productos)) $longitud=count($array_productos);
 
  $color="#0098CD";
  $importeTotal=0;
@@ -423,7 +425,7 @@ else if (($operacion) == "MOSTRAR_LISTA_VENTA") {
  $precio=0;
  $impuesto=0;
  $subtotal=0;
- $impuestoTotal =0;
+ $impuestoTotal =0;$cantidadT=0;
     for ($i = 0; $i < $longitud; $i++) {
   
     
@@ -454,6 +456,7 @@ $subtotal=$subtotal+($cantidad*$precio);
 $impuestoTotal= $impuestoTotal+$impuesto;
 $partidaTotal=$cantidad*$precio+$impuesto;
 $importeTotal=$partidaTotal+$importeTotal;
+$cantidadT +=$cantidad;
 	echo "<tr valign=center style='background-color:$color'>";		
         echo "<td width='5%' align='center'>" . $indice . "</td>";
         echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida($i)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
@@ -474,6 +477,9 @@ $importeTotal=$partidaTotal+$importeTotal;
     ?>	
 
     </table>
+                    <?php echo Form::hidden('cantidadT', ' class="form-control"   ',$cantidadT); ?>
+                    <?php echo Form::hidden("iSubtotal","",$subtotal); ?> 
+                     <?php echo Form::hidden("iImpuesto","",$impuestoTotal); ?>                 
                     <?php echo Form::hidden("iTotal","",$importeTotal); ?>
                 </div>
   

@@ -8,10 +8,6 @@
             data: "operacion=" + operacion,
             success: function (html) {
                 $("#resultado").html(html);
-                $("#dsubtotal").val($("#iSubtotal").val());
-                $("#dimpuesto").val($("#iImpuesto").val());
-                $("#dtotal").val($("#iTotal").val());
-                actualizaEnvio();
             }
         });
 
@@ -195,57 +191,6 @@
 
 
     }
-    function actualizaEnvio()
-    {
-var cantidadT = $('#cantidadT').val();
-if((parseInt(cantidadT) > 0 ) && (parseInt(cantidadT)<=1)){ $('#venta_costo_envio').val("154");}
-else if((cantidadT>1) && (cantidadT<=2)) $('#venta_costo_envio').val("182");
-else if((cantidadT>2) && (cantidadT<=5)) $('#venta_costo_envio').val("218");
-else if((cantidadT>5) && (cantidadT<=7)) $('#venta_costo_envio').val("228");
-else if((cantidadT>7) && (cantidadT<=8)) $('#venta_costo_envio').val("244");
-else if((cantidadT>8) && (cantidadT<=10)) $('#venta_costo_envio').val("256");
-else if((cantidadT>10) && (cantidadT<=12)) $('#venta_costo_envio').val("314");
-else if((cantidadT>12) && (cantidadT<=15)) $('#venta_costo_envio').val("334");
-else if((cantidadT>15) && (cantidadT<=20)) $('#venta_costo_envio').val("366");
-else if((cantidadT>20) && (cantidadT<=25)) $('#venta_costo_envio').val("404");
-else if((cantidadT>25) && (cantidadT<=30)) $('#venta_costo_envio').val("446");
-else if((cantidadT>30) && (cantidadT<=40)) $('#venta_costo_envio').val("516");
-else if((cantidadT>40) && (cantidadT<=50)) $('#venta_costo_envio').val("606");
-else if((cantidadT>50) && (cantidadT<=60)) $('#venta_costo_envio').val("828");
-else if((cantidadT>60) && (cantidadT<=70)) $('#venta_costo_envio').val("934");
-else if((cantidadT>70) && (cantidadT<=75)) $('#venta_costo_envio').val("954");
-else if((cantidadT>75) && (cantidadT<=80)) $('#venta_costo_envio').val("1008");
-else if((cantidadT>75) && (cantidadT<=90)) $('#venta_costo_envio').val("1188");
-else if((cantidadT>75) && (cantidadT<=100)) $('#venta_costo_envio').val("1220");
-else if((cantidadT>75) && (cantidadT<=130)) $('#venta_costo_envio').val("1590");
-else if((cantidadT>75) && (cantidadT<=140)) $('#venta_costo_envio').val("1850");
-else if((cantidadT>140)  ) $('#venta_costo_envio').val("2132");
-else $('#venta_costo_envio').val("0");
-
-
-    }
-    function validaMonto(){
-       var monto= $("#importe_recibido").val();
-       var recargo= "0";
-       var total=$("#dtotal").val();
-       var re = /,/g;
-      //  monto=monto.replace(re,"");
-      //   total=total.replace(re,"");
-      //   recargo=recargo.replace(re,"");
-        if(monto < 0)
-        {
-            alert('El importe recibido tiene que ser mayor a "0" ', 'ATENCION');
-        }
-        else{
-            var cambio =Math.round(((parseFloat(monto)+ parseFloat(recargo))- parseFloat(total))*100)/100;
-            if(cambio < 0){
-            $("#cambio").val('0');
-            }else{
-          
-               $("#cambio").val(cambio.formatMoney());         
-            }
-        }
-    }
 </script>    
 <?php View::content(); ?>
 <body id="cuerpo_principal">
@@ -416,23 +361,20 @@ else $('#venta_costo_envio').val("0");
                     <table width="100%" border="0">
                         <tr>
                             <td style="width: 80%;text-align: right;"> SubTotal $ </td>
-                            <td style="width: 1%;"></td>
-                            <td><?php echo Form::text('dsubtotal', '  class="form-control"  style="text-align:right;" '); ?> </td>
+                            <td><?php echo Form::text('dsubtotal', ' required class="form-control"   '); ?> </td>
                         </tr>
                         <tr>
                             <td style="width: 80%;text-align: right;"> Impuesto $ </td>
-                            <td style="width: 1%;"></td>
-                            <td><?php echo Form::text('dimpuesto', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                            <td><?php echo Form::text('dimpuesto', ' required class="form-control"   '); ?> </td>
                         </tr>
                         <tr>
                             <td style="width: 80%;text-align: right;"> Total $ </td>
-                            <td style="width: 1%;"></td>
-                            <td><?php echo Form::text('dtotal', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                            <td><?php echo Form::text('dtotal', ' required class="form-control"   '); ?> </td>
                         </tr>
                     </table>
 
                     <br>
-                    <div class="col-sm-5">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">       Costo Envio:    
@@ -441,14 +383,13 @@ else $('#venta_costo_envio').val("0");
                             </div>
                         </div> 
                     </div>
-                    <div class="col-sm-7">
+                    <div class="col-sm-8">
                         <div class="form-group">
-                            <!--
                             <div class="input-group">
                                 <div class="input-group-addon">       Capturo:    
                                 </div>
 <?php echo Form::text('venta.capturo', ' required class="form-control"   '); ?>
-                            </div>  !-->
+                            </div>
                         </div> 
                     </div>
 
@@ -574,7 +515,7 @@ else $('#venta_costo_envio').val("0");
 
 </body>
 
-<script >
+<script type="text/javascript">
     $("#venta_producto_id").change(function () {
         buscaUnidadPrecio();
         buscaAlmacen();
@@ -643,20 +584,6 @@ else $('#venta_costo_envio').val("0");
         }
 
     });
-    $("#importe_recibido").keyup(function(){
-     validaMonto();
- }); 
- 
-    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
-   var n = this,
-   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-   decSeparator = decSeparator === undefined ? "." : decSeparator,
-   thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
-   sign = n < 0 ? "-" : "",
-   i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-   j = (j = i.length) > 3 ? j % 3 : 0;
-   return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
-};
 </script>  
 
 
