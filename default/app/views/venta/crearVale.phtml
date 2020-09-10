@@ -8,6 +8,10 @@
             data: "operacion=" + operacion,
             success: function (html) {
                 $("#resultado").html(html);
+                $("#dsubtotal").val($("#iSubtotal").val());
+                $("#dimpuesto").val($("#iImpuesto").val());
+                $("#dtotal").val($("#iTotal").val());
+                actualizaEnvio();
             }
         });
 
@@ -424,23 +428,26 @@ else $('#venta_costo_envio').val("0");
 
                     <div id="resultado" style="min-height: 300px;max-height: 300px;   border-bottom-color:#fff;overflow: auto;position: relative;  "> <?php print"<script> imprime_lista() </script>"; ?></div>
                     </br>
-                    <table width="100%" border="0">
+                   <table width="100%" border="0">
                         <tr>
                             <td style="width: 80%;text-align: right;"> SubTotal $ </td>
-                            <td><?php echo Form::text('dsubtotal', ' required class="form-control"   '); ?> </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dsubtotal', '  class="form-control"  style="text-align:right;" '); ?> </td>
                         </tr>
                         <tr>
                             <td style="width: 80%;text-align: right;"> Impuesto $ </td>
-                            <td><?php echo Form::text('dimpuesto', ' required class="form-control"   '); ?> </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dimpuesto', '  class="form-control" style="text-align:right;"  '); ?> </td>
                         </tr>
                         <tr>
                             <td style="width: 80%;text-align: right;"> Total $ </td>
-                            <td><?php echo Form::text('dtotal', ' required class="form-control"   '); ?> </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dtotal', '  class="form-control" style="text-align:right;"  '); ?> </td>
                         </tr>
                     </table>
 
                     <br>
-                    <div class="col-sm-4">
+                    <div class="col-sm-5">
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">       Costo Envio:    
@@ -449,13 +456,14 @@ else $('#venta_costo_envio').val("0");
                             </div>
                         </div> 
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <div class="form-group">
+                            <!--
                             <div class="input-group">
                                 <div class="input-group-addon">       Capturo:    
                                 </div>
 <?php echo Form::text('venta.capturo', ' required class="form-control"   '); ?>
-                            </div>
+                            </div>  !-->
                         </div> 
                     </div>
 
@@ -569,7 +577,7 @@ else $('#venta_costo_envio').val("0");
 
             </td>
             <td width="33%">
-<?php echo Form::submit((($accion == 'crearVenta') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+<?php echo Form::submit((($accion == 'crearVale') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
             </td>
         </tr>
     </table>
@@ -581,7 +589,7 @@ else $('#venta_costo_envio').val("0");
 
 </body>
 
-<script type="text/javascript">
+<script >
     $("#venta_producto_id").change(function () {
         buscaUnidadPrecio();
         buscaAlmacen();
@@ -622,7 +630,7 @@ else $('#venta_costo_envio').val("0");
                         $('#etiqCb').hide();
                         $('#p').hide();
                         //MUESTRA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
-                        $('#cajaDetalle').hide();
+                        $('#cajaDetalle').show();
                         operacion = 'BUSCA_BANCO';
                         $.ajax({
                             type: "POST",
@@ -650,7 +658,6 @@ else $('#venta_costo_envio').val("0");
         }
 
     });
-    
     $("#importe_recibido").keyup(function(){
      validaMonto();
  }); 

@@ -30,7 +30,7 @@ FROM inventario as inv, producto as pro  WHERE ALMACEN_ID =$id and inv.PRODUCTO_
     
     public function listarVenta() {
          
-         $sqlCompra = "SELECT com.id, com.fecha_documento, com.documento, com.tipo_documento, cli.nombrecompleto,cli.rfc,com.estado 
+         $sqlCompra = "SELECT com.id, com.fecha_documento, com.documento, com.tipo_documento, cli.nombrecompleto,cli.rfc,com.estado, com.salidaVale 
 FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id  ";
         
         return $this->find_all_by_sql($sqlCompra);
@@ -104,6 +104,103 @@ $precio=$array_productos[$i]['PRECIO'];
               $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
               $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario,$precio);
               
+              
+             }
+          //echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";
+           Input::delete();
+           session::delete('array_venta');
+           $actualizar= new venta();
+           $actualizar->update_all("subtotal =  $importeTotal,iva=0,monto=$importeTotal", "id=$valeId ");
+           return $valeId;
+        }
+    }
+    public function guardarDatosVale(){
+       $vale = new venta(Input::post('venta'));
+        $fechaDocumento=$vale->fecha_documento;
+        $fechaMovimiento=$vale->fecha_documento;
+        $referencia=$vale->documento;
+        $proveedorId=$vale->cliente_id;
+        $precio=$vale->precio;
+        $folios = new series_folios();
+           $folios->incrementarConsecutivo('REMISION');
+        $datoFolios = $folios->find_first("tipo = 'REMISION'");
+        $vale->documento="R-".str_pad(($datoFolios->consecutivo),4, "0", STR_PAD_LEFT);
+        $vale->tipo='ET';
+        $vale->estado='1'; 
+        $vale->fecha_documento = strftime("%Y-%m-%d", strtotime($vale->fecha_documento));
+        $vale->fecha_recepcion = strftime("%Y-%m-%d", strtotime($vale->fecha_documento));
+        $vale->fecha_salida = strftime("%Y-%m-%d", strtotime($vale->fecha_salida));
+        $vale->salidaVale = "Si";
+        $vale->usuario_id=Session::get('id'); 
+        $tipoMovimiento="S";
+        $numeroMovimiento="18";
+        if( $vale->save()){
+            $valeId=$vale->id;
+             $array_productos = Session::get('array_venta');
+             $partidaTotal=0;
+             $importeTotal=0;
+            $longitud = count($array_productos);
+             for ($i = 0; $i < $longitud; $i++) {
+              $detalleCompra = new detalle_venta();
+              $lote=new detalle_lote();
+              $serie=new serie();
+              $movimiento=new movimiento_inventario();
+              $producto=new producto();
+              $inventario=new inventario();
+            //  $datoInventario=new numeroInventario();
+               $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;   
+$codigo=$array_productos[$i]['CLAVE'];
+$descripcion=$array_productos[$i]['DESCRIPCION'];
+$cantidad=$array_productos[$i]['CANTIDAD'];
+$precio=$array_productos[$i]['PRECIO'];
+       
+              
+            $partidaTotal=$cantidad*$precio;
+         $importeTotal=$partidaTotal+$importeTotal;
+              $detalleCompra->guardarDatos($valeId, $productoId, $cantidad,$precio);
+              
+              
+              
+      $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;
+       $cantidad= $array_productos[$i]['CANTIDAD'] ;
+       $opcion= "lote";
+        $unidadXpaquete=$array_productos[$i]['UNIDAD_PAQUETE'];
+        $fechaCaducidad=$array_productos[$i]['FECHA_CADUCIDAD'];
+     $almacenId=$array_productos[$i]['ALMACEN_ID'];         
+         $loteSerie=$array_productos[$i]['LOTE_SERIE'];
+         $num_inventario=$array_productos[$i]['NUMERO_INVENTARIO'];
+       
+        
+              if(($opcion=="lote") || ($opcion=="loteInventario")){
+              $lote->valida_entrada($loteSerie,$fechaCaducidad,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
+              }else if (($opcion=="serie") || ($opcion=="serieInventario")){
+              $serie->valida_entrada($loteSerie,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
+              }
+              if($num_inventario!=""){
+              $inventario -> valida_entrada($productoId,$almacenId,$loteSerie,$num_inventario,$cantidad,$unidadXpaquete,$tipoMovimiento);   
+              }
+              $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
+              $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
+              $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario,$precio);
+              ///entrada//
+              $almacen= new almacen();
+              $almacen=$almacen->find_first("almacen='100'");
+              $almacenId=$almacen->id;
+               $tipoMovimiento="E";
+               $numeroMovimiento="7";
+              if(($opcion=="lote") || ($opcion=="loteInventario")){
+              $lote->valida_entrada($loteSerie,$fechaCaducidad,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
+              }else if (($opcion=="serie") || ($opcion=="serieInventario")){
+              $serie->valida_entrada($loteSerie,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
+              }
+              if($num_inventario!=""){
+              $inventario -> valida_entrada($productoId,$almacenId,$loteSerie,$num_inventario,$cantidad,$unidadXpaquete,$tipoMovimiento);   
+              }
+              $inventario->valida_inventario($almacenId,$productoId);
+              $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
+              $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
+              $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario,$precio);
+             
               
              }
           //echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";

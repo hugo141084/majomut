@@ -56,6 +56,7 @@ class ventaController extends AppController{
             utf8_encode('F. DOCUMENTO') => 'fecha_documento',
             utf8_encode('CLIENTE') => 'nombrecompleto',
             utf8_encode('RFC') => 'rfc',
+            utf8_encode('ESTADO') => 'estado',
             utf8_encode('ESTADO') => 'estado'
             
            
@@ -163,7 +164,7 @@ class ventaController extends AppController{
     }
      public function crearVale() 
     {
-     $this->accion="crearVenta";
+     $this->accion="crearVale";
         
         $venta = new venta();
         $this->venta = $venta->find();
@@ -176,14 +177,14 @@ class ventaController extends AppController{
                
                 echo "<script>  alert ('Primero agrege partidas para poder guardar este movimiento....!');</script>"; 
             }else {
-            $this->venta = $venta->guardarDatos();
+            $this->venta = $venta->guardarDatosVale();
             ?>
                 <script>
                     window.open('reporteVenta/<?php echo $this->venta; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
                 </script>
                <?php
                 Input::delete();
-                Redirect::to('venta/crearVenta');
+                Redirect::to('venta/crearVale');
             }
         }else{
               session::delete('array_venta');
@@ -700,5 +701,18 @@ class ventaController extends AppController{
         }
         $this->envio=$envio->find_first("venta_id='$idVenta'");
     } 
+    public function datosFactura($idVenta) {
+        $this->venta=$idVenta;
+        View::template(NULL);
+
+        $envio = new envio();
+        if (Input::hasPost('envio')) {
+
+            $this->envio = $envio->guardarEnvio();
+            
+        }
+        $this->envio=$envio->find_first("venta_id='$idVenta'");
+    } 
+    
 }
 ?>

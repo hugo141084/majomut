@@ -1,16 +1,113 @@
+<?php Tag::css('demo_page'); ?>
+<?php Tag::css('demo_table'); ?>
+<?php Html::includeCss() ?>
+<?php echo Tag::js('jquery.dataTables.min'); ?>
+<?php View::content(); ?>    
+    <div id="dt_example" style="margin:0 auto; padding:10px 20px; background-color:#ffffff; ">      
+        <br />
+        <div id="texto_superior"  >
+                 <?php echo $encabezado ?> 
+            </div>
+          
+             <div style="text-align:right;margin: 0 0; width:100%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                                           
+                          echo Html::linkAction('crearVenta',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');
+                    
+                    
+                    ?>
+                </div>
+            </div> 
+        <br />
+        <br />
+        <table  border="0" width="100%" id="display2" class="display1">
+            <thead>
+                <tr  style="font-size: 9px;letter-spacing: -0.8px;">
+                    <th> #</th>
+                    <th>TIPO DOCUMENTO</th>
+                    <th> ORIGEN</th>
+                    <th>DOCUMENTO</th>
+                 
+                   <th>F. DOCUMENTO</th>
+                    <th>CLIENTE</th>
+                     <th>RFC</th>
+                      <th>ESTADO</th>
+                    <th>ACCION </th>
+                    </tr>
+            </thead>
+            <tbody>
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
-<div id="form_container" style="width:100%">
-    <br>
-    <h1><a></a></h1>
-<?php View::partial("formatoTabla",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrlcrear1'=>"crear/",'vale'=>"reporte",'eliminar'=>"eliminar",'ventana'=>"Venta",'tipoVale'=>'Venta','envio'=>'envio'));  ?>
-</div>
+           $i=1;
+            foreach($result as $res){
+                        
+                        echo "<tr>";
+                        echo "<td>".$res->id."</td>";
+                        echo "<td>".$res->tipo_documento."</td>";
+                        echo "<td >".$res->origen."</td>";
+                            echo "<td>".$res->documento."</td>";
+                           
+                            echo "<td align='center'>".strftime('%d-%m-%Y',strtotime($res->fecha_documento))."</td>"; 
+                            echo "<td>".$res->nombrecompleto."</td>";
+                            echo "<td>".$res->rfc."</td>";
+                            echo "<td>";
+                            if($res->estado=="1") echo "Activo";
+                            else echo "Cancelado";
+                            echo $res->estado=="1";
+                            echo "</td>";
+                            echo "<td align='center'>";
+                                  echo Html::linkAction('reporteVenta/'.$res->id, Html::img('printer.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir ésta Nota de Remision?\'))window.open(this.href,this.target);return false;"'));
+                                         echo Html::linkAction('envio/' . $res->id . '', Html::img('envio.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Consultar Datos de Envio"'), 'rel="shadowbox;width=650;height=370;" ');
+                                          echo Html::linkAction('datosFactura/' . $res->id . '', Html::img('factura.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Consultar Datos de Facturacion"'), 'rel="shadowbox;width=650;height=370;" ');
+                               if($res->salidaVale=="Si")
+                                          echo Html::linkAction('cupon/'.$res->id, Html::img('cupon.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir los vales .?\'))window.open(this.href,this.target);return false;"'));
+                           echo "</td>"; 
+                            echo "</tr>";   
+                            
+                        $i++; 
+               }
+            ?>
+            </tbody>
+        </table>
+        
+       
+    </div>
+
+<script type="text/javascript" charset="utf-8">
+
+$(function(){
+    $("#display2").dataTable ({
+            "aaSorting": [[7,"desc"]],
+            "bAutoWidth": true,
+            "iDisplayLength": 10,
+            "aLengthMenu": [[10,25,50,100,250,500,-1], [10,25,50,100,250,500,"Todo"]],
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                    "aProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "NO EXISTE INFORMACIÓN",
+                    "sInfo": "Mostrando desde _START_ hasta _END_ registros",
+                    "sInfoEmpty": "Mostrando desde 0 hasta 0 de 0 registros",
+                    "sInfoFiltered": "(filtrando de _MAX_ registros en total)",
+                    "sSearch": "Buscar",
+                    "oPaginate": {
+                            "sFirst": "Primero",
+                            "sPrevious": "Anterior",
+                            "sNext": "Siguiente",
+                            "sLast": "Ultimo"
+                    }
+            }
+    });
+    
+    
+});
+
+
+</script>
+
+
 <script>
    function actualizar(){
        window.location.reload();

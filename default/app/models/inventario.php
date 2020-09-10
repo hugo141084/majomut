@@ -31,6 +31,25 @@ class inventario extends ActiveRecord {
           echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }
+     public function valida_inventario($almacen_id,$producto_id){
+        
+        $inventario= new inventario();
+        $existe=$inventario->find_first("almacen_id='$almacen_id' and producto_id='$producto_id' ");
+        if ($existe->id > 0) {
+           
+        }else{
+           $inventario = new inventario();
+        $inventario->almacen_id=$almacen_id; 
+        $inventario->producto_id=$producto_id; 
+        $inventario->estado="1";
+        $inventario->existencia="0";
+        $inventario->cantidad_minima="0"; 
+        $inventario->cantidad_maxima="0";        
+        $inventario->usuario_id=Session::get('id');
+        $inventario->save();
+        }
+        
+    }
      public function quitarProducto($id){
         return $this->find_by_sql("delete from inventario where id=$id");
        
