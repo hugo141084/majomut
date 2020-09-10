@@ -161,6 +161,39 @@ class ventaController extends AppController{
         
         $this->num="R-".str_pad(($datoFolios->consecutivo)+1,4, "0", STR_PAD_LEFT);
     }
+     public function crearVale() 
+    {
+     $this->accion="crearVenta";
+        
+        $venta = new venta();
+        $this->venta = $venta->find();
+
+         if (Input::hasPost('venta')) {
+            $array_productos = Session::get('array_venta');
+            $num = count($array_productos);
+           
+            if($num == "0"){
+               
+                echo "<script>  alert ('Primero agrege partidas para poder guardar este movimiento....!');</script>"; 
+            }else {
+            $this->venta = $venta->guardarDatos();
+            ?>
+                <script>
+                    window.open('reporteVenta/<?php echo $this->venta; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
+                </script>
+               <?php
+                Input::delete();
+                Redirect::to('venta/crearVenta');
+            }
+        }else{
+              session::delete('array_venta');
+        }
+         Input::delete();
+        $folios = new series_folios();
+        $datoFolios = $folios->find_first("tipo = 'REMISION'");
+        
+        $this->num="R-".str_pad(($datoFolios->consecutivo)+1,4, "0", STR_PAD_LEFT);
+    }
     public function crearSalidaCT() 
     {
      $this->accion="crearSalidaCT";

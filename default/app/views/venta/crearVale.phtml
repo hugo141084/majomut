@@ -191,6 +191,57 @@
 
 
     }
+    function actualizaEnvio()
+    {
+var cantidadT = $('#cantidadT').val();
+if((parseInt(cantidadT) > 0 ) && (parseInt(cantidadT)<=1)){ $('#venta_costo_envio').val("154");}
+else if((cantidadT>1) && (cantidadT<=2)) $('#venta_costo_envio').val("182");
+else if((cantidadT>2) && (cantidadT<=5)) $('#venta_costo_envio').val("218");
+else if((cantidadT>5) && (cantidadT<=7)) $('#venta_costo_envio').val("228");
+else if((cantidadT>7) && (cantidadT<=8)) $('#venta_costo_envio').val("244");
+else if((cantidadT>8) && (cantidadT<=10)) $('#venta_costo_envio').val("256");
+else if((cantidadT>10) && (cantidadT<=12)) $('#venta_costo_envio').val("314");
+else if((cantidadT>12) && (cantidadT<=15)) $('#venta_costo_envio').val("334");
+else if((cantidadT>15) && (cantidadT<=20)) $('#venta_costo_envio').val("366");
+else if((cantidadT>20) && (cantidadT<=25)) $('#venta_costo_envio').val("404");
+else if((cantidadT>25) && (cantidadT<=30)) $('#venta_costo_envio').val("446");
+else if((cantidadT>30) && (cantidadT<=40)) $('#venta_costo_envio').val("516");
+else if((cantidadT>40) && (cantidadT<=50)) $('#venta_costo_envio').val("606");
+else if((cantidadT>50) && (cantidadT<=60)) $('#venta_costo_envio').val("828");
+else if((cantidadT>60) && (cantidadT<=70)) $('#venta_costo_envio').val("934");
+else if((cantidadT>70) && (cantidadT<=75)) $('#venta_costo_envio').val("954");
+else if((cantidadT>75) && (cantidadT<=80)) $('#venta_costo_envio').val("1008");
+else if((cantidadT>75) && (cantidadT<=90)) $('#venta_costo_envio').val("1188");
+else if((cantidadT>75) && (cantidadT<=100)) $('#venta_costo_envio').val("1220");
+else if((cantidadT>75) && (cantidadT<=130)) $('#venta_costo_envio').val("1590");
+else if((cantidadT>75) && (cantidadT<=140)) $('#venta_costo_envio').val("1850");
+else if((cantidadT>140)  ) $('#venta_costo_envio').val("2132");
+else $('#venta_costo_envio').val("0");
+
+
+    }
+    function validaMonto(){
+       var monto= $("#importe_recibido").val();
+       var recargo= "0";
+       var total=$("#dtotal").val();
+       var re = /,/g;
+      //  monto=monto.replace(re,"");
+      //   total=total.replace(re,"");
+      //   recargo=recargo.replace(re,"");
+        if(monto < 0)
+        {
+            alert('El importe recibido tiene que ser mayor a "0" ', 'ATENCION');
+        }
+        else{
+            var cambio =Math.round(((parseFloat(monto)+ parseFloat(recargo))- parseFloat(total))*100)/100;
+            if(cambio < 0){
+            $("#cambio").val('0');
+            }else{
+          
+               $("#cambio").val(cambio.formatMoney());         
+            }
+        }
+    }
 </script>    
 <?php View::content(); ?>
 <body id="cuerpo_principal">
@@ -200,15 +251,9 @@
         <h1><a></a></h1>
         <div id="titulo_superior"> 
             <div id="texto_superior"  >
-                <?php echo "VENTA DIRECTA" ?> 
+                <?php echo "GENERACION DE VALES" ?> 
             </div>
-            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
-                <div class='btn'>
-                    <?php
-                    echo Html::linkAction('listadoVenta', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
-                    ?>
-                </div>
-            </div>
+            
         </div>
         <?php echo Form::open("venta/" . $accion); ?>
         <?php echo Form::hidden("venta.id"); ?>
@@ -289,15 +334,15 @@
                 <div class="panel-heading">Datos Producto </div>
                 <div class="panel-body">
                     <div class="form-row">
-                        <div class="col-md-2 ">
+                        <div class="col-md-4 ">
                             <label for="validationCustomUsername">Producto</label>
                             <div class="input-group">
 
-<?php echo Form::dbSelect("venta.producto_id", "descripcion", array("producto", "listarEntrada"), 'Seleccione..', ' class="form-control"'); ?>
+<?php echo Form::dbSelect("venta.producto_id", "descripcion", array("producto", "listarEntrada"), 'Seleccione..', ' class="element text"'); ?>
 
                             </div>
                         </div> 
-                        <div class="col-md-2 ">
+                        <div class="col-md-3 ">
                             <label >cantidad</label>
                             <div class="input-group">
 
@@ -321,24 +366,32 @@
 
 
 
-                        <div class="col-md-2 ">
+                        <div class="col-md-4 ">
                             <label >Lote</label>
                             <div class="input-group">
-                                <div  id="loteProducto" >
-<?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'class="form-control" '); ?>
+                                <div  id="loteProducto" style="width: 100%">
+<?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'class="element text" '); ?>
                                 </div>
                             </div>
                         </div> 
 
-                        <div class="col-md-2 ">
-                            <label >Almacen</label>
+                        <div class="col-md-3 ">
+                            <label >Almacen Salidad</label>
                             <div class="input-group">
-                                <div id="almacen">
-<?php echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="form-control" '); ?>
+                                <div id="almacen" style="width: 100%">
+<?php echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="element text" '); ?>
                                 </div>
                             </div>
                         </div> 
-                        <div class="col-md-2 ">
+                        <div class="col-md-3 ">
+                            <label >Almacen Entrada</label>
+                            <div class="input-group">
+                                
+<?php echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "almacenApartados"), '', 'class="element text" '); ?>
+                               
+                            </div>
+                        </div> 
+                        <div class="col-md-3 ">
                             <label >precio</label>
                             <div class="input-group">
                                 <div id="almacen">
@@ -346,13 +399,26 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-1 ">
-                            <label >.</label>
+                        
+
+                        <div class="col-md-3 ">
+                            <label >Num. Vales</label>
                             <div class="input-group">
-<?php echo Form::button("Agregar", "id='Agregar' style='width:98%;' class='btn-success btn' ") ?>
+
+<?php echo Form::number('venta.cantidad', ' class="form-control"  ', '0'); ?>
+
                             </div>
                         </div> 
 
+
+                        
+
+                        <div class="col-md-12 ">
+                            <label></label>
+                            <div class="input-group">
+<?php echo Form::button("Agregar Producto", "id='Agregar'  class='form-control btn-success btn' ") ?>
+                            </div>
+                        </div> 
                     </div>      
                     <br>
 
@@ -395,8 +461,8 @@
 
                 </div>
             </div>
-<?php $ar2 = array('Contado', 'Credito'); ?>
-            <fieldset style="padding: 15px;">
+<?php $ar2 = array('Contado'); ?>
+              <fieldset style="padding: 15px;">
                 <legend><b>Datos del Pago :</b></legend> 
                 <div class="col-sm-8">
                     <div class="form-group">
@@ -584,6 +650,21 @@
         }
 
     });
+    
+    $("#importe_recibido").keyup(function(){
+     validaMonto();
+ }); 
+ 
+    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
+   var n = this,
+   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+   decSeparator = decSeparator === undefined ? "." : decSeparator,
+   thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
+   sign = n < 0 ? "-" : "",
+   i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+   j = (j = i.length) > 3 ? j % 3 : 0;
+   return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+};
 </script>  
 
 
