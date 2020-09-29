@@ -25,7 +25,7 @@ class presentacion extends ActiveRecord {
          
        
         if( $presentacion->save()){
-          echo "<script>  alert ('Registro Insertado....!');</script>";  
+         // echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }
 }   
