@@ -52,6 +52,12 @@ class catalogoController extends AppController{
         $this->encabezado= "Unidades de Medida";
     }
     public function listadoPresentacion() {
+        
+        $presentacion = new presentacion();
+        $this->preparacion = $presentacion->find();
+        if (Input::hasPost('presentacion')) {
+            $this->presentacion = $presentacion->guardarDatos();
+        }
         $presentacion = new presentacion();
         $this->result = $presentacion->listar();
         $this->campos = array(
@@ -59,7 +65,7 @@ class catalogoController extends AppController{
             utf8_encode('DESCRIPCION') => 'descripcion',
             
         );
-        $this->encabezado= "TIPOS";
+        $this->encabezado= "";
     }
     public function crear(){
          $this->accion="crear";

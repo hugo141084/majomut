@@ -50,6 +50,6 @@ class indexController extends AppController
     }
     
     public function principal(){
-        
+       
     }
 }
