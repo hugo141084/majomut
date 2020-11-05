@@ -717,6 +717,17 @@ class ventaController extends AppController{
         }
         $this->envio=$envio->find_first("venta_id='$idVenta'");
     } 
+    public function cupon($idVenta) {
+        $this->venta=$idVenta;
+        
+        $envio = new envio();
+        if (Input::hasPost('envio')) {
+
+            $this->envio = $envio->guardarEnvio();
+            
+        }
+        $this->envio=$envio->find_first("venta_id='$idVenta'");
+    } 
     
 }
 ?>
