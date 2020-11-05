@@ -582,6 +582,10 @@ class ventaController extends AppController{
           
           
         }
+        else if (($this->operacion) == "MOSTRAR_LISTA_VENTA") {
+          
+          
+        }
         else if (($this->operacion) == "MOSTRAR_LISTA_SALIDA") {
           
           

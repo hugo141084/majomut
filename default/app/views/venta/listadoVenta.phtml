@@ -62,7 +62,7 @@
                                          echo Html::linkAction('envio/' . $res->id . '', Html::img('envio.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Consultar Datos de Envio"'), 'rel="shadowbox;width=650;height=370;" ');
                                           echo Html::linkAction('datosFactura/' . $res->id . '', Html::img('factura.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Consultar Datos de Facturacion"'), 'rel="shadowbox;width=650;height=370;" ');
                                if($res->salidaVale=="Si")
-                                          echo Html::linkAction('cupon/'.$res->id, Html::img('cupon.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir los vales .?\'))window.open(this.href,this.target);return false;"'));
+                                          echo Html::linkAction('cupon/'.$res->id, Html::img('cupon.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;"'));
                            echo "</td>"; 
                             echo "</tr>";   
                             

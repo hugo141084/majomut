@@ -17,7 +17,7 @@ class almacen extends ActiveRecord {
         return $this->find();
     }
     public function listarXid($id) {
-        return $this->find_by_sql("select * from almacen where id=$id");
+        return $this->find_by_sql("select * from almacen where id='$id'");
     }
     public function almacenApartados() {
         return $this->find_by_sql("select descripcion from almacen where almacen='100'");

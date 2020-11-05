@@ -121,6 +121,7 @@ $precio=$array_productos[$i]['PRECIO'];
         $referencia=$vale->documento;
         $proveedorId=$vale->cliente_id;
         $precio=$vale->precio;
+        $cupon=$vale->cupon;
         $folios = new series_folios();
            $folios->incrementarConsecutivo('REMISION');
         $datoFolios = $folios->find_first("tipo = 'REMISION'");
@@ -153,7 +154,20 @@ $codigo=$array_productos[$i]['CLAVE'];
 $descripcion=$array_productos[$i]['DESCRIPCION'];
 $cantidad=$array_productos[$i]['CANTIDAD'];
 $precio=$array_productos[$i]['PRECIO'];
-       
+       $j=0;
+       $j=$cantidad/$cupon;
+       $s=$cantidad%$cupon;
+       for($h=1;$h<=$j;$h++){
+           $dCupon=new cupon();
+           $dCupon->venta_id=$valeId;
+           $dCupon->producto_id=$productoId;
+           if($h==$j)
+           $dCupon->cantidad=$j+$s;
+           else
+           $dCupon->cantidad=$j;
+           
+           $dCupon->save();
+       }
               
             $partidaTotal=$cantidad*$precio;
          $importeTotal=$partidaTotal+$importeTotal;
@@ -171,35 +185,9 @@ $precio=$array_productos[$i]['PRECIO'];
          $num_inventario=$array_productos[$i]['NUMERO_INVENTARIO'];
        
         
-              if(($opcion=="lote") || ($opcion=="loteInventario")){
-              $lote->valida_entrada($loteSerie,$fechaCaducidad,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
-              }else if (($opcion=="serie") || ($opcion=="serieInventario")){
-              $serie->valida_entrada($loteSerie,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
-              }
-              if($num_inventario!=""){
-              $inventario -> valida_entrada($productoId,$almacenId,$loteSerie,$num_inventario,$cantidad,$unidadXpaquete,$tipoMovimiento);   
-              }
-              $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
-              $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
-              $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario,$precio);
-              ///entrada//
-              $almacen= new almacen();
-              $almacen=$almacen->find_first("almacen='100'");
-              $almacenId=$almacen->id;
-               $tipoMovimiento="E";
-               $numeroMovimiento="7";
-              if(($opcion=="lote") || ($opcion=="loteInventario")){
-              $lote->valida_entrada($loteSerie,$fechaCaducidad,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
-              }else if (($opcion=="serie") || ($opcion=="serieInventario")){
-              $serie->valida_entrada($loteSerie,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
-              }
-              if($num_inventario!=""){
-              $inventario -> valida_entrada($productoId,$almacenId,$loteSerie,$num_inventario,$cantidad,$unidadXpaquete,$tipoMovimiento);   
-              }
-              $inventario->valida_inventario($almacenId,$productoId);
-              $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
-              $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
-              $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario,$precio);
+             
+              
+              
              
               
              }
