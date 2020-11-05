@@ -1,7 +1,7 @@
 <script>
     function imprime_lista()
     {
-        var operacion = 'MOSTRAR_LISTA_VENTA'
+        var operacion = 'MOSTRAR_LISTA_VALE'
         $.ajax({
             type: "POST",
             url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
@@ -138,9 +138,9 @@
         var cantidad = $('#venta_cantidad').val();
         var productoId = $('#venta_producto_id').val();
         var precio = $('#venta_precio').val();
-        var almacenId = $('#venta_almacen_id').val();
+        var almacenId = '';
         var serie = "";
-        var lote = $('#lote').val();
+        var lote = '0';
         var opcion = 'lote';
         var mens = "";
         var re = /,/g;
@@ -342,8 +342,16 @@ else $('#venta_costo_envio').val("0");
                             <label for="validationCustomUsername">Producto</label>
                             <div class="input-group">
 
-<?php echo Form::dbSelect("venta.producto_id", "descripcion", array("producto", "listarEntrada"), 'Seleccione..', ' class="element text"'); ?>
+<?php echo Form::dbSelect("venta.producto_id", "descripcion", array("producto", "listarEntrada"), 'Seleccione..', ' class="form-control"'); ?>
 
+                            </div>
+                        </div> 
+                        <div class="col-md-1 ">
+                            <label >.</label>
+                            <div class="input-group">
+                                <div  id="etiqueta" >
+
+                                </div>
                             </div>
                         </div> 
                         <div class="col-md-3 ">
@@ -370,37 +378,14 @@ else $('#venta_costo_envio').val("0");
 
 
 
-                        <div class="col-md-4 ">
-                            <label >Lote</label>
-                            <div class="input-group">
-                                <div  id="loteProducto" style="width: 100%">
-<?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'class="element text" '); ?>
-                                </div>
-                            </div>
-                        </div> 
-
-                        <div class="col-md-3 ">
-                            <label >Almacen Salidad</label>
-                            <div class="input-group">
-                                <div id="almacen" style="width: 100%">
-<?php echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="element text" '); ?>
-                                </div>
-                            </div>
-                        </div> 
-                        <div class="col-md-3 ">
-                            <label >Almacen Entrada</label>
-                            <div class="input-group">
-                                
-<?php echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "almacenApartados"), '', 'class="element text" '); ?>
-                               
-                            </div>
-                        </div> 
+                        
+                        
                         <div class="col-md-3 ">
                             <label >precio</label>
                             <div class="input-group">
-                                <div id="almacen">
+                               
 <?php echo Form::text("venta.precio",  'class="form-control" '); ?>
-                                </div>
+                              
                             </div>
                         </div>
                         
@@ -409,7 +394,7 @@ else $('#venta_costo_envio').val("0");
                             <label >Num. Vales</label>
                             <div class="input-group">
 
-<?php echo Form::number('venta.cantidad', ' class="form-control"  ', '0'); ?>
+<?php echo Form::number('venta.cupon', ' class="form-control"  ', '0'); ?>
 
                             </div>
                         </div> 
@@ -417,8 +402,8 @@ else $('#venta_costo_envio').val("0");
 
                         
 
-                        <div class="col-md-12 ">
-                            <label></label>
+                        <div class="col-md-4 ">
+                            <label>.</label>
                             <div class="input-group">
 <?php echo Form::button("Agregar Producto", "id='Agregar'  class='form-control btn-success btn' ") ?>
                             </div>
