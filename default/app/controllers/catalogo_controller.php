@@ -11,28 +11,48 @@ class catalogoController extends AppController{
     
     public function listadoLote() {
         $lote = new lote();
+        $this->lote = $lote->find();
+
+        if (Input::hasPost('lote')) {
+
+            $this->lote = $lote->guardarDatos();
+        }
         $this->result = $lote->listar();
         $this->campos = array(
             utf8_encode('#') => 'id',
             utf8_encode('CICLO') => 'ciclo',
             utf8_encode('NUM. LOTE') => 'num_lote',
             utf8_encode('CODIGO') => 'codigo',
+            utf8_encode('CADUCIDAD') => 'fecha_caducidad'
             
         );
         $this->encabezado= "Lotes ";
     }
     public function listadoCalidad() {
         $calidad = new calidad();
+        $this->zona = $calidad->find();
+
+        if (Input::hasPost('calidad')) {
+
+            $this->calidad = $calidad->guardarDatos();
+        }
+        
         $this->result = $calidad->listar();
         $this->campos = array(
             utf8_encode('#') => 'id',
+            utf8_encode('CODIGO') => 'codigo',
             utf8_encode('DESCRIPCION') => 'descripcion',
             
         );
         $this->encabezado= "PRESENTACION";
     }
     public function listadoPreparacion() {
+        
         $preparacion = new preparacion();
+        
+        if (Input::hasPost('preparacion')) {
+            $this->preparacion = $preparacion->guardarDatos();
+        }
         $this->result = $preparacion->listar();
         $this->campos = array(
             utf8_encode('#') => 'id',
@@ -43,6 +63,12 @@ class catalogoController extends AppController{
     }
     public function listadoMedida() {
         $medida = new medida();
+        $this->medida = $medida->find();
+
+        if (Input::hasPost('medida')) {
+
+            $this->medida = $medida->guardarDatos();
+        }
         $this->result = $medida->listar();
         $this->campos = array(
             utf8_encode('#') => 'id',
@@ -131,6 +157,13 @@ class catalogoController extends AppController{
     
     public function listadoEmbalaje() {
         $embalaje = new embalaje();
+
+        $this->embalaje = $embalaje->find();
+
+        if (Input::hasPost('embalaje')) {
+
+            $this->embalaje = $embalaje->guardarDatos();
+        }
         $this->result = $embalaje->listar();
         $this->campos = array(
             utf8_encode('#') => 'id',

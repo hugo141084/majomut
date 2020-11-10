@@ -1,19 +1,59 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 ?>
+<br>
 <div id="form_container" style="width:100%">
-    <br/>
     <h1><a></a></h1>
-<?php View::partial("formatoTabla",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrlActualizar'=>"actualizar/",'ctrlAlta'=>"crear/",'ctrleditar'=>"editar/",'ventana'=>"Embalaje"));  ?>
 </div>
+  <div class="row">
+     <div class="col-md-12">
+       <h1><a></a></h1>
+     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>Agregar Empaque</span>
+         </strong>
+        </div>
+        <div class="panel-body">
+            <?php echo Form::open("catalogo/listadoEmbalaje"); ?> 
+         <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Descripcion:
+                        </div>
+<?php echo Form::text( 'embalaje.descripcion', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+              
+            <button type="submit" name="add_cat" class="btn btn-primary">Agregar Empaque</button>
+        <?php echo Form::close(); ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>
+          <span class="glyphicon glyphicon-th"></span>
+          <span>Listado de Empaques</span>
+       </strong>
+      </div>
+        <div id="form_container" style="width:100%">   
+            <?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos));  ?>
+</div>
+    </div>
+    </div>
+   </div>
+
 <script>
    function actualizar(){
        window.location.reload();
    }
-</script>    
-   
+</script> 

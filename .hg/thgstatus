@@ -2,6 +2,7 @@ m
 mcore/libs/auth2/adapters
 mdefault/app/controllers
 mdefault/app/models
+mdefault/app/views/_shared/errors
 mdefault/app/views/_shared/partials
 mdefault/app/views/_shared/templates
 mdefault/app/views/banco
@@ -11,6 +12,7 @@ mdefault/app/views/empleado
 mdefault/app/views/empresa
 mdefault/app/views/envios
 mdefault/app/views/index
+mdefault/app/views/inventario
 mdefault/app/views/producto
 mdefault/app/views/venta
 mdefault/public/css

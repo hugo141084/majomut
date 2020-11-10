@@ -1,19 +1,94 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 ?>
+    
+<br>
 <div id="form_container" style="width:100%">
-   <br/>
     <h1><a></a></h1>
-<?php View::partial("formatoTabla",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrlActualizar'=>"actualizar/",'ctrlAlta'=>"crear/",'ventana'=>"Lote"));  ?>
 </div>
+  <div class="row">
+     <div class="col-md-12">
+       <h1><a></a></h1>
+     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>Agregar Lote</span>
+         </strong>
+        </div>
+        <div class="panel-body">
+            <?php echo Form::open("catalogo/listadoLote"); ?> 
+         
+             <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Ciclo:
+                        </div>
+<?php echo Form::text( 'lote.ciclo', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Num. Lote:
+                        </div>
+<?php echo Form::text( 'lote.num_lote', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Codigo:
+                        </div>
+<?php echo Form::text( 'lote.codigo', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Fecha Caducidad:
+                        </div>
+<?php echo Form::text( 'lote.fecha_caducidad', 'class="form-control"'); ?>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+               <button type="submit" name="add_cat" class="btn btn-primary">Agregar Lote</button> 
+            </div>
+            
+            
+        <?php echo Form::close(); ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>
+          <span class="glyphicon glyphicon-th"></span>
+          <span>Listado de Lotes</span>
+       </strong>
+      </div>
+        <div id="form_container" style="width:100%">   
+            <?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos));  ?>
+</div>
+    </div>
+    </div>
+   </div>
+
 <script>
    function actualizar(){
        window.location.reload();
    }
-</script>    
-   
+</script> 

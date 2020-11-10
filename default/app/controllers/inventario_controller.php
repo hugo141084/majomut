@@ -13,6 +13,13 @@ class inventarioController extends AppController{
      */
     public function listadoAlmacen() {
         $almacen = new almacen();
+        $almacen = new almacen();
+        $this->producto = $almacen->find();
+
+        if (Input::hasPost('almacen')) {
+
+            $this->almacen = $almacen->guardarDatos();
+        }
         $this->result = $almacen->listar();
         $this->campos = array(
             utf8_encode('#') => 'ID',
