@@ -27,9 +27,6 @@ class empleadoController extends AppController {
         
         $this->accion = 'crear';
         $empleado = new empleado();
-        $this->empleado = $empleado->listar();
-        
-        
         $empleado_datos = new empleado(Input::post('empleado')); 
         $cont = $empleado_datos->verificaRFC($empleado_datos->rfc);
         
@@ -43,7 +40,7 @@ class empleadoController extends AppController {
                 
             }
         }
-        $this->Curp = new empleado();
+        $this->empleado = new empleado();
     }
 
     public function editar($id = null) {
@@ -102,7 +99,7 @@ class empleadoController extends AppController {
         if ($id != null) {
             
             $empleado = new empleado();
-            $UsuarioEmpleado = new usuarioAdministrador();
+            $UsuarioEmpleado = new usuario();
             $users = $UsuarioEmpleado->count(" tipo='1' and empleado_id!='$id' AND estatus='1'");
             if($users>0){
                 $this->empleado = $empleado->find_by_id($id);

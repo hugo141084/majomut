@@ -22,7 +22,7 @@ class clienteController extends AppController {
         );
         $cliente=new cliente();
         $this->result = $cliente->listarInactivo();
-        $this->encabezado = "cliente";
+        $this->encabezado = "";
     }
 
     public function crear() {

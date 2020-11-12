@@ -34,7 +34,7 @@ WHERE id ='' ");
     
 
             //para dar de alta el nuevo empleado en la tabla de empleados
-            $empleados = new empleado(Input::post('empleados'));
+            $empleados = new empleado(Input::post('empleado'));
 
             //para dar de alta el nuevo empleado en la tabla de sujetos                
             
@@ -67,7 +67,7 @@ WHERE id ='' ");
                         
                              ?>
                 <script> 
-                window.location.replace("<?php echo PUBLIC_PATH."empleados"; ?>");
+                window.location.replace("<?php echo PUBLIC_PATH."empleado"; ?>");
                 </script>
                 <?php
                         

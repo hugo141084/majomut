@@ -18,8 +18,9 @@
 
         <?php Tag::css('form_css') ?> <!-- estilos para el form!-->
 	<?php Tag::css('mi_estilo') ?> <!-- algunos de mis estilos personalizados!-->
-        <?php Tag::css('bootstrap'); ?>
-        <?php Tag::css('bootstrap.min'); ?>
+       
+        <?php Tag::css('bootstrap.min'); ?> 
+            <?php Tag::css('bootstrap'); ?>
         <?php Tag::css('font-awesome.min'); ?>
         <?php Tag::css('owl.carousel.min'); ?>
         <?php Tag::css('flaticon'); ?>
@@ -35,18 +36,17 @@
 <!--====== Javascripts & Jquery ======-->
 	
         <?php //echo Tag::js('owl.carousel.min'); ?>
-         <?php echo Tag::js('jquery-3.2.1.min'); ?>
+    <?php echo Tag::js('jquery-1.9.1.min'); ?>     
+  <?php echo Tag::js('jquery-ui.min'); ?>
        <?php echo Tag::js('bootstrap'); ?>
 
         <?php //echo  Tag::js('bootstrap.min'); ?>
         <?php echo Tag::js('jquery.slicknav.min'); ?>
         <?php echo Tag::js('jquery.ui.draggable'); ?>
-
             <?php echo Tag::js('jquery.alerts.mod'); ?>
             <?php echo Tag::js('jquery.blockUI'); ?>
-        
-        <?php echo Tag::js('jquery-ui.min'); ?>
-        <?php echo Tag::js('main'); ?>
+      
+       
 <?php echo Tag::js('jquery/shadowbox'); ?><!-- js para la ventana emergente!-->
 <?php echo Tag::js('popper'); ?><!-- js para la ventana emergente!-->
 	<!--[if lt IE 9]>
@@ -92,6 +92,7 @@
 jQuery.curCSS = function(element, prop, val) {
     return jQuery(element).css(prop, val);
 };
+
     </script>                                             
       <a href="index.html" class="site-logo"  style="padding: 0">
 			<img src="<?php echo PUBLIC_PATH ?>img/logo.png"  />

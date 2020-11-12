@@ -30,8 +30,6 @@ class catalogoController extends AppController{
     }
     public function listadoCalidad() {
         $calidad = new calidad();
-        $this->zona = $calidad->find();
-
         if (Input::hasPost('calidad')) {
 
             $this->calidad = $calidad->guardarDatos();
@@ -41,8 +39,7 @@ class catalogoController extends AppController{
         $this->campos = array(
             utf8_encode('#') => 'id',
             utf8_encode('CODIGO') => 'codigo',
-            utf8_encode('DESCRIPCION') => 'descripcion',
-            
+            utf8_encode('DESCRIPCION') => 'descripcion'
         );
         $this->encabezado= "PRESENTACION";
     }
