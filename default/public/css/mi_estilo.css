@@ -250,10 +250,7 @@ a.exit_text:hover{
 
 a{ text-decoration: none;}
 
-a:link,a:visited,a:hover,a:active{
-	color:#222222; /*verde*/
-	/*font-size:12px;*/
-}
+
 a:hover{
 	color:#b5d000;/*verde claro */
 }

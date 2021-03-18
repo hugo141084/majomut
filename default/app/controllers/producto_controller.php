@@ -63,5 +63,17 @@ class productoController extends AppController{
         }
         view::select('crear');
     }
+    public function eliminar($id) {
+        
+        $producto = new producto();
+        $producto = $producto->find_first($id);
+        $producto->estatus='0';
+        $producto->update();
+         Redirect::to('producto');
+            
+        
+        
+       
+    }
 }
 ?>

@@ -13,7 +13,7 @@ class indexController extends AppController
         error_reporting(0);
         $valido = Load::model('usuario')->isValid(); 
         if ($valido) { 
-            Redirect::to('index/principal');
+            Redirect::to('principal/principal');
             
      } else {
         $users = new Usuario();
@@ -30,7 +30,7 @@ class indexController extends AppController
                          $operador = Session::get('Usr');
                        $this->usuarioactivo = $operador;
 
-                            Redirect::to('index/principal');
+                            Redirect::to('principal/principal');
                             
                         }
                         break;

@@ -6,10 +6,11 @@
  * and open the template in the editor.
  */
 ?>
+
 <br>
 <div id="form_container" style="width:100%">
     <h1><a></a></h1>
-    <br/>
+    <br>
 </div>
   <div class="row">
      <div class="col-md-12">
@@ -22,50 +23,48 @@
         <div class="panel-heading">
           <strong>
             <span class="glyphicon glyphicon-th"></span>
-            <span>Agregar Presentación</span>
+            <span>Actualizar Unidad Medida</span>
          </strong>
         </div>
         <div class="panel-body">
-            <?php echo Form::open("catalogo/listadoCalidad"); ?> 
-         <div class="col-sm-12">
+            <?php echo Form::open("catalogo/editarMedida/".$medida->id); ?> 
+            <div class="col-sm-6">
                 <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-addon">  Codigo:
+                        <div class="input-group-addon">  Unidad de Medida:
                         </div>
-<?php echo Form::text( 'calidad.codigo', 'class="form-control"'); ?>
+<?php echo Form::text( 'medida.id', 'class="form-control" required'); ?>
 
                     </div>
                 </div>
             </div> 
-            <div class="col-sm-12">
+         <div class="col-sm-12">
                 <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-addon">  Descripcion:
+                        <div class="input-group-addon">  Unidad de Medida:
                         </div>
-<?php echo Form::text( 'calidad.descripcion', 'class="form-control" required'); ?>
+<?php echo Form::text( 'medida.descripcion', 'class="form-control" required'); ?>
 
                     </div>
                 </div>
             </div> 
               
-            <button type="submit" name="add_cat" class="btn btn-success">Agregar Presentación</button>
+            <?php $url ="'" .  PUBLIC_PATH . "catalogo/listadoMedida'"; ?>  
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <?php echo Form::button("Cancelar", 'class="btn btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <button type="submit" name="add_cat" class="btn btn-success">Actualizar</button>  
+                </div>
+            </div>
         <?php echo Form::close(); ?>
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>
-          <span class="glyphicon glyphicon-th"></span>
-          <span>Listado de Presentaciones</span>
-       </strong>
-      </div>
-        <div id="form_container" style="width:100%">   
-            <?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrleditar'=>"editarCalidad/",'ctrleliminar'=>"eliminarCalidad/"));  ?>
-</div>
-    </div>
-    </div>
+    
    </div>
 
 <script>

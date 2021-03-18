@@ -16,7 +16,7 @@ class embalaje extends ActiveRecord {
 
     public function listar() {
          
-        return $this->find();
+        return $this->find("estatus='1'");
         
         
     }
@@ -27,7 +27,14 @@ class embalaje extends ActiveRecord {
         $embalaje = new embalaje(Input::post('embalaje'));
         
         if( $embalaje->save()){
-          echo "<script>  alert ('Registro Insertado....!');</script>";  
+        //  echo "<script>  alert ('Registro Insertado....!');</script>";  
+        }
+    }
+    public function actualizarDatos(){
+        $embalaje = new embalaje(Input::post('embalaje'));
+        
+        if( $embalaje->update()){
+        //  echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }
 }   

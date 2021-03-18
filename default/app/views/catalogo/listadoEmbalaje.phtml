@@ -4,6 +4,7 @@
 <br>
 <div id="form_container" style="width:100%">
     <h1><a></a></h1>
+    <br>
 </div>
   <div class="row">
      <div class="col-md-12">
@@ -26,13 +27,13 @@
                     <div class="input-group">
                         <div class="input-group-addon">  Descripcion:
                         </div>
-<?php echo Form::text( 'embalaje.descripcion', 'class="form-control"'); ?>
+<?php echo Form::text( 'embalaje.descripcion', 'class="form-control" required'); ?>
 
                     </div>
                 </div>
             </div> 
               
-            <button type="submit" name="add_cat" class="btn btn-primary">Agregar Empaque</button>
+            <button type="submit" name="add_cat" class="btn btn-success">Agregar Empaque</button>
         <?php echo Form::close(); ?>
         </div>
       </div>
@@ -46,7 +47,7 @@
        </strong>
       </div>
         <div id="form_container" style="width:100%">   
-            <?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos));  ?>
+            <?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrleditar'=>"editarEmbalaje/",'ctrleliminar'=>"eliminarEmbalaje/"));  ?>
 </div>
     </div>
     </div>

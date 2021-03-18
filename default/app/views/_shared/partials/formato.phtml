@@ -145,6 +145,7 @@
                                 
                                 ?>
                                 <div style="<?php echo$ancho; ?>">
+                                    <div class="btn-group">
                                     <?php
                                     if (isset($ctrlListar)) {
                                         echo Html::linkAction($ctrlListar . $model->id, Html::img('lista.png', 'cancel', 'style="text-align:center;width:35px; padding:2px;"'));
@@ -152,7 +153,12 @@
                                     ?>
                                     <?php
                                     if (isset($ctrleditar)) {
-                                        echo Html::linkAction($ctrleditar . $model->id, Html::img('pencil.png', 'cancel', 'style="text-align:center;width:20px; padding:2px;"'));
+                                        echo Html::linkAction($ctrleditar . $model->id,'<span class="glyphicon glyphicon-edit"></span>','class="btn btn-info btn-xs"  title="Editar" data-toggle="tooltip"');
+                                    
+                                        
+                    
+                      
+                                        
                                     }
                                    
                                     
@@ -362,7 +368,7 @@
                                     
                                     ?>
 
-                                </div>
+                                    </div></div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

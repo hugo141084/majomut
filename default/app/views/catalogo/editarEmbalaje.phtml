@@ -1,0 +1,68 @@
+<?php
+
+?>
+<br>
+<div id="form_container" style="width:100%">
+    <h1><a></a></h1>
+    <br>
+</div>
+  <div class="row">
+     <div class="col-md-12">
+       <h1><a></a></h1>
+     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>Actualizar Empaque</span>
+         </strong>
+        </div>
+        <div class="panel-body">
+            <?php echo Form::open("catalogo/editarEmbalaje/".$embalaje->id); ?> 
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  #:
+                        </div>
+<?php echo Form::text( 'embalaje.id', 'class="form-control" '); ?>
+
+                    </div>
+                </div>
+            </div>
+         <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">  Descripcion:
+                        </div>
+<?php echo Form::text( 'embalaje.descripcion', 'class="form-control" required'); ?>
+
+                    </div>
+                </div>
+            </div> 
+              
+           <?php $url ="'" .  PUBLIC_PATH . "catalogo/listadoEmbalaje'"; ?>  
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <?php echo Form::button("Cancelar", 'class="btn btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <button type="submit" name="add_cat" class="btn btn-success">Actualizar</button>  
+                </div>
+            </div>
+        <?php echo Form::close(); ?>
+        </div>
+      </div>
+    </div>
+    
+   </div>
+
+<script>
+   function actualizar(){
+       window.location.reload();
+   }
+</script> 

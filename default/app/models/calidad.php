@@ -16,7 +16,7 @@ class calidad extends ActiveRecord {
 
     public function listar() {
          
-        return $this->find();
+        return $this->find("estatus='1'");
         
         
     }
@@ -28,7 +28,15 @@ class calidad extends ActiveRecord {
          
        
         if( $cuenta->save()){
-          echo "<script>  alert ('Registro Insertado....!');</script>";  
+          
+        }
+    }
+    public function actualizarDatos(){
+        $cuenta = new calidad(Input::post('calidad'));
+         
+       
+        if( $cuenta->update()){
+         
         }
     }
 }   

@@ -114,20 +114,21 @@
                             endforeach;
                             ?>
                             <td align="center">
-                                <?php
-                                if (isset($calendar)) {
-                                    $ancho = "width:65px";
-                                } else {
-                                    $ancho = "width:60px";
-                                }
-                                ?>
-                                <div style="<?php echo$ancho; ?>">
+                                
+                                  <div class="btn-group">
+                                <div >
                                     <?php
                                     if (isset($ctrleditar)) {
-                                        echo Html::linkAction($ctrleditar . $model->id, Html::img('pencil_32.png', 'cancel', 'style="text-align:center;width:15px; padding:2px;"'));
+                                       
+                                         echo Html::linkAction($ctrleditar . $model->id,'<span class="glyphicon glyphicon-edit"></span>','class="btn btn-info btn-xs"  title="Editar" data-toggle="tooltip"');
                                     }
                                     ?>
-                                   
+                                    <?php
+                                    if (isset($ctrleliminar)) {
+                                    
+                                        echo Html::linkAction($ctrleliminar.$model->id, '<span class="glyphicon glyphicon-trash"></span>','class="btn btn-danger btn-xs" title="" data-toggle="tooltip" data-original-title="Eliminar" onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"');
+                                    }
+                                    ?>
                                     <?php
                                     if ($campos == "estatus") {
                                         if ($model->$campos == "1") {
@@ -147,8 +148,9 @@
                                                 echo Html::linkAction($ctrlbloquear . $model->id, Html::img('bloquear.png', 'cancele', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Bloquear  el Usuario?\')"'));
                                             }
                                             
-                                    if (isset($eliminar)) {
-                                        echo Html::linkAction($eliminar.$tipoVale.'/'. $model->id, Html::img('close_32.png', 'cancel', 'style="text-align:center;width:15px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"'));
+                                    if (isset($ctrleliminar)) {
+                                    
+                                        echo Html::linkAction($eliminar.$tipoVale.'/'. $model->id, '<span class="glyphicon glyphicon-trash"></span>','class="btn btn-danger btn-xs" title="" data-toggle="tooltip" data-original-title="Eliminar" onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"');
                                     }
                                   
                                         } else if ($model->$campos == "Inactivo") {
@@ -213,6 +215,7 @@
                                     ?>
 
                                 </div>
+                                  </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

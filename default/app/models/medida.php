@@ -16,7 +16,7 @@ class medida extends ActiveRecord {
 
     public function listar() {
          
-        return $this->find();
+        return $this->find("estatus='1'");
         
         
     }
@@ -28,7 +28,15 @@ class medida extends ActiveRecord {
          
        
         if( $cuenta->save()){
-          echo "<script>  alert ('Registro Insertado....!');</script>";  
+         // echo "<script>  alert ('Registro Insertado....!');</script>";  
+        }
+    }
+     public function actualizarDatos(){
+        $cuenta = new medida(Input::post('medida'));
+         
+       
+        if( $cuenta->update()){
+        //  echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }
 }   

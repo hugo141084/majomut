@@ -15,7 +15,7 @@ class presentacion extends ActiveRecord {
     }
 
     public function listar() {
-        return $this->find();
+        return $this->find("estatus='1'");
     }
      public function listarXid($id) {
         return $this->find_by_sql("select * from presentacion where id=$id");
@@ -25,6 +25,14 @@ class presentacion extends ActiveRecord {
          
        
         if( $presentacion->save()){
+         // echo "<script>  alert ('Registro Insertado....!');</script>";  
+        }
+    }
+    public function actualizarDatos(){
+        $presentacion = new presentacion(Input::post('presentacion'));       
+         
+       
+        if( $presentacion->update()){
          // echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }

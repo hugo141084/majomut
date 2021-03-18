@@ -16,7 +16,7 @@ class preparacion extends ActiveRecord {
 
     public function listar() {
          
-        return $this->find();
+        return $this->find("estatus='1'");
         
         
     }
@@ -28,7 +28,15 @@ class preparacion extends ActiveRecord {
         
        
         if( $cuenta->save()){
-          echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";  
+        //  echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";  
+        }
+    }
+    public function actualizarDatos(){
+        $cuenta = new preparacion(Input::post('preparacion'));
+        
+       
+        if( $cuenta->update()){
+        //  echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";  
         }
     }
 }   

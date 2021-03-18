@@ -15,7 +15,7 @@ class lote extends ActiveRecord {
     }
 
     public function listar() {
-        return $this->find();
+        return $this->find("estatus='1'");
     }
      public function listarXid($id) {
         return $this->find_by_sql("select * from lote where id=$id");
@@ -27,7 +27,14 @@ class lote extends ActiveRecord {
         $lote = new lote(Input::post('lote'));       
         
         if( $lote->save()){
-          echo "<script>  alert ('Registro Insertado....!');</script>";  
+        //  echo "<script>  alert ('Registro Insertado....!');</script>";  
+        }
+    }
+     public function actualizarDatos(){
+        $lote = new lote(Input::post('lote'));       
+        
+        if( $lote->update()){
+          //echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }
     

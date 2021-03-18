@@ -28,6 +28,26 @@ class catalogoController extends AppController{
         );
         $this->encabezado= "Lotes ";
     }
+     public function editarLote($id){
+        
+     
+        $lote = new lote();
+        $this->lote = $lote->find_first($id);
+
+        if (Input::hasPost('lote')) {
+
+            $this->lote = $lote->actualizarDatos();
+            Redirect::to('catalogo/listadoLote');
+        }
+       
+    }
+     public function eliminarLote($id){
+        $lote = new lote();
+        $lote = $lote->find_first($id);
+        $lote->estatus='0';
+        $lote->update();
+        Redirect::to('catalogo/listadoLote');
+    }
     public function listadoCalidad() {
         $calidad = new calidad();
         if (Input::hasPost('calidad')) {
@@ -43,6 +63,26 @@ class catalogoController extends AppController{
         );
         $this->encabezado= "PRESENTACION";
     }
+    public function editarCalidad($id){
+        
+        $this->accion="crearCalidad";
+        $calidad = new calidad();
+        $this->calidad = $calidad->find_first($id);
+
+        if (Input::hasPost('calidad')) {
+
+            $this->calidad = $calidad->actualizarDatos();
+            Redirect::to('catalogo/listadoCalidad');
+        }
+       
+    }
+     public function eliminarCalidad($id){
+        $calidad = new calidad();
+        $calidad = $calidad->find_first($id);
+        $calidad->estatus='0';
+        $calidad->update();
+        Redirect::to('catalogo/listadoCalidad');
+    }
     public function listadoPreparacion() {
         
         $preparacion = new preparacion();
@@ -57,6 +97,26 @@ class catalogoController extends AppController{
             
         );
         $this->encabezado= "Preparacion";
+    }
+    public function editarPreparacion($id){
+        
+     
+        $preparacion = new preparacion();
+        $this->preparacion = $preparacion->find_first($id);
+
+        if (Input::hasPost('preparacion')) {
+
+            $this->preparacion = $preparacion->actualizarDatos();
+            Redirect::to('catalogo/listadoPreparacion');
+        }
+       
+    }
+     public function eliminarPreparacion($id){
+        $preparacion = new preparacion();
+        $preparacion = $preparacion->find_first($id);
+        $preparacion->estatus='0';
+        $preparacion->update();
+        Redirect::to('catalogo/listadoPreparacion');
     }
     public function listadoMedida() {
         $medida = new medida();
@@ -74,6 +134,26 @@ class catalogoController extends AppController{
         );
         $this->encabezado= "Unidades de Medida";
     }
+     public function editarMedida($id){
+        
+     
+        $medida = new medida();
+        $this->medida = $medida->find_first($id);
+
+        if (Input::hasPost('medida')) {
+
+            $this->medida = $medida->actualizarDatos();
+            Redirect::to('catalogo/listadoMedida');
+        }
+       
+    }
+     public function eliminarMedida($id){
+        $medida = new medida();
+        $medida = $medida->find_first($id);
+        $medida->estatus='0';
+        $medida->update();
+        Redirect::to('catalogo/listadoMedida');
+    }
     public function listadoPresentacion() {
         
         $presentacion = new presentacion();
@@ -89,6 +169,30 @@ class catalogoController extends AppController{
             
         );
         $this->encabezado= "";
+    }
+     public function editarPresentacion($id) {
+        
+        $presentacion = new presentacion();
+        $this->presentacion = $presentacion->find_first($id);
+        if (Input::hasPost('presentacion')) {
+            $this->presentacion = $presentacion->actualizarDatos();
+         Redirect::to('catalogo/listadoPresentacion');
+            
+        }
+        
+        $this->encabezado= "";
+    }
+    public function eliminarPresentacion($id) {
+        
+        $presentacion = new presentacion();
+        $presentacion = $presentacion->find_first($id);
+        $presentacion->estatus='0';
+        $presentacion->update();
+         Redirect::to('catalogo/listadoPresentacion');
+            
+        
+        
+       
     }
     public function crear(){
          $this->accion="crear";
@@ -107,25 +211,7 @@ class catalogoController extends AppController{
         }
        
     }
-    public function editarLote($id = null,$var=null) {
-        $this->accion = 'editarLote';
-        $clasificacion = new lote();
-        if ($id != null) {
-            $this->lote = $clasificacion->find($id);
-        } else if (Input::hasPost('lote')) {
-             
-            if ($clasificacion->update(Input::post('lote'))) {               
-                $this->actualizo="0";
-                Flash::valid('Registro Actualizado');
-                Router::redirect('catalogo/lostarLote/'.$clasificacion->id);   
-            } else {
-                $this->lote = Input::post('lote');
-                Flash::error('Falló Operación');
-            }
-        }
-        $this->var=$var;
-        view::select('crearClasifProducto');
-    }
+    
      public function crearCalidad(){
         View::template(NULL);
         $this->accion="crearCalidad";
@@ -138,19 +224,7 @@ class catalogoController extends AppController{
         }
        
     }
-    public function editarCalidad($id = null,$var=null){
-        View::template(NULL);
-        View::select('crearCalidad');
-        $this->accion="crearCalidad";
-        $zona = new calidad();
-        $this->zona = $zona->find($id);
-
-        if (Input::hasPost('calidad')) {
-
-            $this->calidad = $calidad->guardarDatos();
-        }
-       
-    }
+   
     
     public function listadoEmbalaje() {
         $embalaje = new embalaje();
@@ -168,6 +242,26 @@ class catalogoController extends AppController{
             
         );
         $this->encabezado= "Empaques";
+    }
+    public function editarEmbalaje($id){
+        
+     
+        $embalaje = new embalaje();
+        $this->embalaje = $embalaje->find_first($id);
+
+        if (Input::hasPost('embalaje')) {
+
+            $this->embalaje = $embalaje->actualizarDatos();
+            Redirect::to('catalogo/listadoEmbalaje');
+        }
+       
+    }
+     public function eliminarEmbalaje($id){
+        $embalaje = new embalaje();
+        $embalaje = $embalaje->find_first($id);
+        $embalaje->estatus='0';
+        $embalaje->update();
+        Redirect::to('catalogo/listadoEmbalaje');
     }
      public function crearEmbalaje(){
         View::template(NULL);

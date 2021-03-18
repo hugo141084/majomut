@@ -166,13 +166,13 @@
         <table width="100%">
         <tr align="center">
             <td width="33%">     
-            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            <?php echo Form::button("Cancelar", 'class="btn btn-dark" onclick="window.location = ' . $url . '" '); ?>
             </td>
             <td>
-            <?php echo Form::reset('Reiniciar', 'class="CSSButton"'); //Crea un botón con el texto 'reiniciar';?>
+            <?php echo Form::reset('Reiniciar', 'class="btn btn-danger"'); //Crea un botón con el texto 'reiniciar';?>
             </td>
             <td width="33%">
-            <?php echo Form::submit((($accion == 'crear') ? 'Guardar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            <?php echo Form::submit((($accion == 'crear') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-success"'); ?>       
             </td>
         </tr>
      </table>
