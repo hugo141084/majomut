@@ -14,7 +14,7 @@ class almacen extends ActiveRecord {
     }
 
     public function listar() {
-        return $this->find();
+        return $this->find("estatus='1'");
     }
     public function listarXid($id) {
         return $this->find_by_sql("select * from almacen where id='$id'");
@@ -38,10 +38,16 @@ class almacen extends ActiveRecord {
         $almacen->usuario=Session::get('id'); 
        
         if( $almacen->save()){
-          echo "<script>  alert ('Registro Insertado....!');</script>";  
+         // echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }
-    
+    public function actualizarDatos(){
+        $almacen = new almacen(Input::post('almacen'));
+        
+        if( $almacen->update()){
+          //echo "<script>  alert ('Registro Insertado....!');</script>";  
+        }
+    }
     public function buscarAlmacen($condicion) {
             return $this->find_all_by_sql("SELECT distinct(alm.id), alm.descripcion
 FROM almacen as alm, inventario as inv

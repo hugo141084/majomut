@@ -25,8 +25,8 @@ class cliente extends ActiveRecord {
         $producto->estatus='1'; 
         
         if( $producto->save()){
-          echo "<script>  alert ('Registro Insertado....!');</script>"; 
-          Redirect::to('cliente/crear');
+         // echo "<script>  alert ('Registro Insertado....!');</script>"; 
+          Redirect::to('cliente/index');
         }
     }
     public function before_save() {

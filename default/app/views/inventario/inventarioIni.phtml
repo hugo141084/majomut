@@ -184,14 +184,14 @@ $.ajax({
   <div class="form-row">
     
     
-     <?php echo Form::hidden('vale.tipo_documento', 'maxlength="20" required class="form-control" style="text-transform:uppercase" onkeyup="Mayusculas(this)" ',"INVENTARIO INICIAL"); ?>
+     <?php echo Form::hidden('vale.tipo_documento', 'maxlength="20" required class="form-control"  ',"INVENTARIO INICIAL"); ?>
       
     <div class="col-sm-5">
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">       Documento:    
                             </div>
-                          <?php echo Form::text('vale.documento', ' readonly="readonly" maxlength="20" required class="form-control" style="text-transform:uppercase" onkeyup="Mayusculas(this)" ',$num); ?>
+                          <?php echo Form::text('vale.documento', ' readonly="readonly" maxlength="20" required class="form-control"  ',$num); ?>
                     </div>
                 </div> 
     </div>
@@ -202,7 +202,7 @@ $.ajax({
                         <div class="input-group">
                             <div class="input-group-addon">       Fecha:    
                             </div>
-                          <?php echo form::text('vale.fecha_recepcion','placeholder="dd-mm-aa" required class="form-control"',date('d-m-Y')); ?>
+                          <?php echo form::date('vale.fecha_recepcion','placeholder="dd-mm-aa" required class="form-control"',date('d-m-Y')); ?>
           </div>
                 </div> 
     </div>
@@ -265,7 +265,7 @@ $.ajax({
                 
                      <tr >
       <td>Observaciones:</td>
-      <td><?php echo Form::textarea('vale.observacion', '  class="form-control" style="text-transform:uppercase" onkeyup="Mayusculas(this)"'); ?></td>
+      <td><?php echo Form::textarea('vale.observacion', '  class="form-control" '); ?></td>
     
                  </tr>
              </table>
@@ -276,7 +276,7 @@ $.ajax({
                         <div class="input-group">
                             <div class="input-group-addon">       Capturo:    
                             </div>
-                          <?php echo Form::text('vale.capturo', ' required class="form-control" style="text-transform:uppercase" onkeyup="Mayusculas(this)" '); ?>
+                          <?php echo Form::text('vale.capturo', ' required class="form-control"   '); ?>
                     </div>
                 </div> 
     </div>
@@ -286,7 +286,8 @@ $.ajax({
                         <div class="input-group">
                             <div class="input-group-addon">       Valido:    
                             </div>
-                          <?php echo Form::text('vale.valido', ' required class="form-control" style="text-transform:uppercase" onkeyup="Mayusculas(this)" '); ?>
+                          <?php echo Form::text('vale.valido', ' required class="form-control"  '); ?>
+                            <?php echo Form::hidden('vale.proveedor_id', ' required class="form-control"  ','0'); ?>
           </div>
                 </div> 
     </div>

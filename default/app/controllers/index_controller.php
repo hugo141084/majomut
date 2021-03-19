@@ -23,10 +23,7 @@ class indexController extends AppController
                 switch ($datosUsu->Estatus) {
                     case 1:
                         
-                        if ($users->iniciarSesion()) {
-                            
-
-                            Flash::info("<strong>" . Session::get('Nombre') . ' ' . Session::get('ApPaterno') . "<strong>");
+                        if ($users->iniciarSesion()) {                        
                          $operador = Session::get('Usr');
                        $this->usuarioactivo = $operador;
 
