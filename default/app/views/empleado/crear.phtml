@@ -1,5 +1,5 @@
-<?php 
-View::content(); 
+<?php
+View::content();
 ?>
 <?php Html::includeCss() ?>
 <br/>
@@ -8,231 +8,255 @@ View::content();
     <h1><a></a></h1>
 
     <?php
-        echo Form::open("empleado/".$accion  ,'POST','id=form1');
-     ?>
+    echo Form::open("empleado/" . $accion, 'POST', 'id=form1');
+    ?>
     <div id="titulo_superior"> 
         <div id="texto_superior"  >
-                 <?php echo "Empleados" ?> 
+            <?php echo "Empleados" ?> 
+        </div>
+        <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+            <div class='btn'>
+                <?php
+                echo Html::linkAction('', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
+                ?>
             </div>
-            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
-                <div class='btn'>
-                    <?php
-                   
-                        echo Html::linkAction('',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
-                    
-                    
-                    ?>
-                </div>
-            </div>
+        </div>
     </div>
-    
-    <?php 
-    if ($accion=='editar'){
-        echo Form::hidden('empleado.id');
-        echo Form::hidden('empleado.estatus');
-    }
-   
-    ?>
-            
+
+<?php
+if ($accion == 'editar') {
+    echo Form::hidden('empleado.id');
+    echo Form::hidden('empleado.estatus');
+}
+?>
+
     <div id="form">
-      <ul>
-        <li>
-            <label class="description">NOMBRE DEL EMPLEADO:</label>
-            <div class="tres_a">
-                <?php echo Form::text('empleado.nombre',' required  class="element text medium"  ');?>
-                <label>*Nombre </label>
-            </div>
-            <div class="tres_b">
-                <?php echo Form::text('empleado.ape_pat',' required class="element text medium"  ');?>
-                <label>*Apellido Paterno</label>
-            </div>
-            <div class="tres_b">
-                <?php echo Form::text('empleado.ape_mat',' class="element text medium"  ');?>
-                <label>Apellido Materno</label>
-            </div>
-        </li>
-        
-        <li class="section_break"></li>
-        <li id="li_2" >
-            <label class="description">DATOS DE ORIGEN:</label>
-            <div class="tres_a">
-                <?php $arrEstado = array(""=>"Seleccione...","AS"=>"AGUASCALIENTES","BC"=>"BAJA CALIFORNIA NTE.","BS"=>"BAJA CALIFORNIA SUR","CC"=>"CAMPECHE","CL"=>"COAHUILA","CM"=>"COLIMA","CS"=>"CHIAPAS","CH"=>"CHIHUAHUA","DF"=>"CIUDAD DE MÉXICO","DG"=>"DURANGO","GT"=>"GUANAJUATO","MN"=>"MICHOACAN","MS"=>"MORELOS","NT"=>"NAYARIT","NL"=>"NUEVO LEON","OC"=>"OAXACA","PL"=>"PUEBLA","QT"=>"QUERETARO","QR"=>"QUINTANA ROO","SP"=>"SAN LUIS POTOSI","SL"=>"SINALOA","SR"=>"SONORA","TC"=>"TABASCO","TS"=>"TAMAULIPAS","TL"=>"TLAXCALA","VZ"=>"VERACRUZ","YN"=>"YUCATAN","ZS"=>"ZACATECAS","GUA"=>"GUATEMALA","SM"=>"SERV. EXTERIOR MEXICANO","NE"=>"NACIDO EN EL EXTRANJERO");?>
-                <?php echo Form::Select('empleado.estado_nacimiento', $arrEstado,'type="text" class="element text medium"','OC'); ?>      
-                <label>Lugar de Nacimiento</label>
-            </div>
+        <ul>
+            <li>
+                <div class="panel panel-success">
+                    <div class="panel-heading">NOMBRE DEL EMPLEADO: </div>
+                    <div class="panel-body">
 
-            <div class="tres_b">
-                <?php if ($accion=='crear'){$select='0';}else{$select=$empleado->sexo;}?>
-                <?php $arregloSexo = array(''=>'Seleccione...','H'=>'MASCULINO','M'=>'FEMENINO');?>
-                <?php echo Form::Select('empleado.sexo', $arregloSexo,'type="text" class="element text medium"',$select); ?>       
-                <label>Sexo</label>
-            </div>
+                        <div class="tres_a">
+<?php echo Form::text('empleado.nombre', ' required  class="element text medium"  '); ?>
+                            <label>*Nombre </label>
+                        </div>
+                        <div class="tres_b">
+                            <?php echo Form::text('empleado.ape_pat', ' required class="element text medium"  '); ?>
+                            <label>*Apellido Paterno</label>
+                        </div>
+                        <div class="tres_b">
+                            <?php echo Form::text('empleado.ape_mat', ' class="element text medium"  '); ?>
+                            <label>Apellido Materno</label>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+
+            <li id="li_2" >
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">DATOS DE ORIGEN: </div>
+                    <div class="panel-body">
+                        <div class="tres_a">
+<?php $arrEstado = array("" => "Seleccione...", "AS" => "AGUASCALIENTES", "BC" => "BAJA CALIFORNIA NTE.", "BS" => "BAJA CALIFORNIA SUR", "CC" => "CAMPECHE", "CL" => "COAHUILA", "CM" => "COLIMA", "CS" => "CHIAPAS", "CH" => "CHIHUAHUA", "DF" => "CIUDAD DE MÉXICO", "DG" => "DURANGO", "GT" => "GUANAJUATO", "MN" => "MICHOACAN", "MS" => "MORELOS", "NT" => "NAYARIT", "NL" => "NUEVO LEON", "OC" => "OAXACA", "PL" => "PUEBLA", "QT" => "QUERETARO", "QR" => "QUINTANA ROO", "SP" => "SAN LUIS POTOSI", "SL" => "SINALOA", "SR" => "SONORA", "TC" => "TABASCO", "TS" => "TAMAULIPAS", "TL" => "TLAXCALA", "VZ" => "VERACRUZ", "YN" => "YUCATAN", "ZS" => "ZACATECAS", "GUA" => "GUATEMALA", "SM" => "SERV. EXTERIOR MEXICANO", "NE" => "NACIDO EN EL EXTRANJERO"); ?>
+<?php echo Form::Select('empleado.estado_nacimiento', $arrEstado, 'type="text" class="element text medium"', 'OC'); ?>      
+                            <label>Lugar de Nacimiento</label>
+                        </div>
+
+                        <div class="tres_b">
+<?php if ($accion == 'crear') {
+    $select = '0';
+} else {
+    $select = $empleado->sexo;
+} ?>
+                            <?php $arregloSexo = array('' => 'Seleccione...', 'H' => 'MASCULINO', 'M' => 'FEMENINO'); ?>
+                            <?php echo Form::Select('empleado.sexo', $arregloSexo, 'type="text" class="element text medium"', $select); ?>       
+                            <label>Sexo</label>
+                        </div>
+
+                        <div class="tres_b">
+
+                            <?php echo Form::date('empleado.fecha_nac', 'class="element text" ', @$empleado->fecha_nac); ?>
+                            <label>Fecha de Nacimiento</label>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+
+            <li  id="div_rfc">
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">DATOS DE IDENTIFICACIÓN: </div>
+                    <div class="panel-body">
+                        <div class="tres_a" >
+                            <?php echo Form::text('empleado.rfc', 'type="text" required class="element text medium"  '); ?>
+                            <label>*R.F.C.</label>
+                        </div>
+
+                        <div class="tres_b">
+                            <?php echo Form::text('empleado.curp', 'type="text" class="element text medium"  '); ?>
+                            <label>C.U.R.P.</label>
+                        </div>
+
+                        <div class="tres_b">
+                            <?php echo Form::text('empleado.ife', 'class="element text medium"  '); ?>
+                            <label>I.F.E</label>
+                        </div>
+                        <br />
+
+                        <div class="tres_a">
+                            <?php echo Form::text('empleado.numero_seguro', 'class="element text medium"  '); ?>
+                            <label>N.S.S.</label>
+                        </div>
+
+                        <div class="tres_b">
+                            <?php if ($accion == 'crear') {
+                                $select = '0';
+                            } else {
+                                $select = $empleado->estado_civil;
+                            } ?>
+<?php $arregloSexo = array('Seleccione...', 'SOLTERO' => 'SOLTERO', 'CASADO' => 'CASADO', 'DIVORCIADO' => 'DIVORCIADO', 'VIUDO' => 'VIUDO'); ?>
+                            <?php echo Form::Select('empleado.estado_civil', $arregloSexo, 'class="element text medium"', $select); ?>       
+                            <label>Estado civil</label>
+                        </div>
+
+                        <div class="tres_b">
+<?php if ($accion == 'crear') {
+    $select = '0';
+} else {
+    $select = $empleado->tipo_sangre;
+} ?>
+                            <?php $arregloTipoS = array('Seleccione...', 'O-' => 'O-', 'O+' => 'O+', 'A−' => 'A−', 'A+' => 'A+', 'B−' => 'B−', 'B+' => 'B+', 'AB−' => 'AB−', 'AB+' => 'AB+'); ?>
+<?php echo Form::Select('empleado.tipo_sangre', $arregloTipoS, 'class="element text" ', $select); ?>
+                            <label>Tipo de Sangre</label>
+                        </div>
+
+
+                        <div class="tres_a">
+
+<?php echo Form::date('empleado.fecha_ingreso', 'class="element text" required ', @$empleado->fecha_ingreso); ?>
+                            <label>Fecha de Ingreso</label> 
+                        </div>
+                        <div class="tres_b">
+
+<?php echo Form::date('empleado.fecha_baja', 'class="element text" ', @$empleado->fecha_baja); ?>
+                            <label>Fecha de Término</label> 
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+
+            <li id="li_5" >
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">DATOS COMPLEMENTARIOS </div>
+                    <div class="panel-body">
+                        <div class="left">
+                            <?php echo Form::Select('empleado.estado_residencia', $arrEstado, 'type="text" class="element text medium"', 'OC'); ?>      
+                            <label>Estado de residencia</label>
+                        </div>
+                        <div class="right">
+                            <?php echo Form::text('empleado.pais_residencia', 'class="element text large"  '); ?>
+                            <label>País de residencia</label>
+                        </div>
+                        <div>
+<?php echo Form::text('empleado.escolaridad', 'class="element text large"  '); ?>
+                            <label>Titulo o Escolaridad</label>
+                        </div>
+
+                        <div>
+<?php echo Form::text('empleado.domicilio', 'class="element text large"  '); ?>
+                            <label>Domicilio: Calle, Num., Colonia, Ciudad.</label>
+                        </div>
+
+                        <div class="left">
+<?php echo Form::text('empleado.telefono', 'type="text"  class="element text medium"'); ?>
+                            <label>Telefono (10 digitos)</label>
+                        </div>
+
+                        <div class="right">
+<?php echo Form::text('empleado.correo', 'type="text" class="element text medium"'); ?>
+                            <label>Correo Electronico</label>
+                        </div>
+                        <br /> 
+
+                        <div>
+<?php echo Form::text('empleado.etiqueta', 'class="element text medium"  '); ?>
+                            <label>Etiqueta</label>
+                        </div> 
+
+                        <br />
+                        <span>
+                            <label class="description"> * Campos Obligatorios.</label>
+                        </span>
+                    </div>
+                </div>
+            </li>
+
+
+
+
+
             
-            <div class="tres_b">
-              
-                <?php echo  Form::date('empleado.fecha_nac','class="element text" ',@$empleado->fecha_nac);?>
-                <label>Fecha de Nacimiento</label>
-            </div>
-        </li>
 
-        <li class="section_break"></li>
-        <li  id="div_rfc">
-            <label class="description">DATOS DE IDENTIFICACI&Oacute;N:</label>
-            <div class="tres_a" >
-                <?php echo Form::text('empleado.rfc','type="text" required class="element text medium"  ');?>
-                <label>*R.F.C.</label>
-            </div>
+            <table style="width: 100%; text-align: center;">
+                <tr>
+                    <td style="width: 33%"> <?php echo Form::button("Cancelar", ' id="Cancelar" class="btn btn-info" '); ?> </td>
+                    <td style="width: 34%"><?php echo Form::reset('Reiniciar', 'class="btn btn-danger"'); ?></td>
+                    <td style="width: 33%"><?php echo Form::submit((($accion == 'crear') ? 'Guardar' : 'Actualizar'), 'type="submit" id="submitButton" class="btn btn-success"'); // ?></td>
+                </tr>
+            </table>
 
-            <div class="tres_b">
-                <?php echo Form::text('empleado.curp','type="text" class="element text medium"  ' );?>
-                <label>C.U.R.P.</label>
-            </div>
-            
-            <div class="tres_b">
-                <?php echo Form::text('empleado.ife','class="element text medium"  ');?>
-                <label>I.F.E</label>
-            </div>
-            <br />
-            
-            <div class="tres_a">
-                <?php echo Form::text('empleado.numero_seguro','class="element text medium"  ');?>
-                <label>N.S.S.</label>
-            </div>
-
-            <div class="tres_b">
-                <?php if ($accion=='crear'){$select='0';}else{$select=$empleado->estado_civil;}?>
-                <?php $arregloSexo = array('Seleccione...','SOLTERO'=>'SOLTERO','CASADO'=>'CASADO','DIVORCIADO'=>'DIVORCIADO','VIUDO'=>'VIUDO');?>
-                <?php echo Form::Select('empleado.estado_civil', $arregloSexo,'class="element text medium"',$select); ?>       
-                <label>Estado civil</label>
-            </div>
-
-            <div class="tres_b">
-                <?php if ($accion=='crear'){$select='0';}else{$select=$empleado->tipo_sangre;}?>
-                <?php $arregloTipoS = array('Seleccione...','O-'=>'O-','O+'=>'O+','A−'=>'A−','A+'=>'A+','B−'=>'B−','B+'=>'B+','AB−'=>'AB−','AB+'=>'AB+');?>
-                <?php echo Form::Select('empleado.tipo_sangre', $arregloTipoS,'class="element text" ',$select); ?>
-                <label>Tipo de Sangre</label>
-            </div>
-        </li>
-
-        <li class="section_break"></li>
-        
-        
-        <li>
-            <div class="tres_a">
-                
-                <?php echo Form::date('empleado.fecha_ingreso','class="element text" required ',@$empleado->fecha_ingreso);?>
-               <label>Fecha de Ingreso</label> 
-            </div>
-            <div class="tres_b">
-                
-                <?php echo Form::date('empleado.fecha_baja','class="element text" ',@$empleado->fecha_baja);?>
-               <label>Fecha de Término</label> 
-            </div>
-        </li>
-
-        <li class="section_break"></li>
-        <li id="li_5" >
-            <label class="description">DATOS COMPLEMENTARIOS:</label>
-            <div class="left">
-                <?php echo Form::Select('empleado.estado_residencia', $arrEstado,'type="text" class="element text medium"','OC'); ?>      
-                <label>Estado de residencia</label>
-            </div>
-            <div class="right">
-                <?php echo Form::text('empleado.pais_residencia','class="element text large"  ' );?>
-                <label>País de residencia</label>
-            </div>
-            <div>
-                <?php echo Form::text('empleado.escolaridad','class="element text large"  ' );?>
-                <label>Titulo o Escolaridad</label>
-            </div>
-
-            <div>
-                <?php echo Form::text('empleado.domicilio','class="element text large"  ' );?>
-                <label>Domicilio: Calle, Num., Colonia, Ciudad.</label>
-            </div>
-
-            <div class="left">
-                <?php echo Form::text('empleado.telefono','type="text"  class="element text medium"' );?>
-                <label>Telefono (10 digitos)</label>
-            </div>
-
-            <div class="right">
-                <?php echo Form::text('empleado.correo','type="text" class="element text medium"' );?>
-                <label>Correo Electronico</label>
-            </div>
-            <br /> <br /><br />
-            <span>
-            <label class="description"> * Campos Obligatorios.</label>
-            </span>
-         </li>  
-        
-         <li class="section_break">
-           <div>
-                <?php echo Form::text('empleado.etiqueta','class="element text medium"  ' );?>
-                <label>Etiqueta</label>
-            </div>   
-         </li>
-        
-        
-        
-       
-        
-        <li class="section_break"></li>
-
-        <table style="width: 100%; text-align: center;">
-            <tr>
-                <td style="width: 33%"> <?php echo Form::button("Cancelar", ' id="Cancelar" class="btn btn-info" '); ?> </td>
-                <td style="width: 34%"><?php echo Form::reset('Reiniciar','class="btn btn-danger"');?></td>
-                <td style="width: 33%"><?php echo Form::submit((($accion=='crear')?'Guardar':'Actualizar'),'type="submit" id="submitButton" class="btn btn-success"'); //?></td>
-            </tr>
-        </table>
-                    
     </div> 
-    <?php echo Form::close();?>
-  </div>
-<?php echo Html::img('bottom.png','',"id='bottom' style='width:100%'");?>
+<?php echo Form::close(); ?>
+</div>
+<?php echo Html::img('bottom.png', '', "id='bottom' style='width:100%'"); ?>
 
 
 
 <script type="text/javascript">
 
-    
-    $("#Cancelar").click(function(){
-     window.location = '<?php echo PUBLIC_PATH."empleado"; ?>';
-        
+
+    $("#Cancelar").click(function () {
+        window.location = '<?php echo PUBLIC_PATH . "empleado"; ?>';
+
     });
-    
+
     //VALIDACION CARGOS PRESIDENTE/TESORERO - ADMINISTRADORES
-   
-    
-     
-    function ejecuta_ajax(datos, div, url){
+
+
+
+    function ejecuta_ajax(datos, div, url) {
         $.ajax({
             type: "POST",
             url: url,
             data: datos,
-            success: function(html) {
+            success: function (html) {
                 div.html(html);
             }
         });
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 </script>
 
 <script type="text/javascript">
-        Shadowbox.init({
-             overlayColor:   "#000",
-              overlayOpacity: '0.6',
-              modal:          true,
-              handleOversize: "rezise",
-              enableKeys:     false,
-              onClose:        function(){ //window.location.reload(); 
-                              <?php //echo Ajax::link('polizas/hola', 'Mostrar Saludo', 'capa_saludo'); ?>
-                              }
-          });
+    Shadowbox.init({
+        overlayColor: "#000",
+        overlayOpacity: '0.6',
+        modal: true,
+        handleOversize: "rezise",
+        enableKeys: false,
+        onClose: function () { //window.location.reload(); 
+<?php //echo Ajax::link('polizas/hola', 'Mostrar Saludo', 'capa_saludo');  ?>
+        }
+    });
 </script>
 

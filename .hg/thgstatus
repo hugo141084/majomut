@@ -15,6 +15,8 @@ mdefault/app/views/envios
 mdefault/app/views/index
 mdefault/app/views/inventario
 mdefault/app/views/producto
+mdefault/app/views/reportes
+mdefault/app/views/usuario
 mdefault/app/views/venta
 mdefault/public/css
 mdefault/public/css/jquery

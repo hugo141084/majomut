@@ -6,10 +6,10 @@ View::content();
     <h1><a></a></h1>
     <br>
 </div>
-<?php echo Form::open("usuario/crear/", 'POST', 'id="frmacceso"'); ?>
+<?php echo Form::open("usuario/editar/", 'POST', 'id="frmacceso"'); ?>
 <div class="col-sm-12">                  
     <div class="panel panel-success">
-        <div class="panel-heading">ALTA DE ACCESO </div>
+        <div class="panel-heading">ACTUALIZAR DATOS</div>
         <div class="panel-body">
 
 
@@ -22,7 +22,7 @@ View::content();
                         <div class="input-group">
                             <div class="input-group-addon"> Empleado:    
                             </div>
-                            <?php echo Form::dbSelect("usuario.empleado_id", 'nombre_completo', array('empleado', 'empleadoAcceso', 0), '- Seleccione -'," class='form-control ' required  ");?>
+                            <?php echo Form::dbSelect("usuario.empleado_id", 'nombre_completo', array('empleado', 'empleadoAcceso', 0), ''," class='form-control ' disabled  ",$usuario->empleado_id);?>
                         </div>
                     </div>
                 </div> 
@@ -38,18 +38,18 @@ View::content();
                 <div class="panel-body">
                     
                     <div class="col-sm-4">
-                        <label for="lastName">Perfil<small class="required">*</small></label>
+                        <label for="lastName">Tipo<small class="required">*</small></label>
                         <div class="input-group">
-                          <?php
+                           <?php
                         $tipo_valor = array(""=>"Seleccione","1"=>"ADMINISTRADOR");
                         
-                        echo Form::Select("usuario.Tipo", $tipo_valor,"", "class='form-control' " );
-                        ?>                                  </div>
+                        echo Form::Select("usuario.Tipo", $tipo_valor, "class='form-control' ",$usuario->Tipo );
+                        ?>                                       </div>
                     </div>
                     <div class="col-sm-5">
                         <label for="lastName">Usuario<small class="required">*</small></label>
                         <div class="input-group">
-                            <?php echo Form::text('usuario.Usr', 'class="form-control" required '); ?>                                    </div>
+                            <?php echo Form::text('usuario.Usr', 'class="form-control" required readonly'); ?>                                    </div>
                     </div>
                    <div class="col-sm-12">
                         <br/>
@@ -57,12 +57,12 @@ View::content();
                     <div class="col-sm-4">
                         <label for="lastName">Contraseña<small class="required">*</small></label>
                         <div class="input-group">
-                              <?php echo Form::pass('usuario.Pass', 'class="form-control"  required  maxlength="16" title="Puede utilizar letras (Mayusculas,Minusculas), Numeros o los simbolos siguientes !+*- :" '); ?>                        </div>         
+                              <?php echo Form::pass('usuario.Pass', 'class="form-control"  required  maxlength="16" title="Puede utilizar letras (Mayusculas,Minusculas), Numeros o los simbolos siguientes !+*- :" ',""); ?>                        </div>         
                     </div>
                     <div class="col-sm-4">
                         <label for="lastName">Repetir Contraseña<small class="required">*</small></label>
                         <div class="input-group">  
-                        <?php echo Form::pass('usuario.Pas', 'class="form-control" required'); ?>
+                        <?php echo Form::pass('usuario.Pas', 'class="form-control" required',""); ?>
                         </div>
                     </div>
                     <div class="col-sm-10">
@@ -74,7 +74,7 @@ View::content();
                       
                 
   La contraseña debe tener al entre 8 y 16 caracteres.<br/>
-  > Al menos un dígito.<br/> > Al menos una minúscula. <br/>  > Al menos una mayúscula. <br/>> Puede tener otros símbolos.
+  Al menos un dígito.<br/> Al menos una minúscula. <br/>  Al menos una mayúscula. <br/>Puede tener otros símbolos.
 </div>  
                 </div>
                 </div>
@@ -99,7 +99,7 @@ View::content();
     </tr>
 </tr>  
 </table>
-
+<?php echo Form::hidden('usuario.Id', 'class="form-control"  '); ?>
 <?php echo Form::close(); ?>
 
 <script>
@@ -107,23 +107,10 @@ View::content();
         
         var cadena=/^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$/;
         
-        empleado = $("#usuario_empleado_id").val();
-        perfil = $("#usuario_Tipo").val();
-        usuario = $("#usuarioUsr").val();
-        Pass = $("#usuario_Pass").val();
         Pass = $("#usuario_Pass").val();
         Pas = $("#usuario_Pas").val();
         
         
-        if (empleado == "" ){
-                alert("Seleccion un empleado");
-            }
-       else if (perfil == "" ){
-                alert("Indique el perfil");
-            }
-       else     if (usuario == "" ){
-                alert("Introduzca un nombre de  -Usuario-");
-            }
          if (Pass == "" ){
                 alert("La Nueva Contraseña es Necesaria");
             }

@@ -16,10 +16,10 @@ class empleado extends  ActiveRecord {
         where  E.estatus = '$estatus' order by nombre asc ";
         return $this->find_all_by_sql($sql);
     }
-    public function buscarEmpleado($empleadoId){
-        return $this->find_by_sql("SELECT ID,concat_ws(' ',nombre, ape_pat, ape_mat) as nombre,  etiqueta
-FROM empleado
-WHERE id ='' ");
+    public function empleadoAcceso(){
+        return $this->find_all_by_sql("SELECT em.id,em.nombre_completo
+FROM empleado em left JOIN usuario us on us.empleado_id=em.id
+WHERE us.empleado_id is NULL and em.estatus='1' ");
         
     }
     public function listarFiltro($estatus=1) {

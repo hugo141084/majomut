@@ -64,7 +64,7 @@ View::content();
                         <label class="col-sm-1 control-label">Tipo de Usuario</label>
                         <div class="col-sm-2">
                         <?php
-                        $tipo_valor = array("ADMINISTRADOR"=>"ADMINISTRADOR", "CAJERO"=>"CAJERO");
+                        $tipo_valor = array("1"=>"ADMINISTRADOR");
                         $select = (@${$prefijo}->tipo != "") ? @${$prefijo}->tipo : "";
                         echo Form::Select($prefijo.".tipo", $tipo_valor, " class='form-control' ", $select);
                         ?>
