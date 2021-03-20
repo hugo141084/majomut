@@ -10,7 +10,7 @@ class bancosCuentas extends ActiveRecord {
         public function datosCuenta($id=NULL) {
             return $this->find_all_by_sql("SELECT ban.nombre_banco, cu.id, cu.numero_cuenta, cu.sucursal,  DATE_FORMAT( cu.fecha_apertura, '%d-%m-%Y' ) fecha_apertura, cu.saldo,  cu.telefono, IF( cu.estatus ='1', 'Activo', IF( cu.estatus = '0', 'Inactivo', '' ) ) estado, cu.observacion
                     FROM bancos_cuentas AS cu,  bancos as ban
-                    WHERE ban.id=cu.bancos_id ");
+                    WHERE ban.id=cu.bancos_id and cu.estatus='1' ");
         }
 
         public function buscarCuentas($id) {
@@ -88,12 +88,24 @@ class bancosCuentas extends ActiveRecord {
                         
                         if ($guardaCuenta->save()) {  //GUARDAMOS EL BANCO CORRECTAMENTE   
                                                    
-                            Redirect::to('banco/');
+                        //    Redirect::to('banco/');
                             
                            }
            
         }
+        public function actualizarDatos() {
 
+            
+            //TOMAMOS EL VALOR DEL ID DE CLASIF_TAB_GRAL SI SE ENCUENTRA EN ALGUNA DE LAS CLASIFICACIONES SUJETOS(EMPLEADO,PROVEEDORES,CONTRATISTA Y DEPENDENCIAS)               
+            $guardaCuenta = new bancosCuentas(Input::post('cuenta'));
+                        
+                        if ($guardaCuenta->update()) {  //GUARDAMOS EL BANCO CORRECTAMENTE   
+                                                   
+                        //    Redirect::to('banco/');
+                            
+                           }
+           
+        }
         public function cuentaBanco($id) {
             $sql = "SELECT concat( nombre_banco,' - ',numero_cuenta) cuenta , saldo, cat_ramos_id, cat_fuente_f_id, numero_cuenta, clasif_tab_gral_id
                     from bancos_cuentas bc inner join bancos b on bc.bancos_id = b.id where b.estatus=1 and bc.estatus=1

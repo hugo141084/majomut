@@ -2,7 +2,7 @@
        <div id="form_container" style="width:100%;" >
 <h1 class="lineaSuperior"><a></a></h1>
             <div class="col-md-12">
-                <?php View::partial("formato",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos, 'ctrlbloquear'=>"bloquear"));  ?>
+                <?php View::partial("formato",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrleditar'=>"editar/", 'ctrlInactivo' => "bloquear/", 'ctrlcrear'=>"crear/"));  ?>
             </div>
         </div>
     </div>

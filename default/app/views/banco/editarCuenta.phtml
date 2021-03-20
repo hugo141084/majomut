@@ -9,59 +9,57 @@
      </div>
   </div>
    <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>
             <span class="glyphicon glyphicon-th"></span>
-            <span>Agregar Cuenta Bancaria</span>
+            <span>Actualizar Cuenta Bancaria</span>
          </strong>
         </div>
         <div class="panel-body">
-          <?php echo Form::open("banco/index/"); ?>
-            <div class="form-group">
+          <?php echo Form::open("banco/editarCuenta/".$cuenta->id); ?>
+            <?php echo Form::hidden( 'cuenta.id', 'class="form-control"'); ?>
+            <div class="form-group col-md-12">
                 Banco <br> 
              <?php echo Form::dbSelect("cuenta.bancos_id", 'nombre_banco', array('bancos', 'datosBanco', 0), '- Seleccione -'," class='form-control ' required  ");?>
         </div>
-              <div class="form-group">
+              <div class="form-group col-md-7">
                 Cuenta <br> 
              <?php echo Form::text('cuenta.numero_cuenta', ' class="form-control"  required '); ?>
         </div>
-            
-              <div class="form-group">
+              <div class="form-group col-md-6">
                 Fecha de apertura <br> 
            <?php echo Form::date('cuenta.fecha_apertura', ' class="form-control"  ',date('d-m-Y')); ?>
         </div>
-              <div class="form-group">
+              <div class="form-group col-md-7">
                 Sucursal <br> 
            <?php echo Form::text('cuenta.sucursal', ' class="form-control"  '); ?>
         </div>
-              <div class="form-group">
+              <div class="form-group col-md-6">
                 Clabe Interbancaria <br> 
            <?php echo Form::text('cuenta.clabe_interbancaria', ' class="form-control"  required'); ?>
         </div>
-              <div class="form-group">
+              <div class="form-group col-md-7">
                 Telefono <br> 
            <?php echo Form::text('cuenta.telefono', ' class="form-control"  '); ?>
         </div>
-            <button type="submit" name="add_cat" class="btn btn-success">Agregar Cuenta</button>
+           <?php $url ="'" .  PUBLIC_PATH . "banco/index'"; ?>  
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <?php echo Form::button("Cancelar", 'class="btn btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <button type="submit" name="add_cat" class="btn btn-success">Actualizar</button>  
+                </div>
+            </div>
         <?php echo Form::close(); ?>
         </div>
       </div>
     </div>
-    <div class="col-md-8">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>
-          <span class="glyphicon glyphicon-th"></span>
-          <span>Lista de Cuentas Bancarias</span>
-       </strong>
-      </div>
-        <div id="form_container" style="width:100%">   
-<?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrleditar'=>"editarCuenta/",'ctrleliminar'=>"eliminarCuenta/"));  ?>
-</div>
-    </div>
-    </div>
+    
    </div>
   
 

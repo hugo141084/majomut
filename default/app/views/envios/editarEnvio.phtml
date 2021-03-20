@@ -14,7 +14,8 @@
          </strong>
         </div>
         <div class="panel-body">
-          <?php echo Form::open("envios/index/"); ?>
+          <?php echo Form::open("envios/editarEnvio/".$costo->id); ?>
+            <?php echo Form::hidden( 'costo.id', 'class="form-control"'); ?>
             <div class="form-group">
                 Codigo <br> 
              <?php echo Form::text('costo.codigo', ' class="form-control" required '); ?>
@@ -29,24 +30,22 @@
         </div>
               
               
-            <button type="submit" name="add_cat" class="btn btn-success">Agregar Costo</button>
+          <?php $url ="'" .  PUBLIC_PATH . "envios/index'"; ?>  
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <?php echo Form::button("Cancelar", 'class="btn btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <button type="submit" name="add_cat" class="btn btn-success">Actualizar</button>  
+                </div>
+            </div>  
         <?php echo Form::close(); ?>
         </div>
       </div>
     </div>
-    <div class="col-md-8">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>
-          <span class="glyphicon glyphicon-th"></span>
-          <span>Lista de Costos de Envios</span>
-       </strong>
-      </div>
-        <div id="form_container" style="width:100%">   
-<?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrleditar'=>"editarEnvio/",'ctrleliminar'=>"eliminarEnvio/"));  ?>
-</div>
-    </div>
-    </div>
+    
    </div>
   
 

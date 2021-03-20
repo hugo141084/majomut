@@ -3,19 +3,16 @@
     <h1><a></a></h1>
     <br/>
 </div>
-  <div class="row">
-     <div class="col-md-12">
-       
-     </div>
-  </div>
+  
    <div class="row">
     <div class="col-md-5">
-       <?php echo Form::open("empresa/index/"); ?>  
+       <?php echo Form::open("empresa/editarEmpresa/".$empresa->id); ?>  
+        <?php echo Form::hidden( 'empresa.id', 'class="form-control"'); ?>
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>
             <span class="glyphicon glyphicon-th"></span>
-            <span>Agregar Empresa de Envios</span>
+            <span>Actualizar Empresa de Envios</span>
          </strong>
         </div>
         <div class="panel-body">
@@ -60,7 +57,7 @@
                     <div class="input-group">
                         <div class="input-group-addon">  Banco:
                         </div>
- <?php echo Form::dbSelect("empresa.bancos_id", 'nombre_banco', array('bancos', 'datosBanco', 0), '- Seleccione -'," class='form-control ' required  ");?>
+ <?php echo Form::dbSelect("empresa.banco_id", 'nombre_banco', array('bancos', 'datosBanco', 0), '- Seleccione -'," class='form-control ' required  ",$empresa->banco_id);?>
 
                     </div>
                 </div>
@@ -87,32 +84,28 @@
                 </div>
             </div> 
             
-            <div class="form-group col-sm-8">
-               <button type="submit" name="add_cat" class="btn btn-success">Agregar</button>
-        </div>  
+             <?php $url ="'" .  PUBLIC_PATH . "empresa/index'"; ?>  
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <?php echo Form::button("Cancelar", 'class="btn btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <button type="submit" name="add_cat" class="btn btn-success">Actualizar</button>  
+                </div>
+            </div>  
              
               
             
-        <?php echo Form::close(); ?>
+        
         </div>
       </div>
         
        
      <?php echo Form::close(); ?>   
     </div>
-    <div class="col-md-7">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>
-          <span class="glyphicon glyphicon-th"></span>
-          <span>Lista de Empresas de Envios</span>
-       </strong>
-      </div>
-        <div id="form_container" style="width:100%">   
-<?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrleditar'=>"editarEmpresa/",'ctrleliminar'=>"eliminarEmpresa/"));  ?>
-</div>
-    </div>
-    </div>
+    
    </div>
   
 

@@ -24,14 +24,33 @@ class enviosController extends AppController{
         $this->campos = array(
             utf8_encode('#') => 'id',
             utf8_encode('CODIGO') => 'codigo',
-            utf8_encode('KILOS') => 'num_kilos',
+            utf8_encode('KILOS') => 'kilos',
             utf8_encode('COSTO') => 'costo'
             
         );
         $this->encabezado= "";
     }
     
-    
+    public function editarEnvio($id){
+        
+     
+        $costo = new costoEnvio();
+        $this->costo = $costo->find_first($id);
+
+        if (Input::hasPost('costo')) {
+
+            $this->costo = $costo->actualizarDatos();
+            Redirect::to('envios/index');
+        }
+       
+    }
+     public function eliminarEnvio($id){
+        $costo = new costoEnvio();
+        $costo = $costo->find_first($id);
+        $costo->estatus='0';
+        $costo->update();
+        Redirect::to('envios/index');
+    }
 
         public function crear(){
          $this->accion="crear";

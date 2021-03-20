@@ -260,7 +260,7 @@
                                     
                                         
                                             if (isset($ctrlInactivo)) {
-                                                echo Html::linkAction($ctrlInactivo . $model->id, Html::img('bloquear.png', 'cancele', 'style="text-align:center;width:32px;padding:2px;" title="Bloquear Registro "'), ('onclick="return confirm(\'Está Seguro que desea dar de baja?\')"'));
+                                                echo Html::linkAction($ctrlInactivo . $model->id, Html::img('bloquear.png', 'cancele', 'style="text-align:center;width:25px;padding:2px;" title="Bloquear Registro "'), ('onclick="return confirm(\'Está Seguro que desea dar de baja?\')"'));
                                             }
                                             if (isset($ctrlAcceso)) {
                                                 echo Html::linkAction($ctrlAcceso . $model->id, Html::img('acceso.png', 'cancele', 'style="text-align:center;width:32px;padding:2px;" title="Cambiar Contraseña "'), ('onclick="return confirm(\'Está Seguro que desea cambiar su contraseña?\')"'));

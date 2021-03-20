@@ -248,48 +248,6 @@ a.exit_text:hover{
 }
 
 
-a{ text-decoration: none;}
-
-
-a:hover{
-	color:#b5d000;/*verde claro */
-}
- 
-a.link1,a.link1b{font-size:10px;}
-
-a.link2,a.link2b{font-size:12px;}
-
-a.link3,a.link3b{font-size:14px;}
-
-
-
-a.link1:link,a.link1:visited,a.link1:hover,a.link1:active,
-a.link2:link,a.link2:visited,a.link2:hover,a.link2:active,
-a.link3:link,a.link3:visited,a.link3:hover,a.link3:active{
-	color:#F60;/*naranja*/
-}
-a.link1:hover,
-a.link2:hover,
-a.link3:hover{
-	color:#999; /*gris*/
-}
-
-a.link1b:link,a.link1b:visited,a.link1b:hover,a.link1b:active,
-a.link2b:link,a.link2b:visited,a.link2b:hover,a.link2b:active,
-a.link3b:link,a.link3b:visited,a.link3b:hover,a.link3b:active{
-	color:#9c9c9c;/*gris claro*/
-}
-a.link1b:hover,
-a.link2b:hover,
-a.link3b:hover{
-	color:#93a803; /*verde claro*/
-}
- 
- 
-
-.text1 { font-size: 10px;}
-.text2 { font-size: 12px;}
-.text3 { font-size: 14px;}
 
 
 h1 {
@@ -463,9 +421,7 @@ ul#css3menu1 li.topfirst a{
 	top:1px;
 }
 
-.boton a{ font-size:12px;text-decoration: none;}
-.boton a:link,a:visited,a:active{color:#222222; }
-.boton a:hover{color:#b5d000;/*verde claro */}
+
 
 .barra-progresiva-container{
     background: #fff;

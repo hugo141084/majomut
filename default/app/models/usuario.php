@@ -10,7 +10,7 @@ class usuario extends ActiveRecord {
         
     }
     public function listar() {
-        return $this->find_all_by_sql("SELECT ua.id, ua.Usr, nombre_completo, ua.estado, ua.tipo,ua.Estatus as estatus FROM usuario ua INNER JOIN empleado e ON ua.empleado_id = e.id AND e.estatus = '1'");
+        return $this->find_all_by_sql("SELECT ua.id, ua.Usr, nombre_completo, ua.estado, ua.tipo,ua.Estatus as estatus FROM usuario ua INNER JOIN empleado e ON ua.empleado_id = e.id AND e.estatus = '1' and  ua.estatus = '1'");
     }
     public function iniciarSesion() {
         //verifica si tiene una sesion valida con ip

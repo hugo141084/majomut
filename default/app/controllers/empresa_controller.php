@@ -22,17 +22,35 @@ class empresaController extends AppController{
     
         $this->result = $empresa->datosEmpresa();
         $this->campos = array(
-            utf8_encode('#') => 'id',
             utf8_encode('NOMBRE') => 'nombre',
             utf8_encode('DIRECCION') => 'direccion',
             utf8_encode('TELEFONO') => 'telefono',
-            utf8_encode('CUENTA BANCARIA') => 'numero_cuenta',
-            utf8_encode('CLABE') => 'clabe_interbancaria'
+            utf8_encode('DATOS PARA PAGO') => 'datosPago',
+           
             
         );
         $this->encabezado= "";
     }
-    
+    public function editarEmpresa($id){
+        
+     
+        $empresa = new empresa();
+        $this->empresa = $empresa->find_first($id);
+
+        if (Input::hasPost('empresa')) {
+
+            $this->empresa = $empresa->actualizarDatos();
+            Redirect::to('empresa/index');
+        }
+       
+    }
+     public function eliminarEmpresa($id){
+        $empresa = new empresa();
+        $empresa = $empresa->find_first($id);
+        $empresa->estatus='0';
+        $empresa->update();
+        Redirect::to('empresa/index');
+    }
     
 
         public function crear(){

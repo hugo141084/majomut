@@ -18,8 +18,7 @@ class bancoController extends AppController{
             $this->cuentas = $cuentas->guardarDatos();
             
         }
-        
-    
+
         $this->result = $cuentas->datosCuenta();
         $this->campos = array(
             utf8_encode('#') => 'id',
@@ -31,7 +30,26 @@ class bancoController extends AppController{
         );
         $this->encabezado= "";
     }
-    
+    public function editarCuenta($id){
+        
+     
+        $cuenta = new bancosCuentas();
+        $this->cuenta = $cuenta->find_first($id);
+
+        if (Input::hasPost('cuenta')) {
+
+            $this->cuenta = $cuenta->actualizarDatos();
+            Redirect::to('banco/index');
+        }
+       
+    }
+     public function eliminarCuenta($id){
+        $cuenta = new bancosCuentas();
+        $cuenta = $cuenta->find_first($id);
+        $cuenta->estatus='0';
+        $cuenta->update();
+        Redirect::to('banco/index');
+    }
     
 
         public function crear(){
@@ -46,25 +64,6 @@ class bancoController extends AppController{
         }
     }
     
-    public function editar($id = null) {
-        $this->accion = 'editar';
-        $proveedor = new proveedor();
-        if ($id != null) {
-            $this->proveedor = $proveedor->find($id);
-        } else if (Input::hasPost('proveedor')) {
-             $proveedor->usuario_id=Session::get('id');
-            if ($proveedor->update(Input::post('proveedor'))) {
-                
-               
-                Redirect::to('proveedor');
-                Flash::valid('Registro Actualizado');
-                Input::delete();
-            } else {
-                $this->proveedor = Input::post('proveedor');
-                Flash::error('Falló Operación');
-            }
-        }
-        view::select('crear');
-    }
+   
 }
 ?>

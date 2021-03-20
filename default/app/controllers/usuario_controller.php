@@ -1,12 +1,13 @@
 <?php
 
-Load::model( 'usuario');
+
 
 
 class usuarioController extends AppController {
 
     public function index($page = 1) {
-        $this->result = Load::model('usuario')->listar();
+       $usuario=new usuario();
+        $this->result =$usuario->listar();
         $this->campos = array('#' => 'id',
             'USUARIO' => 'Usr',            
             'NOMBRE' => 'nombre_completo',
