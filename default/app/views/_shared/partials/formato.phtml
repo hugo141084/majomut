@@ -188,7 +188,7 @@
                                             }
                                             
                                     if (isset($eliminar)) {
-                                        echo Html::linkAction($eliminar.$tipoVale.'/'. $model->id, Html::img('close_32.png', 'cancel', 'style="text-align:center;width:15px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"'));
+                                        echo Html::linkAction($eliminar.$tipoVale.'/'. $model->id, Html::img('close_32.png', '<span class="glyphicon glyphicon-trash"></span>', 'style="text-align:center;width:15px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"'));
                                     }
                                   
                                         } else if ($model->$campos == "Inactivo") {
@@ -197,6 +197,8 @@
                                             if (isset($ctrldesbloquear)) {
                                                 echo Html::linkAction($ctrldesbloquear . $model->id, Html::img('desbloquear.png', 'cancel', 'style="text-align:center;width:20px;padding:2px;"'), ('onclick="return confirm(\'Está Seguro que desea Desbloquear  el Usuario?\')"'));
                                             }
+                                            
+                                            
                                         }
                                     }
                                     if ($campos == "estatus") {

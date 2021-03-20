@@ -235,9 +235,10 @@ else if (($operacion) == "MOSTRAR_LISTA") {
  		<div class="ventanillaCobro">
 <table width="100%" border="0" align="center" class="Estilo">
     <?php
-  
+  $longitud=0;
     $array_productos=Session::get('array_productos');
- $longitud=count($array_productos);
+ if(isset($array_productos))
+    $longitud=count($array_productos);
 
  $color="#0098CD";
  $importeTotal=0;

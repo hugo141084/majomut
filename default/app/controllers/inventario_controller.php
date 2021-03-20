@@ -13,7 +13,6 @@ class inventarioController extends AppController{
      */
     public function listadoAlmacen() {
         $almacen = new almacen();
-        $almacen = new almacen();
         $this->producto = $almacen->find();
 
         if (Input::hasPost('almacen')) {
@@ -22,7 +21,7 @@ class inventarioController extends AppController{
         }
         $this->result = $almacen->listar();
         $this->campos = array(
-            utf8_encode('#') => 'ID',
+            utf8_encode('#') => 'id',
             utf8_encode('CLAVE') => 'almacen',
             utf8_encode('DESCRIPCION') => 'descripcion',
             utf8_encode('TIPO') => 'tipo'
@@ -30,6 +29,26 @@ class inventarioController extends AppController{
            
         );
         $this->encabezado= "ALMACEN";
+    }
+    public function editarAlmacen($id){
+        
+     
+        $almacen = new almacen();
+        $this->almacen = $almacen->find_first($id);
+
+        if (Input::hasPost('almacen')) {
+
+            $this->almacen = $almacen->actualizarDatos();
+            Redirect::to('inventario/listadoAlmacen');
+        }
+       
+    }
+     public function eliminarAlmacen($id){
+        $almacen = new almacen();
+        $almacen = $almacen->find_first($id);
+        $almacen->estatus='0';
+        $almacen->update();
+        Redirect::to('inventario/listadoAlmacen');
     }
      public function listadoRecepcion() {
         $vale = new vale();
@@ -257,7 +276,17 @@ class inventarioController extends AppController{
     }
         
     public function inventarioIni(){
-         $this->accion="inventarioIni";
+        
+        $vale=new vale();
+        $vale=$vale->count();
+        if($vale>=1){
+            Flash::info("<strong>" . Session::get('.')  ."Ya se ha generado un evento de -INVENTARIO INICIAL-, puede realizar un movimiento de ajuste al inventario". "<strong>");
+
+            Redirect::to('principal/principal');
+           
+        }
+            
+        $this->accion="inventarioIni";
         
         $vale = new vale();
         $this->vale = $vale->find();

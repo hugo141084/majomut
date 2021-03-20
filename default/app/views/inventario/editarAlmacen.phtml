@@ -22,12 +22,24 @@
         <div class="panel-heading">
           <strong>
             <span class="glyphicon glyphicon-th"></span>
-            <span>Agregar Almacen</span>
+            <span>Actualizar Almacen</span>
          </strong>
         </div>
         <div class="panel-body">
-            <?php echo Form::open("inventario/listadoAlmacen"); ?> 
+            <?php echo Form::open("inventario/editarAlmacen/".$almacen->id); ?> 
         <div class="form-row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">   #:
+                        </div>
+                        
+                        <?php echo Form::text('almacen.id', 'class="form-control" '); ?>
+                       
+
+                    </div>
+                </div>
+            </div>
             <div class="col-sm-7">
                 <div class="form-group">
                     <div class="input-group">
@@ -46,7 +58,7 @@
                     <div class="input-group">
                         <div class="input-group-addon">     Descripción:    
                         </div>
-                        <?php echo Form::text('almacen.descripcion', 'class="form-control"  required'); ?>
+                        <?php echo Form::text('almacen.descripcion', 'class="form-control"  '); ?>
                     </div>
                 </div>
             </div> 
@@ -61,30 +73,28 @@
                     $select = '0';
                 
                 $arregloEstado = array(''=>'Seleccione...','GENERAL'=>'General','PUNTO VENTA'=>'Punto de Venta');?>
-                <?php echo Form::Select('almacen.tipo', $arregloEstado,'class="form-control" required',$select); ?>
+                <?php echo Form::Select('almacen.tipo', $arregloEstado,'class="form-control"',$select); ?>
                     </div>
                 </div>
             </div>
 </div>
               
-            <button type="submit" name="add_cat" class="btn btn-success">Agregar Almacen</button>
+            <?php $url ="'" .  PUBLIC_PATH . "inventario/listadoAlmacen'"; ?>  
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <?php echo Form::button("Cancelar", 'class="btn btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <button type="submit" name="add_cat" class="btn btn-success">Actualizar</button>  
+                </div>
+            </div>
         <?php echo Form::close(); ?>
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>
-          <span class="glyphicon glyphicon-th"></span>
-          <span>Listado de Almacenes</span>
-       </strong>
-      </div>
-        <div id="form_container" style="width:100%">   
-            <?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrleditar'=>"editarAlmacen/",'ctrleliminar'=>"eliminarAlmacen/"));  ?>
-</div>
-    </div>
-    </div>
+    
    </div>
 
 <script>

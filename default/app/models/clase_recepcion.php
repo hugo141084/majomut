@@ -18,7 +18,7 @@ class clase_recepcion {
         $producto=new producto();
         $detalle=$producto->listarXid($productoId);
         $array_productos[$num]['CLAVE'] = $detalle->clave;
-        $array_productos[$num]['DESCRIPCION'] = $detalle->nombre;
+        $array_productos[$num]['DESCRIPCION'] = $detalle->descripcion;
         $array_productos[$num]['CANTIDAD'] = $cantidad;
         $array_productos[$num]['MEDIDA'] = $detalle->medida;
         //$presentacion=new presentacion();
