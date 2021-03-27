@@ -59,7 +59,7 @@ class inventario extends ActiveRecord {
                    return $this->find_by_sql("select sum(existencia) as suma from inventario where producto_id=$productoId and almacen_id=$almacenId ");                 
     }
      public function buscarXproducto($productoId){    
-                   return $this->find_all_by_sql("select * from inventario where producto_id=$productoId  ");                 
+                   return $this->find_all_by_sql("select * from inventario where producto_id=$productoId and existencia > 0  ");                 
     }
     public function actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId){
      $cantidad=$cantidad *$unidadXpaquete;

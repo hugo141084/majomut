@@ -100,7 +100,7 @@ $html ='<style>
 
 
     
-<table align="left" width="100%" border="0">
+<table align="left" width="100%" border="0" cellpadding="2">
     
 
     <thead> 
@@ -140,7 +140,8 @@ $clasificacionId="0";
 $tipo=$tipo;
 $total=0;
 foreach ($existencia as $dato){
-    
+    $desProducto=new producto();
+    $desProducto=$desProducto->listarJuntoXid($dato->id);
     if($clasificacionId==$dato->producto_id){
     $clasificacion="";    
     }else{
@@ -151,10 +152,10 @@ foreach ($existencia as $dato){
     $html.= '
             <tr class="nonegrita">
                     <td width="10%"><div class="divcentrar">'.$dato->clave.'</div></td>
-                    <td width="45%" align="left">'.$dato->descripcion.'</td>
+                    <td width="45%" align="left">'.$desProducto->descripcion.'</td>
                     <td width="20%"><div class="divcentrar"></div></td>
                     <td  align="center" width="10%"> </td>
-                    <td  width="15%" align="right">'.$dato->existencia.'</td>
+                    <td  width="15%" align="right">'.(($dato->existencia >=0)? number_format($dato->existencia,2):"0").'</td>
             </tr>
             ';
     if ($tipo=="DETALLE"){
@@ -168,7 +169,7 @@ foreach ($existencia as $dato){
                     <td width="10%"><div class="divcentrar"></div></td>
                     <td width="45%" align="left">'.$almacen->almacen.'</td>
                     <td width="20%"><div class="divcentrar">'.$almacen->descripcion.'</div></td>
-                    <td  align="center" width="10%" align="right" >'.$detalleInventario->existencia.' </td>
+                    <td  align="center" width="10%" align="right" >'.(($detalleInventario->existencia >=0)? number_format($detalleInventario->existencia,2):"0").' </td>
                     <td  width="15%"><div class="divcentrar" style="font-weight:bold"></div></td>
             </tr>
             ';
@@ -178,7 +179,7 @@ foreach ($existencia as $dato){
                     <td width="10%"><div class="divcentrar"></div></td>
                     <td width="45%" align="left"></td>
                     <td width="20%"><div class="divcentrar"></div></td>
-                    <td  align="center" width="10%" align="right" >Total: '.$total.' </td>
+                    <td  align="center" width="10%" align="right" >Total: '.(($total >=0)? number_format($total,2):"0").' </td>
                     <td  width="15%"><div class="divcentrar" style="font-weight:bold"></div></td>
             </tr>
             ';  

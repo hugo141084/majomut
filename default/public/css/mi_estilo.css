@@ -18,6 +18,7 @@ font-weight: 300;
 
 
 }
+
 #titulo_superior{
     
 
@@ -93,7 +94,12 @@ body{
     bottom:0;
     width:100%;
 }
-
+#resultado {
+    overflow-y: scroll;
+}
+.resultado {
+    overflow-y: scroll;
+}
 .head{ 	
 	position:absolute; display:block;z-index:2;
         background: url(../img/header.png ) repeat-x; 

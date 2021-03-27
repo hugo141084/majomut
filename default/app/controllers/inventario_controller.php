@@ -430,7 +430,7 @@ class inventarioController extends AppController{
 
         if (($this->operacion) == "MOSTRAR") {
           $producto = new producto();  
-          $this->listar=$producto->listar();  
+          $this->listar=$producto->listarJunto();  
         }
          else if (($this->operacion) == "MOSTRAR_ALMACEN") {
              $id=Input::POST('almacen');
@@ -504,7 +504,7 @@ class inventarioController extends AppController{
             $this->resultado= $inventario->quitarProducto(Input::POST('id'));
         }
         else if (($this->operacion) == "QUITAR_PARTIDA") {
-       $clase = new claseRecepcion();
+       $clase = new clase_recepcion();
             $this->mensaje = $clase-> quita_movimiento(Input::POST('linea'));
            
            
