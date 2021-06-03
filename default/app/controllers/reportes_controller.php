@@ -100,10 +100,9 @@ class reportesController extends AppController{
     public function lote() {
         $this->accion="lote";
         $condicion="";
-         if (Input::hasPost('existencia')) {  
-             $datos = Input::Post('existencia');
-             
-             $clasificacion=$datos['CLASIFICACION_PRODUCTO_ID'];
+         if (Input::hasPost('producto')) {  
+             $datos = Input::Post('producto');
+             $clasificacion=$datos['id'];
              if($clasificacion=="") $clasificacion=0;
             
              
@@ -238,9 +237,9 @@ class reportesController extends AppController{
     public function reporteLote($clasificacion=NULL){
         
         if($clasificacion!="0"){
-                 $condicion=" where CLASIFICACION_PRODUCTO_ID=".$clasificacion." and LOTE='S' and EXISTENCIA <> 0";
+                 $condicion="  where id='$clasificacion'";
              }else{
-                 $condicion="where LOTE='S'";
+                 $condicion="";
              }
             
               $existencia=new producto();

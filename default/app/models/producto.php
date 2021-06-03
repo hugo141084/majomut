@@ -28,7 +28,7 @@ class producto extends ActiveRecord {
     public function listarJuntoXid($id) {
         
         
-        return $this->find_all_by_sql("SELECT p.id, p.descripcion nombre,p.clave,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) datosPago, p.peso, p.existencia FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id where p.estatus='1' and p.id='$id'");
+        return $this->find_by_sql("SELECT p.id, p.descripcion nombre,p.clave,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) datosPago, p.peso, p.existencia FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id where p.estatus='1' and p.id='$id'");
         
     }
     public function listarEntrada() {
@@ -64,6 +64,8 @@ class producto extends ActiveRecord {
       }
                   $this->update_all("existencia = existencia + $cantidad", "id=$productoId ");
                }
+               
+               
                public function buscaXcondicion($condicion) {
             return $this->find_all_by_sql("SELECT *
 FROM producto

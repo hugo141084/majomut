@@ -12,7 +12,7 @@
 
 <div id="form_container" style="width:100%;" >
 
-    <h1><a>Crear</a></h1>
+    <h1><a></a></h1>
     <div id="titulo_superior"> 
         <div id="texto_superior"  >
                  <?php echo "Lotes" ?> 
@@ -32,8 +32,8 @@
 <fieldset>     
 <table width="50%" border="0" class="letra">
   <tr>
-    <td >Clasificacion</td>
-    <td width="29%"><?php echo Form::dbSelect("existencia.CLASIFICACION_PRODUCTO_ID","DESCRIPCION",array("clasificacionProducto","listar"),'Seleccione..','type="text"  class="element  text" style="width:425px"');?></td>
+    <td >Producto</td>
+    <td width="29%"><?php echo Form::dbSelect("producto.id","descripcion",array("producto","listarEntrada"),'Seleccione..','type="text"  class="element  text" style="width:425px"');?></td>
   </tr>
   
   

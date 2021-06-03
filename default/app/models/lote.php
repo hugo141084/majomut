@@ -99,7 +99,12 @@ class lote extends ActiveRecord {
                
                public function buscarXproducto($productoId){
                   
-                   return $this->find_all_by_sql("select * from lote where ´producto_id=$productoId  ");                 
+                   return $this->find_all_by_sql("select * from detalle_lote where producto_id=$productoId  ");                 
+    
+               }
+               public function buscarLotes($productoId){
+                  
+                   return $this->find_all_by_sql("select l.codigo, dl.existencia, dl.almacen_id from detalle_lote dl inner join lote l on dl.lote_id=l.id where dl.producto_id=$productoId  ");                 
     
                }
 }   

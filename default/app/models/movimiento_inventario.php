@@ -45,7 +45,7 @@ ORDER BY  alma.almacen ASC");
     
     public function detalleMovimiento($clave_articulo, $almacen,$fecha_inicio, $fecha_fin) {
       
-        return $this->find_all_by_sql("select movi.EXISTENCIA,movi.FECHA_DOCUMENTO,movi.REFERENCIA,movi.CANTIDAD,movi.COSTO,movi.REFERENCIA,movi.TIPO_MOVIMIENTO from movimiento_inventario as movi where movi.ALMACEN_ID='$almacen' and movi.PRODUCTO_ID='$clave_articulo'  and (FECHA_DOCUMENTO >= '$fecha_inicio' && FECHA_DOCUMENTO <='$fecha_fin')  order by movi.ID ");
+        return $this->find_all_by_sql("select movi.existencia,movi.fecha_documento,movi.referencia,movi.cantidad,movi.costo,movi.referencia,movi.tipo_movimiento from movimiento_inventario as movi where movi.almacen_id='$almacen' and movi.producto_id='$clave_articulo'  and (fecha_documento >= '$fecha_inicio' && fecha_documento <='$fecha_fin')  order by movi.id ");
     
     }
     
@@ -79,7 +79,7 @@ ORDER BY  alma.almacen ASC");
         $movimiento=new movimiento_inventario();
         $movimiento->producto_id=$productoId;
         $movimiento->tipo_movimiento=$tipoMovimiento;
-        $movimiento->fecha_documento=$tipoMovimiento;        
+        $movimiento->fecha_documento=$fechaDocumento;        
         $movimiento->referencia=$referencia;
         $movimiento->fecha_movimiento=$fechaMovimiento;
         $movimiento->empleado_proveedor=$proveedorId;

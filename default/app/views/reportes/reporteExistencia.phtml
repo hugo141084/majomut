@@ -1,7 +1,35 @@
 <?php
 load::lib('tcpdf');
+class reporte extends TCPDF {
 
-$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
+    
+
+    public function Header() {
+      $this->SetFont('helvetica', 'b', 10);
+        $titulo = " Union de Productores Organicos Beneficio Majomut, S. DE P.R. DE R.L \n Distribucion de Existencias";
+        $this->SetXY(30, 13);
+        $this->multiCell(145, 5, $titulo, 0, 'C');
+
+        $this->Image('./img/logo.png', '10', '10', 30, 20, '', '', '', false, 400, '', false, false, 1, false, false, false);   
+    }
+
+    public function Footer() {
+        /* establecemos el color del texto */
+        $this->SetTextColor(0, 0, 0);
+        $this->SetFont('helvetica', 'C', 8);
+   
+            $this->SetXY(10, 265);
+            $this->MultiCell(110, 1, "1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. 29247 ", 0, 'C');
+            $this->SetXY(120, 265);
+            $this->MultiCell(60, 1, "www.majomut.org ", 0, 'C');
+            $this->SetXY(182, 265);
+            $this->SetFont('helvetica', 'C', 7);
+            $this->MultiCell(30, 1, "" . $this->getAliasNumPage() . " / " . $this->getAliasNbPages() . " \n ", 0, 'C');
+        
+    }
+
+}
+$pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter'); 
 ob_end_clean();
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
@@ -13,22 +41,6 @@ $pdf->SetSubject('');
 $numEvento="PENDIENTE";
 //================================================================
 //================ SE GENERAN DATOS DE LA POLIZA  ==================
-$logo='img/logo.jpg';
-$titulo='INSTITUTO ESTATAL DE EDUCACION PARA ADULTOS';
-$subtitulo1='DISTRIBUCION DE EXISTENCIAS';
-$subtitulo2='ALMACEN ESTATAL';
-$url='';
-
-// set default header data
-/*if ($miles==1){
-    $pdf->SetHeaderData($logo, 11, $titulo , $subtitulo1."\n".$subtitulo2."\n  (en miles de pesos)" ,"\n".$url,'',array(190,190,190));
-}else{*/
-    $pdf->SetHeaderData($logo, 11, $titulo , $subtitulo1."\n".$subtitulo2,$url,'',array(190,190,190));
-//}
-    
-
-// set default footer data
-$pdf->SetFooterData('',array(190,190,190),"");
 
 // set header and footer fonts
 $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN,'' , 8));
@@ -38,7 +50,7 @@ $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-$pdf->SetMargins(10,20,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetMargins(10,25,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
 $pdf->SetHeaderMargin('5');//PDF_MARGIN_HEADER
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -50,8 +62,6 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 //set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-$pdf->setPageOrientation('P'); // PDF_PAGE_ORIENTATION---> 'L' or 'P'
-// ---------------------------------------------------------
 
 // set default font subsetting mode
 $pdf->setFontSubsetting(true);
@@ -146,8 +156,8 @@ foreach ($existencia as $dato){
     $clasificacion="";    
     }else{
         $clasificacionId=$dato->producto_id;
-        $clasificacion=Load::model('producto')->listarXid($clasificacionId);
-        $clasificacion=$clasificacion->descripcion;
+        $desProducto=Load::model('producto')->listarXid($clasificacionId);
+       // $clasificacion=$desProducto->descripcion;
     }
     $html.= '
             <tr class="nonegrita">

@@ -112,7 +112,7 @@ function cerrar()
 
 <div id="form_container" style="width:100%;" >
 
-    <h1><a>Crear</a></h1>
+    <h1><a></a></h1>
     <div id="titulo_superior"> 
         <div id="texto_superior"  >
                  <?php echo "MOVIMIENTOS AL INVENTARIO" ?> 
@@ -125,16 +125,16 @@ function cerrar()
     </div>
     <div id="margen" >
     <?php echo Form::open("reportes/" . $accion,"Post","id='consulta' method = 'POST'"); ?>
-<table width="100%" border="0" class="letra">
+<table width="100%" border="0"  cellpadding="4">
   <tr>
     <td colspan="5" bgcolor="#adb5ce"><h5><a id="letra1">Periodo </a></h5> </td>
     </tr>
   <tr>
     <td width="20%" align="center">Desde el dia</td>
-    <td ><?php echo form::text('movimiento.fecha_inicio','required style="width:87px"', ''); ?> 
+    <td ><?php echo form::date('movimiento.fecha_inicio','required class="form-control"', ''); ?> 
           </td>
     <td align="center">Hasta el dia</td>
-    <td ><?php echo form::text('movimiento.fecha_fin','required style="width:87px"',''); ?></td>
+    <td ><?php echo form::date('movimiento.fecha_fin','required class="form-control"',''); ?></td>
     <td>&nbsp;</td>
   </tr>
   <tr >
@@ -198,7 +198,7 @@ $i++;
     <td>&nbsp;</td>
     <td colspan="2" align="center">
       <label> Titulo reporte </label><br /><br />      
-      <?php echo form::text('movimiento.titulo',"","MOVIMIENTOS AL INVENTARIO");?>
+      <?php echo form::text('movimiento.titulo','class="form-control"',"MOVIMIENTOS AL INVENTARIO");?>
     </td>
     </tr>
   <tr>
