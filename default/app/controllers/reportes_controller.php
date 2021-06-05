@@ -3,41 +3,45 @@
 Load::models('inventario','producto','lote','serie','movimiento_inventario'); 
 class reportesController extends AppController{
     
-    public function clasificacionProducto() {
-        $producto = new clasificacionProducto();
-        $this->result = $producto->listar();
-        $this->campos = array(
-            utf8_encode('#') => 'ID',
-            utf8_encode('DESCRIPCION') => 'DESCRIPCION',
-            
-        );
-        $this->encabezado= "Clasificacion";
-    }
+   
     public function index() {
         
     }
-    
-    public function departamento() {
-     $this->accion="departamento"; 
-     if (Input::hasPost('movimiento')) {  
-             $datos = Input::Post('movimiento');
-            $producto=$datos['PRODUCTO_ID'];
-            $departamento=$datos['DEPARTAMENTO_ID'];
-           // $agrupar=$datos['AGRUPAR'];
-           $agrupar=""; 
-            if($producto==""){$producto=0;}
-            if($departamento==""){$departamento=0;}
-            if($agrupar==""){$agrupar=0;}
-             $fechaInicial=strftime("%Y-%m-%d", strtotime($datos['FECHA_INICIO']));
-             $fechaFinal=strftime("%Y-%m-%d", strtotime($datos['FECHA_FIN']));
-             $titulo=$datos['titulo'];             
-            ?>
-           <script>
-           window.open('reporteDepartamento/<?php echo $producto.'/'.$departamento.'/'.$agrupar.'/'.$fechaInicial.'/'.$fechaFinal.'/'.$titulo.'/' ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
-           </script>
-           <?php
-             Router::redirect('reportes/departamento');
+    public function producto() {
+        $this->accion="producto";
+        $condicion="";
+         if (Input::hasPost('producto')) {  
+             $datos = Input::Post('producto');
+             
+             $producto=$datos['producto_id'];
+             if($producto=="") $producto=0;
+             $calidad=$datos['calidad_id'];
+             if($calidad=="") $calidad=0;
+             $empaque=$datos['empaque_id'];
+              if($empaque=="") $empaque=0;
+             ?>
+                <script>
+                    window.open('reporteProducto/<?php echo $producto; ?>/<?php echo $calidad; ?>/<?php echo $empaque; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
+                </script>
+                <?php
+         }
     }
+    public function almacen() {
+        $this->accion="almacen";
+        $condicion="";
+         if (Input::hasPost('almacen')) {  
+             $datos = Input::Post('almacen');
+             $almacen=$datos['almacen_id'];
+             if($almacen=="") $almacen=0;
+             
+             $tipo=$datos['tipo'];
+             
+             ?>
+                <script>
+                    window.open('reporteAlmacen/<?php echo $almacen; ?>/<?php echo $tipo; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
+                </script>
+                <?php
+         }
     }
     
     public function movimiento() {
@@ -167,41 +171,16 @@ class reportesController extends AppController{
               $existencia=new movimiento_inventario();
               $this->movimientos=$existencia->buscaXmovimiento($condicion);
     }
-    
-    public function reporteDepartamento($producto,$departamento,$agrupar,$fechaInicial,$fechaFinal,$titulo){
-         ini_set('memory_limit', '512M');
-         ini_set('max_execution_time', '-1');
-         $entrega = new entrega();
-         $this->fechaInicial=$fechaInicial;
-         $this->fechaFinal=$fechaFinal;
-         $this->agrupar=$agrupar;
-         $this->producto=$producto;
-         $this->departamento=$departamento;
-         $this->tituloReporte=$titulo;
-         $condicion=" and  (ent.FECHA_ENTREGA >= '$fechaInicial' and ent.FECHA_ENTREGA <= '$fechaFinal' )";
-        
-         
-         if ($agrupar!="0")
-         {
-             $condicionFecha=" (FECHA_ENTREGA >= '$fechaInicial' and FECHA_ENTREGA <= '$fechaFinal') ";
-             if($agrupar=="Fecha"){  $entrega = new entrega(); $this->movimientos=$entrega->entregaXfecha($condicionFecha);}
-        else if($agrupar=="Vale" ){  $entrega = new entrega(); $this->movimientos=$entrega->entregaXvale($condicionFecha);}
-         }else{
-             if($producto!="0"){
-             $condicion=$condicion." and (detEn.PRODUCTO_ID=$producto)";
-         }
-         if ($departamento!="0")
-         {
-            $condicion=$condicion." and (ent.DEPARTAMENTO_ID=$departamento)";
-         }
-         
-         $this->movimientos=$entrega->buscaProducto($condicion);
-         }
-         
-        
+    public function reporteAlmacen($almacen=NULL,$tipo=NULL){
+        $condicion="";
+        if($almacen!="0"){
+                 $condicion =" where id=".$almacen;
+             }
               
+              $this->tipo=$tipo;
+              $existencia=new almacen();
+              $this->almacen=$existencia->buscaAlmacen($condicion);
     }
-    
     public function reporteExistencia($clasificacion=NULL,$opcion=NULL,$tipo=NULL){
         
         if($clasificacion!="0"){
@@ -217,6 +196,29 @@ class reportesController extends AppController{
               $this->tipo=$tipo;
               $existencia=new producto();
               $this->existencia=$existencia->buscaXcondicion($condicion);
+    }
+    public function reporteProducto($producto=NULL,$calidad=NULL,$empaque=NULL){
+        $condicion="";
+        if($producto!="0"){
+                 $condicion.=" where p.id=".$producto;
+             }
+        if($calidad!="0"){
+            if($condicion==""){
+                $condicion .= " where p.calidad_id=".$calidad;
+            }else{
+              $condicion .=" and p.calidad_id=".$calidad;  
+            }
+        } 
+        if($empaque!="0"){
+            if($condicion==""){
+                $condicion .=" where p.empaque_id=".$empaque;
+            }else{
+              $condicion .=" and p.empaque_id=".$empaque;  
+            }
+        } 
+              
+              $existencia=new producto();
+              $this->productos=$existencia->buscaProductos($condicion);
     }
     public function reporteInventarioInicial($clasificacion=NULL,$tipo=NULL){
         

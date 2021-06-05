@@ -1,0 +1,219 @@
+<?php
+load::lib('tcpdf');
+class reporte extends TCPDF {
+
+    
+
+    public function Header() {
+      $this->SetFont('helvetica', 'b', 10);
+        $titulo = " Union de Productores Organicos Beneficio Majomut, S. DE P.R. DE R.L \n Distribucion de Existencias";
+        $this->SetXY(30, 13);
+        $this->multiCell(145, 5, $titulo, 0, 'C');
+
+        $this->Image('./img/logo.png', '10', '10', 30, 20, '', '', '', false, 400, '', false, false, 1, false, false, false);   
+    }
+
+    public function Footer() {
+        /* establecemos el color del texto */
+        $this->SetTextColor(0, 0, 0);
+        $this->SetFont('helvetica', 'C', 8);
+   
+            $this->SetXY(10, 265);
+            $this->MultiCell(110, 1, "1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. 29247 ", 0, 'C');
+            $this->SetXY(120, 265);
+            $this->MultiCell(60, 1, "www.majomut.org ", 0, 'C');
+            $this->SetXY(182, 265);
+            $this->SetFont('helvetica', 'C', 7);
+            $this->MultiCell(30, 1, "" . $this->getAliasNumPage() . " / " . $this->getAliasNbPages() . " \n ", 0, 'C');
+        
+    }
+
+}
+$pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter'); 
+ob_end_clean();
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('');
+$pdf->SetTitle('Reportes');
+$pdf->SetSubject('');
+//================================================================
+//VARIABLES POR DECLARAR
+$numEvento="PENDIENTE";
+//================================================================
+//================ SE GENERAN DATOS DE LA POLIZA  ==================
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN,'' , 8));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+$pdf->SetMargins(10,25,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('5');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+
+
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+// Set font
+// dejavusans is a UTF-8 Unicode font, if you only need to
+// print standard ASCII chars, you can use core fonts like
+// helvetica or times to reduce file size.
+//$pdf->SetFont('dejavusans', , 8, , true);
+
+// Add a page
+// This method has several options, check the source code documentation for more information.
+$pdf->AddPage();
+
+
+// Set some content to print
+$html ='<style>
+	.negrita{
+            font-size: 10px; 
+            color: #333;
+            font-weight:bold;
+	}
+        .nonegrita{
+            font-size: 10px; 
+            color: #333;
+            text-align: center; vertical-align: bottom;
+        }
+        .nonegrita1{
+            font-size: 8px; 
+            color: #333;
+            text-align: center; vertical-align: bottom;
+        }
+        .divcentrar{
+            font-size: 10px; 
+            color: #333;
+           
+        }
+        .mitabla{
+		font-size: 10px; 
+		color: #333; 
+	}
+        </style>
+
+
+
+    
+<table align="left" width="100%" border="0" cellpadding="2">
+    
+
+    <thead> 
+    
+  <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="10%" ></td>
+        <td width="45%" ></td>
+        <td width="20%" ></td>
+        <td width="10%" >Fecha:</td>
+        <td width="15%" >'.date('d-m-Y').'</td>
+        
+      </tr> 
+     <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="10%" ></td>
+        <td width="45%" ></td>
+        <td width="20%" ></td>
+        <td width="10%" ></td>
+        <td width="15%" >.</td>
+        
+      </tr> 
+  <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="10%" align="left" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;"> Clave</td>
+        <td width="10%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">.<br>Clave </td>
+        <td width="45%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Descripción <br> Producto</td>
+        <td width="10%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">.<br>Existencia</td>
+        <td width="25%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Tipo</td>
+        
+      </tr> 
+      </thead>';
+$clasificacionId="0";
+$tipo=$tipo;
+$total=0;
+foreach ($almacen as $dato){
+    $desProducto=new producto();
+    $desProducto=$desProducto->listarJuntoXid($dato->id);
+    if($clasificacionId==$dato->producto_id){
+    $clasificacion="";    
+    }else{
+        $clasificacionId=$dato->producto_id;
+        $desProducto=Load::model('producto')->listarXid($clasificacionId);
+       // $clasificacion=$desProducto->descripcion;
+    }
+    $html.= '
+            <tr class="nonegrita">
+                    <td width="10%"><div class="divcentrar">'.$dato->almacen.'</div></td>
+                    <td width="55%" colspan="2" align="left">'.$dato->descripcion.'</td>
+                    
+                    <td  align="center" width="10%"> </td>
+                    <td  width="15%" align="right">'.$dato->tipo.'</td>
+            </tr>
+            ';
+    if ($tipo=="DETALLE"){
+        $detalle=Load::model('inventario')->buscarXproducto($dato->id);
+       $total=0;
+        foreach ($detalle as $detalleInventario){
+            $total+=$detalleInventario->existencia;
+          $almacen=Load::model('producto')->listarXid($detalleInventario->producto_id);   
+        $html.= '
+            <tr class="nonegrita1">
+                    <td width="10%"><div class="divcentrar"></div></td>
+                    <td width="10%" align="left">'.$almacen->clave.'</td>
+                    <td width="45%"><div class="divcentrar">'.$almacen->descripcion.'</div></td>
+                    <td  align="center" width="10%" align="right" >'.(($detalleInventario->existencia >=0)? number_format($detalleInventario->existencia,2):"0").' </td>
+                    <td  width="15%"><div class="divcentrar" style="font-weight:bold"></div></td>
+            </tr>
+            ';
+        }
+      $html.= '
+            <tr class="nonegrita1">
+                    <td width="10%"><div class="divcentrar"></div></td>
+                    <td width="45%" align="left"></td>
+                    <td width="20%"><div class="divcentrar"></div></td>
+                    <td  align="center" width="10%" align="right" >Total: '.(($total >=0)? number_format($total,2):"0").' </td>
+                    <td  width="15%"><div class="divcentrar" style="font-weight:bold"></div></td>
+            </tr>
+            ';  
+    }
+    
+}
+
+$notas = "";
+//$html.= '<tr><td colspan="6"></td></tr></table> <p>
+//$html.= '</table> <p>';
+
+$html.= '   
+        </table> 
+        <p>
+
+
+        <p>
+';
+
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+
+// ---------------------------------------------------------
+
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+ 
+ob_end_clean();
+$pdf->Output();
+//============================================================+
+// END OF FILE
+//============================================================+
+?>

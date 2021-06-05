@@ -1,0 +1,194 @@
+<?php
+load::lib('tcpdf');
+class reporte extends TCPDF {
+
+    
+
+    public function Header() {
+      $this->SetFont('helvetica', 'b', 10);
+        $titulo = " Union de Productores Organicos Beneficio Majomut, S. DE P.R. DE R.L \n Distribucion de Existencias";
+        $this->SetXY(30, 13);
+        $this->multiCell(145, 5, $titulo, 0, 'C');
+
+        $this->Image('./img/logo.png', '10', '10', 30, 20, '', '', '', false, 400, '', false, false, 1, false, false, false);   
+    }
+
+    public function Footer() {
+        /* establecemos el color del texto */
+        $this->SetTextColor(0, 0, 0);
+        $this->SetFont('helvetica', 'C', 8);
+   
+            $this->SetXY(10, 265);
+            $this->MultiCell(110, 1, "1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. 29247 ", 0, 'C');
+            $this->SetXY(120, 265);
+            $this->MultiCell(60, 1, "www.majomut.org ", 0, 'C');
+            $this->SetXY(182, 265);
+            $this->SetFont('helvetica', 'C', 7);
+            $this->MultiCell(30, 1, "" . $this->getAliasNumPage() . " / " . $this->getAliasNbPages() . " \n ", 0, 'C');
+        
+    }
+
+}
+$pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter'); 
+ob_end_clean();
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('');
+$pdf->SetTitle('Reportes');
+$pdf->SetSubject('');
+//================================================================
+//VARIABLES POR DECLARAR
+$numEvento="PENDIENTE";
+//================================================================
+//================ SE GENERAN DATOS DE LA POLIZA  ==================
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN,'' , 8));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+$pdf->SetMargins(10,25,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('5');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+
+
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+// Set font
+// dejavusans is a UTF-8 Unicode font, if you only need to
+// print standard ASCII chars, you can use core fonts like
+// helvetica or times to reduce file size.
+//$pdf->SetFont('dejavusans', , 8, , true);
+
+// Add a page
+// This method has several options, check the source code documentation for more information.
+$pdf->AddPage();
+
+
+// Set some content to print
+$html ='<style>
+	.negrita{
+            font-size: 10px; 
+            color: #333;
+            font-weight:bold;
+	}
+        .nonegrita{
+            font-size: 10px; 
+            color: #333;
+            text-align: center; vertical-align: bottom;
+        }
+        .nonegrita1{
+            font-size: 8px; 
+            color: #333;
+            text-align: center; vertical-align: bottom;
+        }
+        .divcentrar{
+            font-size: 10px; 
+            color: #333;
+           
+        }
+        .mitabla{
+		font-size: 10px; 
+		color: #333; 
+	}
+        </style>
+
+
+
+    
+<table align="left" width="100%" border="0" cellpadding="2">
+    
+
+    <thead> 
+    
+  <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="10%" ></td>
+        <td width="45%" ></td>
+        <td width="20%" ></td>
+        <td width="10%" >Fecha:</td>
+        <td width="15%" >'.date('d-m-Y').'</td>
+        
+      </tr> 
+     <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="10%" ></td>
+        <td width="45%" ></td>
+        <td width="20%" ></td>
+        <td width="10%" ></td>
+        <td width="15%" >.</td>
+        
+      </tr> 
+  <tr style="font-size:10px;text-align:left;font-style:italic">
+        <td width="10%" align="left" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Clave</td>
+        <td width="30%" align="left" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Producto</td>
+        <td width="15%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Tipo</td>
+        <td width="15%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Presentación</td>
+        <td width="10%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Preparación</td>
+        <td width="10%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Empaque</td>
+        <td width="10%" align="center" style="border-bottom:1px dashed #000000;border-top:1px dashed #000000;">Precio</td>
+        
+      </tr> 
+      </thead>
+      
+     
+     
+      
+    
+    ';
+
+$total=0;
+foreach ($productos as $dato){
+    
+    $html.= '
+            <tr class="nonegrita">
+                    <td width="10%"><div class="divcentrar">'.$dato->clave.'</div></td>
+                    <td width="30%" align="left">'.$dato->producto.'</td>
+                    <td width="15%">'.$dato->calidad.'</td>
+                    <td width="15%" > '.$dato->presentacion.'</td>
+                         <td width="10%" > '.$dato->preparacion.'</td>
+                          <td width="10%"  align="right">'.$dato->empaque.'</td>
+                              <td  width="10%" align="right">'.$dato->precio.'</td>
+            </tr>
+            ';
+    
+    
+}
+
+$notas = "";
+//$html.= '<tr><td colspan="6"></td></tr></table> <p>
+//$html.= '</table> <p>';
+
+$html.= '   
+        </table> 
+        <p>
+
+
+        <p>
+';
+
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+ob_end_clean();
+// ---------------------------------------------------------
+
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+ $pdf->Output();
+
+//============================================================+
+// END OF FILE
+//============================================================+
+?>

@@ -54,5 +54,8 @@ FROM almacen as alm, inventario as inv
 WHERE inv.almacen_id = alm.id
 AND $condicion order by alm.descripcion asc");
         }
+        public function buscaAlmacen($condicion) {
+            return $this->find_all_by_sql("SELECT * FROM almacen  $condicion ");
+        }
 }   
 ?>
