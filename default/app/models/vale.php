@@ -116,7 +116,7 @@ FROM vale as com  where tipo='ET' ";
     public function guardarDatosIni(){
        $vale = new vale(Input::post('vale'));
         $fechaDocumento=$vale->fecha_recepcion;
-        $fechaMovimiento=$vale->date("Y-m-d");
+        $fechaMovimiento=date("Y-m-d");
         $referencia=$vale->documento;
         $proveedorId=$vale->proveedor_id;
         $folios = new series_folios();

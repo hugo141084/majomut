@@ -431,10 +431,10 @@ class ventaController extends AppController{
     // $this->datosUsuario=$usuario->listarEmpleado($this->datosCompra->USUARIO_ID);
     }
     public function reporteVenta($compraId){
-     $compra=new pedido();
-     $this->datosCompra=$compra->listarXidDC($compraId);
-     $detalleCompra=new detalle_pedido();
-     $this->detalleCompra=$detalleCompra->listarProductoCompra($compraId);
+     $compra=new venta();
+     $this->datosCompra=$compra->listarVentaId($compraId);
+     $detalleCompra=new detalle_venta();
+     $this->detalleCompra=$detalleCompra->listarProductoVenta($compraId);
      $usuario=new usuario();
      $destino=new almacen();
      $this->destino=$destino->destino($compraId);

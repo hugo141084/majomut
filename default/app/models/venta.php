@@ -27,7 +27,10 @@ class venta extends ActiveRecord {
 FROM inventario as inv, producto as pro  WHERE ALMACEN_ID =$id and inv.PRODUCTO_ID= pro.ID ";
         return $this->find_all_by_sql($sqlProducto);
     }
-    
+    public function listarVentaId($id) {
+        return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_recepcion, com.documento, com.tipo_documento,cli.id clienteId, cli.nombrecompleto,cli.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio 
+ ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior)  direccion ,cli.colonia,cli.ciudad,cli.municipio,cli.estado,cli.pais,cli.codigopostal FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
+    }
     public function listarVenta() {
          
          $sqlCompra = "SELECT com.id, com.fecha_documento, com.documento, com.tipo_documento, cli.nombrecompleto,cli.rfc,com.estado, com.salidaVale 
@@ -60,6 +63,7 @@ FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id  ";
              $array_productos = Session::get('array_venta');
              $partidaTotal=0;
              $importeTotal=0;
+             $ivaTotal=0;
             $longitud = count($array_productos);
              for ($i = 0; $i < $longitud; $i++) {
               $detalleCompra = new detalle_venta();
@@ -74,15 +78,17 @@ $codigo=$array_productos[$i]['CLAVE'];
 $descripcion=$array_productos[$i]['DESCRIPCION'];
 $cantidad=$array_productos[$i]['CANTIDAD'];
 $precio=$array_productos[$i]['PRECIO'];
-       
+       $pro = new producto();     
+        $pro=$pro->find_first('id='.$productoId);
+        $iva=$pro->impuesto; 
               
             $partidaTotal=$cantidad*$precio;
          $importeTotal=$partidaTotal+$importeTotal;
+         $ivaTotal=$ivaTotal+(round((($partidaTotal*$iva)/100),2));
               $detalleCompra->guardarDatos($valeId, $productoId, $cantidad,$precio);
               
-              
-              
-      $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;
+         $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;     
+             
        $cantidad= $array_productos[$i]['CANTIDAD'] ;
        $opcion= "lote";
         $unidadXpaquete=$array_productos[$i]['UNIDAD_PAQUETE'];
@@ -110,7 +116,8 @@ $precio=$array_productos[$i]['PRECIO'];
            Input::delete();
            session::delete('array_venta');
            $actualizar= new venta();
-           $actualizar->update_all("subtotal =  $importeTotal,iva=0,monto=$importeTotal", "id=$valeId ");
+           $ventaTotal=$importeTotal+$ivaTotal;
+           $actualizar->update_all("subtotal =  $importeTotal,iva=$ivaTotal,monto=$ventaTotal", "id=$valeId ");
            return $valeId;
         }
     }

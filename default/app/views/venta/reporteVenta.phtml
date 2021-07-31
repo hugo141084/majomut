@@ -57,19 +57,19 @@ $html .= '<style>
 	table.first {
         color: #003300;
         font-family: helvetica;
-        font-size: 8pt;
+        font-size: 9pt;
         
     }
     table.second {
         
         font-family: helvetica;
-        font-size: 7pt;
+        font-size: 9pt;
         
     }
     table.thirty {
         color: #003300;
         font-family: helvetica;
-        font-size: 6pt;
+        font-size: 9pt;
       
     }
     table.four {
@@ -85,6 +85,11 @@ $html .= '<style>
         text-align: center;
         font-weight: bold;
     }
+    p {
+       
+        font-size: 9pt;
+        font-weight: bold;
+    }
         </style>';
 
 //echo $raiz;
@@ -96,8 +101,8 @@ $html .= '<table class="first" width="100%" border="0">
     <td  align="center" style="width:20%;padding-top:3px" ><img src="'.$logo.'" width="70" height="80" alt="logo" style="padding-top:1px;" /> </td>
 	
     <td  align="center" valign="middle" style="width:70%;  vertical-align:middle" ><br/> UNION DE PRODUCTORES  ORGANICOS <br/>BENEFICIO MAJOMUT, S. DE P.R. DE R.L <br /> R.F.C. : UPO111114BJ7<br />	
-    1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. C.P. 29247 <br/>
-        Lugar de Expedicion: 70790 - OAX</td>
+    1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. 29247 <br/>
+        </td>
         
         <td  align="left" style="width:10%;padding-top:15px"  valign="top" >  <br/> Venta No. '.$datosCompra->documento.'</td>      
   </tr>
@@ -112,35 +117,35 @@ $html.='
     <td height="20"  width="20%" style=" background-color:#33a936; color:#FFF"><div align="center">Num. Cliente </div></td>
   </tr>
   <tr height="20" >
-    <td width="15%">Nombre:</td>
-    <td width="25%">'.$datosCompra->nombrecompleto.'</td>
-    <td width="15%">&nbsp;</td>
-    <td width="25%">&nbsp;</td>
-    <td rowspan="2"><div align="center"> CM-'.str_pad($datosCompra->clienteId,4,0,STR_PAD_LEFT).'</div></td>
+    <td width="18%">Nombre:</td>
+    <td width="30%"><p>'.$datosCompra->nombrecompleto.'</p></td>
+    <td width="10%">&nbsp;</td>
+    <td width="22%">&nbsp;</td>
+    <td rowspan="2" align="center" valign="middle"><p>CM-'.str_pad($datosCompra->clienteId,4,0,STR_PAD_LEFT).'</p></td>
   </tr>
   <tr height="20" >
     <td>RFC:</td>
-    <td>'.$datosCompra->rfc.'</td>
+    <td><p>'.$datosCompra->rfc.'</p></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
   <tr height="20" >
     <td>Direccion:</td>
-    <td>'.$datosCompra->direccion.'</td>
+    <td><p>'.$datosCompra->direccion.'</p></td>
     <td>Colonia:</td>
-    <td>'.$datosCompra->colonia.'</td>
+    <td><p>'.$datosCompra->colonia.'</p></td>
     <td width="20%" ><div align="center"></div></td>
   </tr>
   <tr height="20" >
-    <td>Ciudad;</td>
-    <td>'.$datosCompra->ciudad.'</td>
+    <td>Ciudad:</td>
+    <td><p>'.$datosCompra->municipio.'</p></td>
     <td>C.P.:</td>
-    <td>'.$datosCompra->codigopostal.'</td>
+    <td><p>'.$datosCompra->codigopostal.'</p></td>
     <td rowspan="2"><div align="center">  </div></td>
   </tr>
   <tr height="20" >
-    <td style="font-weight:bold;color:#FFF;" bgcolor="#33a936">Correo Elec. </td>
-    <td colspan="3">'.$datosCompra->correoelectronico.'</td>
+    <td style="font-weight:bold;color:#FFF;" bgcolor="#33a936">Correo Electronico </td>
+    <td colspan="3"><p>'.$datosCompra->correoelectronico.'</p></td>
   </tr>
 </table>
 
@@ -153,8 +158,8 @@ $html .='<table class="second" border="0"  style="width: 100%">
     <td style="width: 15%">CODIGO <br>PRODUCTO</td>
 <td style="width: 15%">CANTIDAD</td>
 <td style="width: 40%">PRODUCTO</td>
-<td style="width: 15%">VALOR UNITARIO</td>
-<td style="width: 15%">VALOR UNITARIO</td>
+<td style="width: 15%">PRECIO UNITARIO</td>
+<td style="width: 15%">SUBTOTAL</td>
     </tr>
    ';
 $i=1;
@@ -188,7 +193,7 @@ for($j=$i;$j<=5;$j++){
 
 
 $descuento=0;
-$importeTotal=$datosCompra->subtotal-$descuento+$datosCompra->costo_envio;
+$importeTotal=$datosCompra->subtotal+$datosCompra->iva-$descuento+$datosCompra->costo_envio;
 $decimales = $importeTotal - (int) $importeTotal;
 $decimales = round($decimales, 2);
 $decimales = $decimales * 100;
