@@ -29,7 +29,9 @@ FROM inventario as inv, producto as pro  WHERE ALMACEN_ID =$id and inv.PRODUCTO_
     }
     public function listarVentaId($id) {
         return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_recepcion, com.documento, com.tipo_documento,cli.id clienteId, cli.nombrecompleto,cli.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio 
- ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior)  direccion ,cli.colonia,cli.ciudad,cli.municipio,cli.estado,cli.pais,cli.codigopostal FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
+ ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior)  direccion ,cli.colonia,cli.ciudad,cli.municipio,cli.estado,cli.pais,cli.codigopostal, 
+ com.nombre,com.direccion as direccionP,com.rfc as rfcP
+FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
     }
     public function listarVenta() {
          

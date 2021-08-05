@@ -21,7 +21,7 @@ class cotizacion extends ActiveRecord {
     }
    public function listarXid($id) {
         return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.documento, com.tipo_documento, cli.nombrecompleto,cli.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio 
- ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior,cli.colonia,cli.ciudad,cli.estado,cli.pais,cli.codigopostal)  direccion FROM cotizacion as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
+ ,cli.telefono,cli.correoelectronico,com.nombre, com.direccion, com.telefono,com.correoelectronico,com.organizacion FROM cotizacion as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
     }
     public function listarProductoAlmacen($id) {
          $sqlProducto = "SELECT inv.ID, pro.CLAVE_ARTICULO, pro.DESCRIPCION, inv.EXISTENCIA, inv.CANTIDAD_MINIMA, inv.CANTIDAD_MAXIMA

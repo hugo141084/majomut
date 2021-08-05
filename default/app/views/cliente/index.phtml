@@ -1,7 +1,9 @@
+﻿<?php Tag::css('demo_page'); ?>
+<?php Tag::css('demo_table'); ?>
+<?php Html::includeCss() ?>
+<?php echo Tag::js('jquery.dataTables.min'); ?>
 <?php
 View::content();
-
-
 ?>
 
 <div id="container" >
@@ -32,8 +34,51 @@ View::content();
 
                             <div class="panel-body">
                              <div class="col-md-12">
-          <?php View::partial("formato",false,array('Encabezado'=>$encabezado,'Model'=>$cliente,'Campos'=>$campos,'ctrleditar'=>"editar/", 'ctrlInactivo' => "bloquear/", 'ctrlcrear'=>"crear/")); ?>
+                                   <div style="text-align:right;margin: 0 0; width:100%; float: left; ">
+                <div class='btn'>
+                    <?php                                      
+                          echo Html::linkAction('crear',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');                 
+                    ?>
+                </div>
+            </div> 
+ 
+ <table  border="0" width="100%" id="display" class="display">
+            <thead>
+                <tr  style="font-size: 9px;letter-spacing: -0.8px;">
+                    <th width='5%'> #</th>
+                    <th width='30%'> NOmbre / Razón Social</th>
+                    <th width='30%'>R.F.C.</th>                              
+                    <th width='13%'>E-mail</th>
+                    <th width='13%'>Telefono</th>
+                    <th width='13%'>Acción</th>
+                    </tr>
+            </thead>
+            <tbody>
+<?php
 
+           $i=1;
+            foreach($cliente as $res){
+
+              
+                       echo "<tr>";
+                        echo "<td>".$res->id."</td>";
+                            echo "<td>".$res->nombrecompleto."</td>";
+                            echo "<td>".$res->rfc."</td>";
+                            echo "<td>".$res->correoelectronico."</td>"; 
+                            echo "<td>".$res->telefono."</td>"; 
+                            echo "<td>";
+                            if($res->id !=1){
+                            echo Html::linkAction("editar/" . $res->id,'<span class="glyphicon glyphicon-edit"></span>','class="btn btn-info btn-xs"  title="Editar" data-toggle="tooltip"');
+                            echo Html::linkAction("bloquear/" . $res->id, Html::img('bloquear.png', 'cancele', 'style="text-align:center;width:25px;padding:2px;" title="Bloquear Registro "'), ('onclick="return confirm(\'Está Seguro que desea dar de baja?\')"'));        
+                            }
+                            echo "</td>";
+                            echo "</tr>";  
+                             
+                        $i++; 
+               }
+            ?>
+            </tbody>
+        </table>
         </div>     
                             </div>
                         </div>
@@ -65,7 +110,7 @@ View::content();
 <?php
 
            $i=1;
-            foreach($result1 as $res){
+            foreach($result as $res){
 
               
                        echo "<tr>";
@@ -116,3 +161,28 @@ View::content();
 
     }
 </script>    
+<script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(".display").dataTable({ 
+            "aaSorting": [[0,"asc"]],
+            "bAutoWidth": true,
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "aProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encuentran resultados",
+                "sInfo": "Mostrando desde _START_ hasta _END_ registros",
+                "sInfoEmpty": "Mostrando desde 0 hasta 0 de 0 registros",
+                "sInfoFiltered": "(filtrando de _MAX_ registros en total)",
+                "sSearch": "Buscar",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Ultimo"
+                }
+            }
+        });
+    });
+    
+</script>

@@ -217,15 +217,16 @@ else if (($operacion) == "MOSTRAR_LISTA") {
 
 
 <div class="cabecera" >
-    <table width="100%" border="0">
-        <tr bgcolor="#CCCCCC" style="height: 30px;">
+    <table width="100%" border="1" cellpadding="2">
+        <tr bgcolor="#CCCCCC" style="height: 30px; text-align: center;">
     <td width="5%"><label>#</label></td>
     <td width="5%"><label></label></td>
     <td width="10%"><label>Codigo</label></td>
     <td width="10%"><label>Cantidad</label></td>
     <td width="30%"><label>Descripcion</label></td>
-    <td width="10%"><label>V. Unitario</label></td>   
-    <td width="10%"><label>V. total</label></td>
+    <td width="10%"><label>V. Unitario</label></td> 
+    <td width="10%"><label>Impuesto</label></td> 
+    <td width="10%"><label>V. Total</label></td>
    
     
     
@@ -234,23 +235,22 @@ else if (($operacion) == "MOSTRAR_LISTA") {
 </table>
    </div>                    
  		<div class="ventanillaCobro">
-<table width="100%" border="0" align="center" class="Estilo">
+<table width="100%" border="0" align="center" class="Estilo" cellpadding="2">
     <?php
   
     $array_productos=Session::get('array_cotizacion');
- $longitud=count($array_productos);
-
+ $longitud=0;
+  if(!empty($array_productos)) $longitud=count($array_productos);
  $color="#0098CD";
  $importeTotal=0;
  $indice=0;
  $partidaTotal=0;
  $cantidad=0;
  $precio=0;
+ $impuesto=0;
+ $subtotal=0;
+ $impuestoTotal =0;$cantidadT=0;
     for ($i = 0; $i < $longitud; $i++) {
-  
-    
-        
-        
 
  if($color=="#0098CD")
         {
@@ -266,16 +266,25 @@ $codigo=$array_productos[$i]['CLAVE'];
 $descripcion=$array_productos[$i]['DESCRIPCION'];
 $cantidad=$array_productos[$i]['CANTIDAD'];
 $precio=$array_productos[$i]['PRECIO'];
-$partidaTotal=$cantidad*$precio;
-    $importeTotal=$partidaTotal+$importeTotal;
+  
+$tasa=$array_productos[$i]['TASA'];
+if($tasa=="")$tasa=0;
+$impuesto=(($cantidad*$precio)*$tasa)/100;
+$subtotal=$subtotal+($cantidad*$precio);
+$impuestoTotal= $impuestoTotal+$impuesto;
+$partidaTotal=$cantidad*$precio+$impuesto;
+$importeTotal=$partidaTotal+$importeTotal;
+$cantidadT +=$cantidad;    
+    
 	echo "<tr valign=center style='background-color:$color'>";		
         echo "<td width='5%' align='center'>" . $indice . "</td>";
         echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida($i)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
         echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $codigo  . "</FONT></td>";
         echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,0,'.',',')."  ".$array_productos[$i]['MEDIDA']. "</FONT></td>";
         echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion  . "</FONT></td>";
-        echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $precio  . "</FONT></td>";
-        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $partidaTotal . "</FONT></td>";
+         echo "<td width='5%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($precio,2) . "</FONT></td>";
+        echo "<td width='5%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " .$tasa."% </FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($partidaTotal,2) . "</FONT></td>";
         
         
         echo "</tr>";
@@ -286,6 +295,10 @@ $partidaTotal=$cantidad*$precio;
     ?>	
 
     </table>
+                    <?php echo Form::hidden('cantidadT', ' class="form-control"   ',$cantidadT); ?>
+                    <?php echo Form::hidden("iSubtotal","",  number_format($subtotal,2)); ?> 
+                     <?php echo Form::hidden("iImpuesto","", number_format($impuestoTotal,2)); ?>                 
+                    <?php echo Form::hidden("iTotal","", number_format($importeTotal,2)); ?>
                 </div>
   
 
@@ -391,8 +404,8 @@ else if (($operacion) == "MOSTRAR_LISTA_VENTA") {
 
 
 <div class="cabecera" >
-    <table width="100%" border="0">
-        <tr bgcolor="#CCCCCC" style="height: 30px;">
+    <table width="100%" border="0" cellpadding="1">
+        <tr bgcolor="#CCCCCC" style="height: 30px; text-align: center">
     <td width="5%"><label>#</label></td>
     <td width="5%"><label></label></td>
     <td width="10%"><label>Cantidad</label></td>
@@ -694,18 +707,85 @@ $("#entrega_ALMACEN_ID").change(function(){
  <?php
  }
  else if (($operacion) == "BUSCA_CLIENTE") {
+     $arreglod[] = "";
+$arreglod[1] = $cliente->calle;
+$arreglod[2] = $cliente->numeroexterior;
+$arreglod[3] = $cliente->numerointerior;
+$arreglod[4] = $cliente->colonia;
+$arreglod[5] = $cliente->municipio;
+$arreglod[6] = $cliente->codigopostal;
+$arreglod[7] = $cliente->estado;
+$arreglod[8] = $cliente->pais;
+$arreglod = array_filter($arreglod, "strlen"); 
+$direccion=implode(", ", $arreglod).".";
+$campo="";
+if($cliente->id!=1) $campo='readonly="readonly"'
  ?><table width="100%" border="0">
   <tr>
     <td width="104"><label> Nombre:</label></td>
-    <td width="551"><input name="nombre" id="nombre" type="text" size="40"  class="letra" readonly="readonly" value="<?php echo $cliente->nombrecompleto; ?>"/></td>
+    <td width="551">
+    <?php echo Form::text('venta.nombre', "class='form-control' $campo ",$cliente->nombrecompleto ); ?>
+    </td>
   </tr>
   <tr>
     <td><label> Direccion:</label></td>
-    <td><input type="text" name="direccion" id="direccion" size="50"  class="letra" readonly="readonly" value="<?php echo $cliente->direccion; ?>"/></td>
+    <td>
+    <?php echo Form::text('venta.direccion', "class='form-control' $campo ",$direccion ); ?>
+    </td>
   </tr>
   <tr>
     <td><label> RFC:</label></td>
-    <td><input name="rfc" id="rfc" type="text" size="15"   class="letra" readonly="readonly" value="<?php echo $cliente->rfc; ?>"/></td> 
+    <td>
+    <?php echo Form::text('venta.rfc', "class='form-control' readonly='readonly' ",$cliente->rfc ); ?>
+    </td> 
+  </tr>
+</table>
+  <?php   
+ }
+  else if (($operacion) == "BUSCA_CLIENTE_C") {
+     $arreglod[] = "";
+$arreglod[1] = $cliente->calle;
+$arreglod[2] = $cliente->numeroexterior;
+$arreglod[3] = $cliente->numerointerior;
+$arreglod[4] = $cliente->colonia;
+$arreglod[5] = $cliente->municipio;
+$arreglod[6] = $cliente->codigopostal;
+$arreglod[7] = $cliente->estado;
+$arreglod[8] = $cliente->pais;
+$arreglod = array_filter($arreglod, "strlen"); 
+$direccion=implode(", ", $arreglod).".";
+$campo="";
+if($cliente->id!=1) $campo='readonly="readonly"'
+ ?><table width="100%" border="0">
+  <tr>
+    <td width="104"><label> Nombre:</label></td>
+    <td width="551">
+    <?php echo Form::text('cotizacion.nombre', "class='form-control' $campo ",$cliente->nombrecompleto ); ?>
+    </td>
+  </tr>
+  <tr>
+    <td><label> Direccion:</label></td>
+    <td>
+    <?php echo Form::text('cotizacion.direccion', "class='form-control' $campo ",$direccion ); ?>
+    </td>
+  </tr>
+  <tr>
+    <td><label> Telefono:</label></td>
+    <td>
+    <?php echo Form::text('cotizacion.telefono', "class='form-control' $campo ",$cliente->telefono ); ?>
+    </td> 
+  </tr>
+  <tr>
+    <td><label> Email:</label></td>
+    <td>
+    <?php echo Form::text('cotizacion.correoelectronico', "class='form-control' $campo ",$cliente->correoelectronico ); ?>
+    </td> 
+  </tr>
+  <tr>
+    <td><label> Organizaciòn:</label></td>
+    <td>
+    <?php echo Form::text('cotizacion.organizacion', "class='form-control' $campo ",""); ?>
+    </td> 
   </tr>
 </table>
   <?php   

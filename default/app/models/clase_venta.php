@@ -22,6 +22,7 @@ class clase_venta {
         $array_productos[$num]['CANTIDAD'] = $cantidad;
         $array_productos[$num]['MEDIDA'] = $detalle->medida;
         $array_productos[$num]['PRECIO'] = $precio;
+        $array_productos[$num]['TASA'] = $detalle->impuesto;
         $array_productos[$num]['UNIDAD_ENTRADA'] = $detalle->empaque;
         
         
@@ -40,6 +41,7 @@ class clase_venta {
         $array_productos[$num]['CANTIDAD'] = $cantidad;
         $array_productos[$num]['MEDIDA'] = $detalle->medida;
         $array_productos[$num]['PRECIO'] = $precio;
+         $array_productos[$num]['TASA'] = $detalle->impuesto;
         $array_productos[$num]['UNIDAD_ENTRADA'] = $detalle->empaque;
         
         

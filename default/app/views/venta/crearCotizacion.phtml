@@ -8,6 +8,9 @@
             data: "operacion=" + operacion,
             success: function (html) {
                 $("#resultado").html(html);
+                $("#dsubtotal").val($("#iSubtotal").val());
+                $("#dimpuesto").val($("#iImpuesto").val());
+                $("#dtotal").val($("#iTotal").val());
             }
         });
 
@@ -89,7 +92,7 @@
     function buscaCliente() {
         var clienteId = $('#cotizacion_cliente_id').val();
         if (clienteId > 0) {
-            var operacion = "BUSCA_CLIENTE";
+            var operacion = "BUSCA_CLIENTE_C";
             $.ajax({
                 type: "POST",
                 url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
@@ -208,7 +211,7 @@
                         <div class="input-group">
                             <div class="input-group-addon">       Fecha:    
                             </div>
-                            <?php echo form::text('cotizacion.fecha_documento', 'placeholder="dd-mm-aa" required class="form-control"', date('d-m-Y')); ?>
+                            <?php echo form::date('cotizacion.fecha_documento', 'placeholder="dd-mm-aa" required class="form-control"', date('d-m-Y')); ?>
                         </div>
                     </div> 
                 </div>
@@ -230,7 +233,7 @@
                     <div id="cliente">
                         <table width="100%" border="0">
                             <tr>
-                                <td width="104"><label> Nombre:</label></td>
+                                <td width="104"><label> Cliente:</label></td>
                                 <td width="551"><input name="nombre" id="nombre" type="text" size="40"  class="letra" readonly="readonly"/></td>
                             </tr>
                             <tr>
@@ -238,8 +241,16 @@
                                 <td><input type="text" name="direccion" id="direccion" size="50"  class="letra" readonly="readonly"/></td>
                             </tr>
                             <tr>
-                                <td><label> RFC:</label></td>
+                                <td><label> Telefono:</label></td>
                                 <td><input name="rfc" id="rfc" type="text" size="15"   class="letra" readonly="readonly"/></td> 
+                            </tr>
+                            <tr>
+                                <td><label> Email:</label></td>
+                                <td><input name="rfc" id="rfc" type="text" size="25"   class="letra" readonly="readonly"/></td> 
+                            </tr>
+                            <tr>
+                                <td><label> Organizacion:</label></td>
+                                <td><input name="rfc" id="rfc" type="text" size="55"   class="letra" readonly="readonly"/></td> 
                             </tr>
                         </table>
                     </div>   
@@ -280,7 +291,7 @@
                             <label >Precio</label>
                             <div class="input-group">
                                
-                                  <?php echo Form::text('cotizacion.precio', ' readonly="readonly" class="form-control"  ','0'); ?>
+                                  <?php echo Form::text('cotizacion.precio', '  class="form-control"  ','0'); ?>
                                 
                             </div>
                         </div> 
@@ -296,6 +307,24 @@
 
                     <div id="resultado" style="height: 200px; border-bottom:1px;  border-bottom-color:#000; "> <?php print"<script> imprime_lista() </script>"; ?></div>
                     </br>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> SubTotal $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dsubtotal', '  class="form-control"  style="text-align:right;" '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Impuesto $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dimpuesto', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Total $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dtotal', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                        </tr>
+                    </table>
+                    <br/>
 
                     <table style="width: 100%" border="0">
 
@@ -311,8 +340,8 @@
                             <div class="input-group">
                                 <div class="input-group-addon">       Costo Envio:    
                                 </div>
-                                <?php echo Form::number('cotizacion.costo_envio', ' required class="form-control"   '); ?>
-                            </div>
+                                <?php echo Form::dbSelect("cotizacion.costo_envio", 'costo', array('costoEnvio', 'datos', 0), '- Seleccione -', " class='form-control' "); ?>
+                                 </div>
                         </div> 
                     </div>
                     <div class="col-sm-8">

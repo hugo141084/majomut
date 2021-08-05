@@ -11,7 +11,7 @@
                 $("#dsubtotal").val($("#iSubtotal").val());
                 $("#dimpuesto").val($("#iImpuesto").val());
                 $("#dtotal").val($("#iTotal").val());
-                actualizaEnvio();
+                
             }
         });
 
@@ -326,15 +326,15 @@ else $('#venta_costo_envio').val("0");
                         <table width="100%" border="0">
                             <tr>
                                 <td width="104"><label> Nombre:</label></td>
-                                <td width="551"><input name="nombre" id="nombre" type="text" size="40"  class="letra" readonly="readonly"/></td>
+                                <td width="551"><input name="venta.nombre" id="venta.nombre" type="text" size="100"  class="letra" readonly="readonly"/></td>
                             </tr>
                             <tr>
                                 <td><label> Direccion:</label></td>
-                                <td><input type="text" name="direccion" id="direccion" size="50"  class="letra" readonly="readonly"/></td>
+                                <td><input type="text" name="venta.direccion" id="venta.direccion" size="100"  class="letra" readonly="readonly"/></td>
                             </tr>
                             <tr>
                                 <td><label> RFC:</label></td>
-                                <td><input name="rfc" id="rfc" type="text" size="15"   class="letra" readonly="readonly"/></td> 
+                                <td><input name="venta.rfc" id="venta.rfc" type="text" size="15"   class="letra" readonly="readonly"/></td> 
                             </tr>
                         </table>
                     </div>   
@@ -438,7 +438,7 @@ else $('#venta_costo_envio').val("0");
                                 <div class="input-group-addon">       Costo Envio:    
                                 </div>
 <?php //echo Form::number('venta.costo_envio', ' required class="form-control"   '); ?>
-                                <?php echo Form::dbSelect("venta.costo_envio", 'costo', array('costoEnvio', 'datos', 0), '- Seleccione -', " class='form-control' required"); ?>
+                                <?php echo Form::dbSelect("venta.costo_envio", 'costo', array('costoEnvio', 'datos', 0), '- Seleccione -', " class='form-control' "); ?>
                             </div>
                         </div> 
                     </div>

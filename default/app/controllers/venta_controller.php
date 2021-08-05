@@ -143,11 +143,11 @@ class ventaController extends AppController{
             if($num == "0"){
                
                 echo "<script>  alert ('Primero agrege partidas para poder guardar este movimiento....!');</script>"; 
-            }else {
+            }else {                
             $this->venta = $venta->guardarDatos();
             ?>
                 <script>
-                    window.open('reporteVenta/<?php echo $this->venta; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
+                  window.open('reporteVenta/<?php echo $this->venta; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
                 </script>
                <?php
                 Input::delete();
@@ -635,6 +635,13 @@ class ventaController extends AppController{
           
         }
         else if (($this->operacion) == "BUSCA_CLIENTE") {
+          
+            $clienteId=Input::POST('clienteId');
+     
+          $this->cliente= Load::model('cliente')-> buscaCliente($clienteId);
+          
+        }
+        else if (($this->operacion) == "BUSCA_CLIENTE_C") {
           
             $clienteId=Input::POST('clienteId');
      
