@@ -36,14 +36,16 @@ AND det.producto_id = pro.id
 FROM inventario as inv, producto as pro  WHERE ALMACEN_ID =$id and inv.PRODUCTO_ID= pro.ID ";
         return $this->find_all_by_sql($sqlProducto);
     }
-    public function guardarDatos($compraId,$productoId,$cantidad,$precio){
+    public function guardarDatos($compraId,$productoId,$cantidad,$precio,$ivaI,$totalI){
         $detalleCompra = new detalle_cotizacion();
         $detalleCompra->cotizacion_id=$compraId; 
         $detalleCompra->producto_id=$productoId; 
         $detalleCompra->cantidad=$cantidad;
         $detalleCompra->precio=$precio;
+        $detalleCompra->impuesto=$ivaI;
+        $detalleCompra->total=$totalI;
         
-        $detalleCompra->usuario_id=Session::get('id'); 
+        $detalleCompra->usuario_id=Session::get('Id'); 
         $detalleCompra->save();
         
     }

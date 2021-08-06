@@ -66,6 +66,8 @@ FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id  ";
              $partidaTotal=0;
              $importeTotal=0;
              $ivaTotal=0;
+             $ivaI=0;
+             $totalI=0;
             $longitud = count($array_productos);
              for ($i = 0; $i < $longitud; $i++) {
               $detalleCompra = new detalle_venta();
@@ -86,8 +88,11 @@ $precio=$array_productos[$i]['PRECIO'];
               
             $partidaTotal=$cantidad*$precio;
          $importeTotal=$partidaTotal+$importeTotal;
-         $ivaTotal=$ivaTotal+(round((($partidaTotal*$iva)/100),2));
-              $detalleCompra->guardarDatos($valeId, $productoId, $cantidad,$precio);
+         $ivaI=(round((($partidaTotal*$iva)/100),2));
+         $totalI=$partidaTotal+$ivaI;
+         $ivaTotal=$ivaTotal+$ivaI;
+          $importeTotal=$partidaTotal+$ivaTotal;
+              $detalleCompra->guardarDatos($valeId, $productoId, $cantidad,$precio,$ivaI,$totalI);
               
          $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;     
              

@@ -211,9 +211,9 @@ $html .=' <tr align="center">
 <td style="width: 15%; " >'.$datos->clave.' </td>
 <td style="width: 15%" >'.$datos->cantidad.'</td>
 <td style="width: 40%" >'.$datos->descripcion.'</td>
-<td style="width: 10%" >'.$datos->precio.'</td>
-<td style="width: 10%" >'.$datos->precio.'</td>
-<td style="width: 10%" >'. number_format($c1,2).'</td>
+<td style="width: 10%" >'.number_format($datos->precio,2).'</td>
+<td style="width: 10%" >'.number_format($datos->impuesto,2).'</td>
+<td style="width: 10%" >'. number_format($datos->total,2).'</td>
 
 </tr>'; 
 $i++;
