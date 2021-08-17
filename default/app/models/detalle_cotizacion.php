@@ -23,10 +23,9 @@ class detalle_cotizacion extends ActiveRecord {
         return $this->find_by_sql("select * from almacen where id='$id'");
     }
     public function listarProductoCompra($compraId) {
-         $sqlProducto = "SELECT det.id,det.precio, pro.clave, pro.descripcion, det.cantidad, pre.descripcion AS unidad_entrada
-FROM detalle_cotizacion AS det, producto AS pro,  presentacion AS pre
-WHERE det.cotizacion_id =$compraId
-AND det.producto_id = pro.id
+         $sqlProducto = "SELECT p.id,p.clave, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion, dv.cantidad, dv.precio,dv.impuesto,dv.total "
+                 . "FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id "
+                 . "inner join detalle_cotizacion dv  on dv.producto_id=p.id where dv.cotizacion_id=$compraId
 
  ";
         return $this->find_all_by_sql($sqlProducto);

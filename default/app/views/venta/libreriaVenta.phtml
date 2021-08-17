@@ -272,7 +272,7 @@ if($tasa=="")$tasa=0;
 $impuesto=(($cantidad*$precio)*$tasa)/100;
 $subtotal=$subtotal+($cantidad*$precio);
 $impuestoTotal= $impuestoTotal+$impuesto;
-$partidaTotal=$cantidad*$precio+$impuesto;
+$partidaTotal=$cantidad*$precio;
 $importeTotal=$partidaTotal+$importeTotal;
 $cantidadT +=$cantidad;    
     
@@ -787,6 +787,43 @@ if($cliente->id!=1) $campo='readonly="readonly"'
     <?php echo Form::text('cotizacion.organizacion', "class='form-control' $campo ",""); ?>
     </td> 
   </tr>
+</table>
+  <?php   
+ }
+ else if (($operacion) == "BUSCA_CLIENTE_P") {
+     $arreglod[] = "";
+$arreglod[1] = $cliente->calle;
+$arreglod[2] = $cliente->numeroexterior;
+$arreglod[3] = $cliente->numerointerior;
+$arreglod[4] = $cliente->colonia;
+$arreglod[5] = $cliente->municipio;
+$arreglod[6] = $cliente->codigopostal;
+$arreglod[7] = $cliente->estado;
+$arreglod[8] = $cliente->pais;
+$arreglod = array_filter($arreglod, "strlen"); 
+$direccion=implode(", ", $arreglod).".";
+$campo="";
+if($cliente->id!=1) $campo='readonly="readonly"'
+ ?><table width="100%" border="0">
+  <tr>
+    <td width="104"><label> Nombre:</label></td>
+    <td width="551">
+    <?php echo Form::text('pedido.nombre', "class='form-control' $campo ",$cliente->nombrecompleto ); ?>
+    </td>
+  </tr>
+  <tr>
+    <td><label> Direccion:</label></td>
+    <td>
+    <?php echo Form::text('pedido.direccion', "class='form-control' $campo ",$direccion ); ?>
+    </td>
+  </tr>
+  <tr>
+    <td><label> Telefono:</label></td>
+    <td>
+    <?php echo Form::text('pedido.rfc', "class='form-control' readonly='readonly' ",$cliente->rfc ); ?>
+    </td> 
+  </tr>
+
 </table>
   <?php   
  }

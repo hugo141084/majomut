@@ -35,7 +35,7 @@
     function buscaCliente() {
         var clienteId = $('#pedido_cliente_id').val();
         if (clienteId > 0) {
-            var operacion = "BUSCA_CLIENTE";
+            var operacion = "BUSCA_CLIENTE_P";
             $.ajax({
                 type: "POST",
                 url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
@@ -154,7 +154,7 @@
                         <div class="input-group">
                             <div class="input-group-addon">       Fecha:    
                             </div>
-                            <?php echo form::text('pedido.fecha_documento', 'readonly="readonly" placeholder="dd-mm-aa" required class="form-control"', date('d-m-Y')); ?>
+                            <?php echo form::date('pedido.fecha_documento', 'readonly="readonly" placeholder="dd-mm-aa" required class="form-control"', date('Y-m-d')); ?>
                         </div>
                     </div> 
                 </div>
@@ -182,7 +182,7 @@
                         <div class="input-group">
                             <div class="input-group-addon">       Fecha Entrega:    
                             </div>
-                            <?php echo form::text('pedido.fecha_entrega', 'placeholder="dd-mm-aa" required class="form-control"', date('d-m-Y')); ?>
+                            <?php echo form::date('pedido.fecha_entrega', 'placeholder="dd-mm-aa" required class="form-control"', date('Y-m-d')); ?>
                         </div>
                     </div> 
                 </div>
@@ -244,7 +244,7 @@
                             <label >Precio</label>
                             <div class="input-group">
                                
-                                  <?php echo Form::text('pedido.precio', ' readonly="readonly" class="form-control"  ','0'); ?>
+                                  <?php echo Form::text('pedido.precio', '  class="form-control"  ','0'); ?>
                                 
                             </div>
                         </div> 

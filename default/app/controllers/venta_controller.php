@@ -647,6 +647,12 @@ class ventaController extends AppController{
      
           $this->cliente= Load::model('cliente')-> buscaCliente($clienteId);
           
+        }else if (($this->operacion) == "BUSCA_CLIENTE_P") {
+          
+            $clienteId=Input::POST('clienteId');
+     
+          $this->cliente= Load::model('cliente')-> buscaCliente($clienteId);
+          
         }
         else if (($this->operacion) == "BUSCA_EMPLEADO") {
           

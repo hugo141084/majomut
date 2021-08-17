@@ -42,8 +42,8 @@ class reporte extends TCPDF {
 }
 $pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter'); 
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('');
-$pdf->SetTitle('Reportes');
+$pdf->SetAuthor('Majomut');
+$pdf->SetTitle('Reporte Cotizacion');
 $pdf->SetSubject('');
 
 $logo='./img/logoReporte.png';
@@ -196,11 +196,11 @@ del café cosecha ciclo 2019-2020, los precios y las calidades, que a continuaci
 <table style="width: 100%" border="1" class="mitabla1" cellpadding="3">
 <tr align="center" bgcolor="#CCCCCC" class="respTi">
 <td style="width: 15%">Codigo <br>Producto</td>
-<td style="width: 15%">Cantidad</td>
+<td style="width: 10%">Cantidad</td>
 <td style="width: 40%">Producto</td>
 <td style="width: 10%">Precio Unitario</td>
 <td style="width: 10%">Impuesto</td>
-<td style="width: 10%">Precio Total</td>
+<td style="width: 15%">Precio Total</td>
 </tr>';
 $i=1;
 $c1=0;$c2=0;$c3=0;$c4=0;
@@ -209,11 +209,11 @@ foreach ($detalleCompra as $datos){
  
 $html .=' <tr align="center">
 <td style="width: 15%; " >'.$datos->clave.' </td>
-<td style="width: 15%" >'.$datos->cantidad.'</td>
+<td style="width: 10%" >'.$datos->cantidad.'</td>
 <td style="width: 40%" >'.$datos->descripcion.'</td>
-<td style="width: 10%" >'.number_format($datos->precio,2).'</td>
-<td style="width: 10%" >'.number_format($datos->impuesto,2).'</td>
-<td style="width: 10%" >'. number_format($datos->total,2).'</td>
+<td style="width: 10%" align="right">'.number_format($datos->precio,2).'</td>
+<td style="width: 10%" align="right">'.number_format($datos->impuesto,2).'</td>
+<td style="width: 15%" align="right">'. number_format($datos->total,2).'</td>
 
 </tr>'; 
 $i++;
@@ -223,48 +223,47 @@ if($i<5){
 for($j=$i;$j<=5;$j++){
  $html .=' <tr align="center">
 <td style="width: 15%;height: 19px;"></td>
-<td style="width: 15%"></td>
+<td style="width: 10%"></td>
 <td style="width: 40%"></td>
 <td style="width: 10%"></td>
 <td style="width: 10%"></td>
-<td style="width: 10%"></td>
+<td style="width: 15%"></td>
 </tr>';    
 }    
 }
 $html .=' <tr align="center" bgcolor="#CCCCCC">
 <td style="width: 15%"></td>
-<td style="width: 15%"></td>
-<td style="width: 40%"></td>
 <td style="width: 10%"></td>
-<td style="width: 10%">SUBTOTAL</td>
-<td style="width: 10%">'.$datosCompra->subtotal.'</td>
+<td style="width: 40%"></td>
+
+<td style="width: 20%" colspan="2" align="right">Subtotal</td>
+<td style="width: 15%" align="right">'.$datosCompra->subtotal.'</td>
 
 </tr>'; 
 $html .=' <tr align="center" bgcolor="#CCCCCC">
 <td style="width: 15%"></td>
-<td style="width: 15%"></td>
-<td style="width: 40%"></td>
 <td style="width: 10%"></td>
-<td style="width: 10%">IVA</td>
-<td style="width: 10%">'.$datosCompra->iva.'</td>
+<td style="width: 40%"></td>
+
+<td style="width: 20%" colspan="2" align="right">I.V.A.</td>
+<td style="width: 15%" align="right">'.$datosCompra->iva.'</td>
 
 </tr>'; 
 $html .=' <tr align="center" bgcolor="#CCCCCC">
 <td style="width: 15%"></td>
-<td style="width: 15%"></td>
-<td style="width: 40%"></td>
 <td style="width: 10%"></td>
-<td style="width: 10%">COSTO ENVIO</td>
-<td style="width: 10%">'.$datosCompra->costo_envio.'</td>
+<td style="width: 40%"></td>
+
+<td style="width: 20%" colspan="2" align="right">Costo Envio</td>
+<td style="width: 15%" align="right">'.(($datosCompra->costo_envio < 1)? "0.00": $datosCompra->costo_envio).'</td>
 
 </tr>'; 
 $html .=' <tr align="center" bgcolor="#CCCCCC">
 <td style="width: 15%"></td>
-<td style="width: 15%"></td>
-<td style="width: 40%"></td>
 <td style="width: 10%"></td>
-<td style="width: 10%">TOTAL</td>
-<td style="width: 10%">'. number_format(($datosCompra->monto + $datosCompra->costo_envio),2).'</td>
+<td style="width: 40%"></td>
+<td style="width: 20%" colspan="2" align="right">Total</td>
+<td style="width: 15%" align="right">'. number_format(($datosCompra->monto + $datosCompra->costo_envio),2).'</td>
 
 </tr>'; 
 $html .='</table> <p>
@@ -342,12 +341,10 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
 // Close and output PDF document
 // This method has several options, check the source code documentation for more information.
- //$pdf->Output('reporte.pdf', 'I');
+  ob_end_clean(); 
+$pdf->Output('cotizacion.pdf', 'I');
 
 
-  // ob_end_clean();  
-
- //$pdf->Output('reportePedido.pdf', 'I');
 
 ?>
 

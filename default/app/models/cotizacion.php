@@ -57,6 +57,7 @@ FROM cotizacion as com inner join cliente as cli  WHERE com.cliente_id =cli.id  
             $longitud = count($array_productos);
             $partidaTotal=0;
              $importeTotal=0;
+             $subtotal=0;
              $ivaTotal=0;
              $ivaI=0;
              $totalI=0;
@@ -72,12 +73,13 @@ $precio=$array_productos[$i]['PRECIO'];
         $pro=$pro->find_first('id='.$productoId);
         $iva=$pro->impuesto; 
               
-              $partidaTotal=$cantidad*$precio;
-         $importeTotal=$partidaTotal+$importeTotal;
+        $partidaTotal=$cantidad*$precio;
+         
          $ivaI=(round((($partidaTotal*$iva)/100),2));
          $totalI=$partidaTotal+$ivaI;
          $ivaTotal=$ivaTotal+$ivaI;
-          $importeTotal=$partidaTotal+$ivaTotal;
+          $importeTotal=$importeTotal+$totalI;
+          $subtotal=$subtotal+$partidaTotal;
               $detalleCompra->guardarDatos($compraId, $productoId, $cantidad,$precio,$ivaI,$totalI);
               
               
@@ -86,7 +88,7 @@ $precio=$array_productos[$i]['PRECIO'];
            Input::delete();
            session::delete('array_cotizacion');
            $actualizar= new cotizacion();
-           $actualizar->update_all("subtotal =  $importeTotal,iva=$ivaTotal,monto=$importeTotal", "id=$compraId ");
+           $actualizar->update_all("subtotal =  $subtotal,iva=$ivaTotal,monto=$importeTotal", "id=$compraId ");
            return $compraId;
         }
     }

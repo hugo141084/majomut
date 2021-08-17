@@ -32,7 +32,7 @@ AND det.almacen_id = alm.id
         return $this->find_all_by_sql($sqlProducto);
     }
     public function listarProductoVenta($compraId) {
-         $sqlProducto = "SELECT p.id,p.clave, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion, dv.cantidad, dv.precio "
+         $sqlProducto = "SELECT p.id,p.clave, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion, dv.cantidad, dv.precio,dv.impuesto,dv.total "
                  . "FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id "
                  . "inner join detalle_venta dv  on dv.producto_id=p.id where dv.venta_id=$compraId
  ";
