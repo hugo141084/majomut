@@ -1,6 +1,0 @@
-# example repository config (see 'hg help config' for more info)
-
-[paths]
-default = https://proyecto14@bitbucket.org/proyecto14/majomut
-default-push = https://proyecto14@bitbucket.org/proyecto14/majomut
-
