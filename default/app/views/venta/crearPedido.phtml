@@ -8,6 +8,9 @@
             data: "operacion=" + operacion,
             success: function (html) {
                 $("#resultado").html(html);
+                $("#dsubtotal").val($("#iSubtotal").val());
+                $("#dimpuesto").val($("#iImpuesto").val());
+                $("#dtotal").val($("#iTotal").val());
             }
         });
 
@@ -260,6 +263,24 @@
 
                     <div id="resultado" style="height: 200px; border-bottom:1px;  border-bottom-color:#000; "> <?php print"<script> imprime_lista() </script>"; ?></div>
                     </br>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> SubTotal $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dsubtotal', '  class="form-control"  style="text-align:right;" '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Impuesto $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dimpuesto', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Total $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dtotal', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                        </tr>
+                    </table>
+                    <br/>
 
                     <table style="width: 100%" border="0">
 
@@ -275,7 +296,7 @@
                             <div class="input-group">
                                 <div class="input-group-addon">       Costo Envio:    
                                 </div>
-                                <?php echo Form::number('pedido.costo_envio', ' required class="form-control"   '); ?>
+                                <?php echo Form::dbSelect("pedido.costo_envio", 'costo', array('costoEnvio', 'datos', 0), '- Seleccione -', " class='form-control' "); ?>
                             </div>
                         </div> 
                     </div>

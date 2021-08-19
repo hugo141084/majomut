@@ -20,7 +20,7 @@ class pedido extends ActiveRecord {
         
     }
     public function listarXid($id) {
-        return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_entrega, com.documento, com.tipo_documento, cli.nombrecompleto,cli.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio 
+        return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_entrega, com.documento, com.tipo_documento, com.direccion,com.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio,com.nombre 
  ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior,cli.colonia,cli.ciudad,cli.estado,cli.pais,cli.codigopostal)  direccion FROM pedido as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
     }
     public function listarXidDC($id) {
@@ -62,7 +62,11 @@ FROM pedido as com inner join cliente as cli  WHERE com.cliente_id =cli.id  ";
              $array_productos = Session::get('array_pedido');
             $longitud = count($array_productos);
             $partidaTotal=0;
-                    $importeTotal=0;
+             $importeTotal=0;
+             $subtotal=0;
+             $ivaTotal=0;
+             $ivaI=0;
+             $totalI=0;
              for ($i = 0; $i < $longitud; $i++) {
               
    
@@ -73,17 +77,26 @@ $cantidad=$array_productos[$i]['CANTIDAD'];
 $precio=$array_productos[$i]['PRECIO'];
        $detalleCompra = new detalle_pedido();
               
-            $partidaTotal=$cantidad*$precio;
-         $importeTotal=$partidaTotal+$importeTotal;
-              $detalleCompra->guardarDatos($compraId, $productoId, $cantidad,$precio);
+            $pro = new producto();     
+        $pro=$pro->find_first('id='.$productoId);
+        $iva=$pro->impuesto; 
               
+        $partidaTotal=$cantidad*$precio;
+         
+         $ivaI=(round((($partidaTotal*$iva)/100),2));
+         $totalI=$partidaTotal+$ivaI;
+         $ivaTotal=$ivaTotal+$ivaI;
+          $importeTotal=$importeTotal+$totalI;
+          $subtotal=$subtotal+$partidaTotal;
+             
+              $detalleCompra->guardarDatos($compraId, $productoId, $cantidad,$precio,$ivaI,$totalI);
               
              }
          //echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";
            Input::delete();
            session::delete('array_pedido');
            $actualizar= new pedido();
-           $actualizar->update_all("subtotal =  $importeTotal,iva=0,monto=$importeTotal", "id=$compraId ");
+           $actualizar->update_all("subtotal =  $subtotal,iva=$ivaTotal,monto=$importeTotal", "id=$compraId ");
            return $compraId;
         }
     }

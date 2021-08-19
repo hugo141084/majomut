@@ -226,7 +226,7 @@ else if (($operacion) == "MOSTRAR_LISTA") {
     <td width="30%"><label>Descripcion</label></td>
     <td width="10%"><label>V. Unitario</label></td> 
     <td width="10%"><label>Impuesto</label></td> 
-    <td width="10%"><label>V. Total</label></td>
+    <td width="10%"><label>Subtotal</label></td>
    
     
     
@@ -282,8 +282,8 @@ $cantidadT +=$cantidad;
         echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $codigo  . "</FONT></td>";
         echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,0,'.',',')."  ".$array_productos[$i]['MEDIDA']. "</FONT></td>";
         echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion  . "</FONT></td>";
-         echo "<td width='5%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($precio,2) . "</FONT></td>";
-        echo "<td width='5%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " .$tasa."% </FONT></td>";
+         echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($precio,2) . "</FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " .$tasa."% </FONT></td>";
         echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($partidaTotal,2) . "</FONT></td>";
         
         
@@ -298,7 +298,7 @@ $cantidadT +=$cantidad;
                     <?php echo Form::hidden('cantidadT', ' class="form-control"   ',$cantidadT); ?>
                     <?php echo Form::hidden("iSubtotal","",  number_format($subtotal,2)); ?> 
                      <?php echo Form::hidden("iImpuesto","", number_format($impuestoTotal,2)); ?>                 
-                    <?php echo Form::hidden("iTotal","", number_format($importeTotal,2)); ?>
+                    <?php echo Form::hidden("iTotal","", number_format(($importeTotal+$impuestoTotal),2)); ?>
                 </div>
   
 
@@ -317,15 +317,16 @@ else if (($operacion) == "MOSTRAR_LISTA_PEDIDO") {
 
 
 <div class="cabecera" >
-    <table width="100%" border="0">
+    <table width="100%" border="0" cellpadding="2">
         <tr bgcolor="#CCCCCC" style="height: 30px;">
     <td width="5%"><label>#</label></td>
     <td width="5%"><label></label></td>
     <td width="10%"><label>Codigo</label></td>
     <td width="10%"><label>Cantidad</label></td>
     <td width="30%"><label>Descripcion</label></td>
-    <td width="10%"><label>V. Unitario</label></td>   
-    <td width="10%"><label>V. total</label></td>
+    <td width="5%"><label>P. Unitario</label></td>
+    <td width="5%"><label>Impuesto</label></td>
+    <td width="10%"><label>Subtotal</label></td>
    
     
     
@@ -338,14 +339,17 @@ else if (($operacion) == "MOSTRAR_LISTA_PEDIDO") {
     <?php
   
     $array_productos=Session::get('array_pedido');
- $longitud=count($array_productos);
-
+ $longitud=0;
+if(!empty($array_productos)) $longitud=count($array_productos);
  $color="#0098CD";
  $importeTotal=0;
  $indice=0;
  $partidaTotal=0;
  $cantidad=0;
  $precio=0;
+ $impuesto=0;
+ $subtotal=0;
+ $impuestoTotal =0;$cantidadT=0;
     for ($i = 0; $i < $longitud; $i++) {
   
     
@@ -366,8 +370,15 @@ $codigo=$array_productos[$i]['CLAVE'];
 $descripcion=$array_productos[$i]['DESCRIPCION'];
 $cantidad=$array_productos[$i]['CANTIDAD'];
 $precio=$array_productos[$i]['PRECIO'];
+
+$tasa=$array_productos[$i]['TASA'];
+if($tasa=="")$tasa=0;
+$impuesto=(($cantidad*$precio)*$tasa)/100;
+$subtotal=$subtotal+($cantidad*$precio);
+$impuestoTotal= $impuestoTotal+$impuesto;
 $partidaTotal=$cantidad*$precio;
-    $importeTotal=$partidaTotal+$importeTotal;
+$importeTotal=$partidaTotal+$importeTotal;
+$cantidadT +=$cantidad; 
 	echo "<tr valign=center style='background-color:$color'>";		
         echo "<td width='5%' align='center'>" . $indice . "</td>";
         echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida($i)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
@@ -375,6 +386,7 @@ $partidaTotal=$cantidad*$precio;
         echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,0,'.',',')."  ".$array_productos[$i]['MEDIDA']. "</FONT></td>";
         echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion  . "</FONT></td>";
         echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $precio  . "</FONT></td>";
+         echo "<td width='5%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " .$tasa."% </FONT></td>";
         echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $partidaTotal . "</FONT></td>";
         
         
@@ -386,6 +398,10 @@ $partidaTotal=$cantidad*$precio;
     ?>	
 
     </table>
+                     <?php echo Form::hidden('cantidadT', ' class="form-control"   ',$cantidadT); ?>
+                    <?php echo Form::hidden("iSubtotal","",  number_format($subtotal,2)); ?> 
+                     <?php echo Form::hidden("iImpuesto","", number_format($impuestoTotal,2)); ?>                 
+                    <?php echo Form::hidden("iTotal","", number_format(($importeTotal+$impuestoTotal),2)); ?>
                 </div>
   
 
@@ -415,7 +431,7 @@ else if (($operacion) == "MOSTRAR_LISTA_VENTA") {
     <td width="10%"><label>Lote</label></td>
     <td width="5%"><label>P. Unitario</label></td>
     <td width="5%"><label>Impuesto</label></td>
-    <td width="10%"><label>P. Total</label></td>
+    <td width="10%"><label>Subtotal</label></td>
     
     </tr>
   

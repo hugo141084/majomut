@@ -23,7 +23,7 @@ class detalle_pedido extends ActiveRecord {
         return $this->find_by_sql("select * from almacen where id='$id'");
     }
     public function listarProductoCompra($compraId) {
-         $sqlProducto = "SELECT det.id, p.clave, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion, det.cantidad, det.precio
+         $sqlProducto = "SELECT det.id, p.clave, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion, det.cantidad, det.precio,det.impuesto,det.total
 FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id
 inner join detalle_pedido det on  det.producto_id=p.id
 WHERE det.pedido_id =$compraId ";
@@ -34,13 +34,14 @@ WHERE det.pedido_id =$compraId ";
 FROM inventario as inv, producto as pro  WHERE ALMACEN_ID =$id and inv.PRODUCTO_ID= pro.ID ";
         return $this->find_all_by_sql($sqlProducto);
     }
-    public function guardarDatos($compraId,$productoId,$cantidad,$precio){
+    public function guardarDatos($compraId,$productoId,$cantidad,$precio,$ivaI,$totalI){
         $detalleCompra = new detalle_pedido();
         $detalleCompra->pedido_id=$compraId; 
         $detalleCompra->producto_id=$productoId; 
         $detalleCompra->cantidad=$cantidad;
         $detalleCompra->precio=$precio;
-        
+        $detalleCompra->impuesto=$ivaI;
+        $detalleCompra->total=$totalI;
         $detalleCompra->usuario_id=Session::get('id'); 
         $detalleCompra->save();
         
