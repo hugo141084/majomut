@@ -237,6 +237,21 @@ class inventarioController extends AppController{
             $this->almacen = $almacen->guardarDatos();
         }
     }
+    public function crearCombinacion(){
+         $this->accion="crear";
+        
+        $almacen = new almacen();
+        $this->producto = $almacen->find();
+
+        if (Input::hasPost('almacen')) {
+
+            $this->almacen = $almacen->guardarDatos();
+        }
+        $folios = new series_folios();
+        $datoFolios = $folios->find_first("tipo = 'VALE'");
+        
+        $this->num="V-".str_pad(($datoFolios->consecutivo)+1,4, "0", STR_PAD_LEFT);
+    }
     public function inventarioInicial() 
     {
     $this->accion="inventarioInicial";

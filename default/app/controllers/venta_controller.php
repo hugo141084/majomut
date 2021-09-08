@@ -409,6 +409,7 @@ class ventaController extends AppController{
     public function reporteCotizacion($compraId){
      $compra=new cotizacion();
      $this->datosCompra=$compra->listarXid($compraId);
+     $cotizacion=$this->datosCompra;
      $detalleCompra=new detalle_cotizacion();
      $this->detalleCompra=$detalleCompra->listarProductoCompra($compraId);
      $usuario=new usuario();
@@ -417,10 +418,13 @@ class ventaController extends AppController{
      $ciclo=new lote();
      $this->ciclo=$ciclo->ciclo($compraId);
     // $this->datosUsuario=$usuario->listarEmpleado($this->datosCompra->USUARIO_ID);
+     $banco=new bancosCuentas();
+     $this->datosBancarios=$banco->find_by_sql("select * from  bancos ban inner join bancos_cuentas bc on bc.bancos_id=ban.id where bc.id='$cotizacion->bancos_cuentas_id'");
     }
     public function reportePedido($compraId){
      $compra=new pedido();
      $this->datosCompra=$compra->listarXid($compraId);
+     $pedido=$this->datosCompra;
      $detalleCompra=new detalle_pedido();
      $this->detalleCompra=$detalleCompra->listarProductoCompra($compraId);
      $usuario=new usuario();
@@ -429,6 +433,10 @@ class ventaController extends AppController{
      $ciclo=new lote();
      $this->ciclo=$ciclo->ciclo($compraId);
     // $this->datosUsuario=$usuario->listarEmpleado($this->datosCompra->USUARIO_ID);
+    $banco=new bancosCuentas();
+     $this->datosBancarios=$banco->find_by_sql("select * from  bancos ban inner join bancos_cuentas bc on bc.bancos_id=ban.id where bc.id='$pedido->bancos_cuentas_id'");
+    
+     
     }
     public function reporteVenta($compraId){
      $compra=new venta();
@@ -595,6 +603,23 @@ class ventaController extends AppController{
             $this->condicion='PRODUCTO_ID='.Input::POST('productoId');
           
         } 
+        else if (($this->operacion) == "BUSCA_PRODUCTO") {
+          
+            $this->condicion='almacen_id='.Input::POST('almacenId');
+          
+        } 
+        else if (($this->operacion) == "BUSCA_LOTE_PA") {
+          
+            $this->condicion='dl.almacen_id='.Input::POST('almacenId').' and dl.producto_id='.Input::POST('productoId');
+          
+        } 
+        else if (($this->operacion) == "BUSCA_EXISTENCIA_PA") {
+         $lote= Input::POST('lote');
+         $existencia=new detalle_lote();
+         $this->existencia= $existencia->find_first($lote);
+            
+          
+        }
         else if (($this->operacion) == "BUSCA_ALMACEN_SALIDA") {
           
             $this->condicion='PRODUCTO_ID='.Input::POST('productoId');
@@ -607,17 +632,17 @@ class ventaController extends AppController{
             $detalle=$producto->listarXid($productoId);
             if($detalle->NUMERO_SERIE=="S"){
                 $this->var="serie";
-                if($detalle->NUMERO_INVENTARIO=="S"){
+                if($detalle->numero_inventario=="S"){
                 $this->var="serieInventario";    
                 }
-            }else if($detalle->LOTE=="S"){
+            }else if($detalle->lote=="S"){
                 $this->var="lote";
-                if($detalle->NUMERO_INVENTARIO=="S"){
+                if($detalle->numero_inventario=="S"){
                 $this->var="loteInventario";    
                 }
             }else{
                 $this->var="ninguno";
-                if($detalle->NUMERO_INVENTARIO=="S"){
+                if($detalle->numero_inventario=="S"){
                 $this->var="soloInventario";    
                 }
             }

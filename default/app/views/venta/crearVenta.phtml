@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
     function imprime_lista()
     {
         var operacion = 'MOSTRAR_LISTA_VENTA'
@@ -16,16 +16,42 @@
         });
 
     }
-    function buscaAlmacen() {
-        var productoId = $('#venta_producto_id').val();
+    function buscaProducto() {
+        var almacenId = $('#venta_almacen_id').val();
 
-        var operacion = "BUSCA_ALMACEN";
+        var operacion = "BUSCA_PRODUCTO";
         $.ajax({
             type: "POST",
             url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
-            data: "productoId=" + productoId + "&operacion=" + operacion,
+            data: "almacenId=" + almacenId + "&operacion=" + operacion,
             success: function (html) {
-                $("#almacen").html(html);
+                $("#productoEs").html(html);
+            }
+        });
+    }
+    function buscaLote() {
+        var almacenId = $('#venta_almacen_id').val();
+        var productoId = $('#venta_producto_id').val();
+        var operacion = "BUSCA_LOTE_PA";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "almacenId=" + almacenId + "&productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#loteProducto").html(html);
+            }
+        });
+    }
+    
+    function buscaExistencia() {
+        var lote = $('#lote').val();
+        var operacion = "BUSCA_EXISTENCIA_PA";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "lote=" + lote  + "&operacion=" + operacion,
+            success: function (html) {
+                $("#existencia").val(html);
             }
         });
     }
@@ -113,7 +139,8 @@
                 $("#etiqueta").html(cadena[0]);
                 var valor = cadena[1];
                 $("#venta_precio").val(valor);
-
+                 buscaLote();
+        buscaDetalle();
             }
         });
     }
@@ -245,6 +272,20 @@ else $('#venta_costo_envio').val("0");
                $("#cambio").val(cambio.formatMoney());         
             }
         }
+        
+        
+    }
+    
+    function buscarOrigen(){
+         var almacen= $("#venta_almacen_id").val();
+         var concepto = $("#venta_almacen_id option:selected").text()
+         if(almacen >= 1){
+         $("#venta_origen").val(concepto); 
+         buscaProducto();
+        }else{
+            $("#venta_origen").val("");
+        }
+        
     }
 </script>    
 <?php View::content(); ?>
@@ -282,8 +323,8 @@ else $('#venta_costo_envio').val("0");
                             <div class="input-group-addon">       Origen:    
                             </div>
                             <?php
-                            $ar2 = array('OFICINA SAN CRISTOBAL' => 'OFICINA SAN CRISTOBAL', 'BODEGA TUXTLA' => 'BODEGA TUXTLA');
-                            echo Form::Select('venta.origen', $ar2, 'OFICINA SAN CRISTOBAL');
+                             echo Form::hidden('venta.origen',' class="form-control" ');
+                             echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="form-control" onchange="buscarOrigen()" '); 
                             ?>
                         </div>
                     </div> 
@@ -344,14 +385,35 @@ else $('#venta_costo_envio').val("0");
                 <div class="panel-heading">Datos Producto </div>
                 <div class="panel-body">
                     <div class="form-row">
-                        <div class="col-md-2 ">
+                        <div class="col-md-3 ">
                             <label for="validationCustomUsername">Producto</label>
                             <div class="input-group">
-
-<?php echo Form::dbSelect("venta.producto_id", "descripcion", array("producto", "listarEntrada"), 'Seleccione..', ' class="form-control"'); ?>
-
+<div id="productoEs">
+<?php echo Form::text("venta.producto_id", ' class="form-control"'); ?>
+</div>
                             </div>
                         </div> 
+                        
+                        <div class="col-md-2 ">
+                            <label >Lote</label>
+                            <div class="input-group">
+                                <div  id="loteProducto" >
+
+                                    <?php echo Form::text("lote",  'class="form-control" '); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                         
+                        <div class="col-md-2 ">
+                            <label >precio</label>
+                            <div class="input-group">
+                                <div id="almacen">
+<?php echo Form::text("venta.precio",  'class="form-control" '); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="col-md-2 ">
                             <label >cantidad</label>
                             <div class="input-group">
@@ -376,28 +438,12 @@ else $('#venta_costo_envio').val("0");
 
 
 
-                        <div class="col-md-2 ">
-                            <label >Lote</label>
-                            <div class="input-group">
-                                <div  id="loteProducto" >
-<?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'class="form-control" '); ?>
-                                </div>
-                            </div>
-                        </div> 
-
-                        <div class="col-md-2 ">
-                            <label >Almacen</label>
+                        
+                        <div class="col-md-1 ">
+                            <label >existencia</label>
                             <div class="input-group">
                                 <div id="almacen">
-<?php echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="form-control" '); ?>
-                                </div>
-                            </div>
-                        </div> 
-                        <div class="col-md-2 ">
-                            <label >precio</label>
-                            <div class="input-group">
-                                <div id="almacen">
-<?php echo Form::text("venta.precio",  'class="form-control" '); ?>
+<?php echo Form::text("existencia",  'class="form-control" readonly="readonly"'); ?>
                                 </div>
                             </div>
                         </div>
@@ -575,12 +621,9 @@ else $('#venta_costo_envio').val("0");
 
 </body>
 
-<script >
-    $("#venta_producto_id").change(function () {
-        buscaUnidadPrecio();
-        buscaAlmacen();
-        buscaDetalle();
-    });
+<script type="text/javascript">
+   
+    
     $("#venta_cliente_id").change(function () {
         buscaCliente();
 

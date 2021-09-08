@@ -21,7 +21,7 @@ class pedido extends ActiveRecord {
     }
     public function listarXid($id) {
         return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_entrega, com.documento, com.tipo_documento, com.direccion,com.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio,com.nombre 
- ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior,cli.colonia,cli.ciudad,cli.estado,cli.pais,cli.codigopostal)  direccion FROM pedido as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
+ ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior,cli.colonia,cli.ciudad,cli.estado,cli.pais,cli.codigopostal)  direccion,com.bancos_cuentas_id FROM pedido as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
     }
     public function listarXidDC($id) {
         return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_entrega, com.documento, com.tipo_documento,cli.id, cli.nombrecompleto,cli.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio 

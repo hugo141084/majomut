@@ -1,11 +1,12 @@
 <script>
  function imprime_lista()
 {
-var operacion='MOSTRAR_LISTA' 
+     var almacen= $("#combinacion_almacen_id").val();
+var operacion='MOSTRAR_LISTA_COM' 
 $.ajax({
           type: "POST",
           url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
-          data: "operacion=" + operacion,
+          data: "operacion=" + operacion+"&almacen=" + almacen,
           success: function(html){
             $("#resultado").html(html);
           }
@@ -35,34 +36,60 @@ $.ajax({
   <div class="form-row">
     
     
-     <?php echo Form::hidden('vale.tipo_documento', 'maxlength="20" required class="form-control"   ',"VALE DE ENTRADA"); ?>
+     <?php echo Form::hidden('combinacion.tipo_documento', 'maxlength="20" required class="form-control"   ',"COMBINACION LOTE(S)"); ?>
       
+    
+      <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Almacen:    
+                            </div>
+                            <?php
+                             echo Form::dbSelect("combinacion.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="form-control" onchange="imprime_lista()" '); 
+                            ?>
+                        </div>
+                    </div> 
+                </div>
     <div class="col-sm-5">
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">       Documento:    
                             </div>
-                          <?php echo Form::text('vale.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ',$num); ?>
+                          <?php echo Form::text('combinacion.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ',$num); ?>
                     </div>
                 </div> 
     </div>
-      <div class="col-sm-2">
-      </div>
-      <div class="col-sm-5">
+      <div class="col-sm-3">
                     <div class="form-group">
                         <div class="input-group">
-                            <div class="input-group-addon">       Fecha:    
+                            <div class="input-group-addon">       Fecha :    
                             </div>
-                          <?php echo form::text('vale.fecha_recepcion','placeholder="dd-mm-aa" required class="form-control"',date('d-m-Y')); ?>
-          </div>
+                          <?php echo Form::text('combinacion.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ',date('d-m-Y')); ?>
+                    </div>
                 </div> 
     </div>
-    
-      
   </div>
-   
-             <div class="panel panel-primary">
-        <div class="panel-heading">Datos Producto </div>
+   <div class="col-sm-6">
+             <div class="panel panel-success">
+        <div class="panel-heading">Porductos y Lotes Existentes</div>
+        <div class="panel-body">
+             <div class="form-row">
+               
+                 
+                   
+
+             
+            <div id="resultado" style=" width: 100%; height: 300px; border-bottom:1px;  border-bottom-color:#000; "> </div>
+        
+          </div>
+        
+        </div>
+             </div>  
+        
+   </div>
+   <div class="col-sm-6">
+    <div class="panel panel-success">
+        <div class="panel-heading">Lotes Existentes</div>
         <div class="panel-body">
              <div class="form-row">
                 <div class="col-md-2 ">
@@ -150,7 +177,9 @@ $.ajax({
                 </div> 
     </div>
         </div>
-             </div>  
+             </div>
+   </div>    
+        
             <?php $url = "'" . PUBLIC_PATH . "inventario/listadoRecepcion'"; ?>
         <table width="100%">
         <tr align="center">

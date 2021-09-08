@@ -355,6 +355,23 @@
                     </div>
                    
                 </div>
+                
+                <div class="panel panel-success">
+                <div class="panel-heading">Cuentas bancarias  </div>
+                <div class="panel-body">
+                    <div class="form-row">
+                        <div class="col-sm-8">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Cuenta de deposito:    
+                            </div>
+<?php echo Form::dbSelect("cotizacion.bancos_cuentas_id", 'cuenta', array('bancosCuentas', 'listarCuentasBancos', 0), '- Seleccione -', " class='form-control '  "); ?>
+                        </div>
+                    </div> 
+                </div>
+                    </div>
+                </div>
+                </div>
             </div>  
             <?php $url = "'" . PUBLIC_PATH . "venta/listadoCotizacion'"; ?>
             <table width="100%">

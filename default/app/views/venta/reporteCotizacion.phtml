@@ -20,7 +20,11 @@ class reporte extends TCPDF {
   
 
     public function Header() {
-        
+        $this->Image('./img/logotitulo.png', 30, 3, 150, 40, '');
+         $this->Image('./img/logoIzquierdo.png', 5, 0, 15, 100, '');
+           $this->Image('./img/logoIzquierdo.png', 5, 80, 15, 200, '');
+           $this->Image('./img/logoDerecho.png', 195, 80, 15, 200, '');
+           $this->Image('./img/logoDerecho.png', 195, 0, 15, 200, '');
     }
 
     public function Footer() {
@@ -32,7 +36,7 @@ class reporte extends TCPDF {
             $this->SetXY(10, 260);
             $this->MultiCell(110, 1, "1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. 29247 \n  Teléfonos 967 678 31 96 y 967 678 81 06 \n San Cristóbal de Las Casas, Chiapas.", 0, 'C');
             $this->SetXY(120, 260);
-            $this->MultiCell(60, 1, "www.majomut.org \n mail: directivosmajomut@prodigy.net.mx \n  info@majomut.org", 0, 'C');
+            $this->MultiCell(60, 1, "www.majomut.org \n mail: ventas@majomut.org \n  info@majomut.org", 0, 'C');
             $this->SetXY(182, 260);
             $this->SetFont('helvetica', 'C', 7);
             $this->MultiCell(30, 1, "" . $this->getAliasNumPage() . " / " . $this->getAliasNbPages() . " \n ", 0, 'C');
@@ -46,11 +50,11 @@ $pdf->SetAuthor('Majomut');
 $pdf->SetTitle('Reporte Cotizacion');
 $pdf->SetSubject('');
 
-$logo='./img/logoReporte.png';
+$logo='./img/logotitulo.png';
 
 
 //set margins
-$pdf->SetMargins(10,10,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetMargins(20,45,20);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
 $pdf->SetHeaderMargin('10');//PDF_MARGIN_HEADER
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -71,7 +75,7 @@ $pdf->AddPage();
 // Set some content to print
 $html="<style>
         .mitabla{
-		font-size: 11px; 
+		font-size: 10px; 
 		color: #333; 
 	}
         .mitabla1{
@@ -107,29 +111,7 @@ page-break-after:always;
 
 $html .='
  <table class="mitabla" border="0" >
-<thead>
 
-<tr>
-<th align="center" style="width: 20% ">
-
-<img src="'.$logo.'" width="100" height="110"  />
-</th>
-<th align="left" style="width: 80%; font-weigth:18px;">
-
-  <hr>
-<font align="center" class="resp"><br>
-UNION DE PRODUCTORES  ORGANICOS <br>
-BENEFICIO MAJOMUT, S. DE P.R. DE R.L <br>
-R.F.C.  UPO111114BJ7 <br>
-</font>
- <hr>  
- 
-
-</th>
-
-</tr>
-
-</thead>
  <tbody>
           <tr>
           <td colspan="3">   
@@ -141,20 +123,16 @@ R.F.C.  UPO111114BJ7 <br>
 <br>
 <table style="width: 100%" border="0" class="mitabla">   
     <tr >
-        <td style="width: 65%" border="0" >             </td>
-        <td style="width: 35%" border="0" >San Cristobal de las Casas, Chiapas            </td>
+        <td style="width: 30%" border="0" >             </td>
+        <td style="width: 70%" border="0" align="right">San Cristobal de las Casas, Chiapas a ' .FechaCadena($datosCompra->fecha_documento).'           </td>
     </tr>
+     
      <tr >
-        <td style="width: 65%" border="0" >             </td>
-        <td style="width: 35%" border="0" >'.FechaCadena($datosCompra->fecha_documento).'            </td>
-    </tr>
-     <tr >
-        <td style="width: 65%" border="0" >             </td>
-        <td style="width: 35%" border="0" >Cotizacion No. <b>'.$datosCompra->documento.'</b>            </td>
+        <td style="width: 30%" border="0" >             </td>
+        <td style="width: 70%" border="0" align="right">Cotizacion No. <b>'.$datosCompra->documento.'</b>            </td>
     </tr>
     </table>
    <br>
-<br> 
 <table style="width: 100%" border="0" class="mitabla" cellpadding="1">   
     <tr >
         <td style="width: 20%" border="0" ><strong>CLIENTE </strong>      </td>
@@ -265,47 +243,89 @@ $html .=' <tr align="center" bgcolor="#CCCCCC">
 <td style="width: 20%" colspan="2" align="right">Total</td>
 <td style="width: 15%" align="right">'. number_format(($datosCompra->monto + $datosCompra->costo_envio),2).'</td>
 
-</tr>'; 
-$html .='</table> <p>
-NOTA:</p>
+</tr></table> 
+<p>
+'.$datosCompra->observacion.'
+</p>
+<p>
+El envió se hará dentro de 4 a 5 días hábiles después de haber recibido el pedido y el deposito correspondiente, el tiempo de entrega por mensajería 
+oscila máximo 5 días hábiles. El costo  de envió varia  en cuanto al peso total.</p>
 <p>
 Por políticas de la empresa debemos recibir por e-mail copia de la ficha de depósito o transferencia con
 el 100 % del valor del pedido realizado, antes de ser enviado a domicilio. 
 </p>
 
 </td></tr>
+</table>
 
+'; 
+$pdf->writeHTML($html, true, false, true, false, '');
+$pdf->AddPage();
+$html="<style>
+        .mitabla{
+		font-size: 10px; 
+		color: #333; 
+	}
+        .mitabla1{
+		font-size: 9px; 
+		color: #333; 
+	}
+        .mitabla2{
+		font-size: 9px; 
+		color: #333; 
+                font:bold;
+	}
+        .resp{
+        
+        font-size:18px;
+        font-family:Courier,monospace;
+        font:bold;
+     }
+     .respTi{
+        
+        font-size:9px;
+        font-family:Courier,monospace;
+     }
+     p
+{
+font-size:9px;
+        
+}
 
+        </style>";
+$html.='
+    <table>
 <tr>  
 
-<td style="width: 80%">
-<br><br/><br/><br><br><br><br><br>
+<td style="width: 85%">
+
 <p>NOTA:</p>
 
-<p>Pueden ser pedidos mixtos de acuerdo a sus necesidades.
-Enviar los datos para facturación.
+<p>Puede ser en grano (sin moler) <br/>
+Pueden ser pedidos mixtos de acuerdo a sus necesidades.<br/>
+Enviar los datos para facturación.<br/>
 Precios sujetos a cambio, el cual se le comunicaría con anticipación.</p>
 <p>Los datos para depositar son los siguientes:</p>
 <table style="width: 100%" border="1" class="mitabla1" cellpadding="3">
 <tr>
-<td style="width: 30%"> Nombre </td>
-<td style="width: 70%"> Unión de Productores Orgánicos Beneficio Majomut, S. de P.R. de R.L. </td>
+<td style="width: 28%"> Nombre </td>
+<td style="width: 72%"> Unión de Productores Orgánicos Beneficio Majomut, S. de P.R. de R.L. </td>
 </tr>
 <tr>
 <td> No. Cuenta </td>
-<td> 0190410128 </td>
+<td> '.$datosBancarios->numero_cuenta.' </td>
 </tr>
 <tr>
 <td> CLABE Interbancaria </td>
-<td> 012130001904101289 </td>
+<td> '.$datosBancarios->clabe_interbancaria.' </td>
 </tr>
 <tr>
 <td> Banco </td>
-<td> BBVA Bancomer, S.A. </td>
+<td> '.$datosBancarios->nombre_banco.' </td>
 </tr>
 <tr>
 <td> Sucursal </td>
-<td> 4439 </td>
+<td> '.$datosBancarios->sucursal.' </td>
 </tr>
 </table>
 <p>Por cualquier duda o aclaración estamos a sus órdenes.</p>

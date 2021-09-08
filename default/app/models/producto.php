@@ -38,7 +38,7 @@ class producto extends ActiveRecord {
         
     }
     public function listarXid($id) {
-        return $this->find_by_sql("SELECT p.id, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion,p.clave, p.peso, p.existencia, em.descripcion empaque, me.descripcion medida,p.precio,p.impuesto FROM producto p inner join preparacion pr on pr.id=p.preparacion_id inner join presentacion pre on pre.id=p.preparacion_id inner join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  where p.id=$id");
+        return $this->find_by_sql("SELECT p.id, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion,p.clave, p.peso, p.existencia, em.descripcion empaque, me.descripcion medida,p.precio,p.impuesto,p.lote FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.preparacion_id left join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  where p.id=$id");
     }
     public function guardarDatos(){
         $producto = new producto(Input::post('producto'));
@@ -74,5 +74,9 @@ FROM producto
         public function buscaProductos($condicion) {
         return $this->find_all_by_sql("SELECT p.id,p.clave, p.descripcion producto ,pre.descripcion preparacion,c.descripcion calidad ,pr.descripcion presentacion,p.clave, p.peso, p.existencia, em.descripcion empaque, me.descripcion medida,p.precio,p.impuesto FROM producto p inner join preparacion pr on pr.id=p.preparacion_id inner join presentacion pre on pre.id=p.preparacion_id inner join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  $condicion");
     }
+    public function buscarProductoV($condicion) {
+          return $this->find_all_by_sql("SELECT p.id, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion FROM inventario inv inner join producto p on inv.producto_id=p.id   left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.preparacion_id left join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  where  $condicion");
+        }
 }   
+
 ?>

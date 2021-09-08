@@ -5,14 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+class detalle_lote extends ActiveRecord{
 
-class detalle_lote extends ActiveRecord {
-
-    
-
-    protected function initialize() {
-        
-    }
+   
 
     public function listar() {
         return $this->find();
@@ -89,6 +84,11 @@ class detalle_lote extends ActiveRecord {
                public function buscarXproducto($productoId){
                   
                    return $this->find_all_by_sql("select * from lote where PRODUCTO_ID=$productoId  ");                 
+    
+               }
+                public function buscarLotePA($condicion){
+                  
+                   return $this->find_all_by_sql("select lo.id,lo.codigo from lote lo inner join detalle_lote dl on dl.lote_id=lo.id where $condicion ");                 
     
                }
 }   
