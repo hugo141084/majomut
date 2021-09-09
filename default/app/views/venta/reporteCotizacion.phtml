@@ -44,6 +44,7 @@ class reporte extends TCPDF {
     }
 
 }
+ob_end_clean(); 
 $pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter'); 
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Majomut');
@@ -353,7 +354,7 @@ e-mail: ventas@majomut.org</p>
  ';
   echo $html;
 //print_r($datos);
-  
+  ob_end_clean(); 
 // Print text using writeHTMLCell()
 $pdf->writeHTML($html, true, false, true, false, '');
 
