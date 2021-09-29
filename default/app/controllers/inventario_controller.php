@@ -625,7 +625,12 @@ class inventarioController extends AppController{
             }
           
         }
-        
+        else if (($this->operacion) == "BUSCA_LOEXT_PRODUCTO") {
+          $productoId=  Input::POST('productoId'); 
+           $almacenId=  Input::POST('almacenId'); 
+          $datos=new detalle_lote();
+          $this->datos=$datos->find_all_by_sql("select lo.codigo, dl.existencia from detalle_lote dl inner join lote lo on dl.lote_id=lo.id  where dl.producto_id='$productoId' and dl.almacen_id='$almacenId' and dl.existencia >0 ");
+        } 
     }
 }
 ?>

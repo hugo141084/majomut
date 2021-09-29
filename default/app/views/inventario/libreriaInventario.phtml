@@ -528,7 +528,47 @@ $("#entrega_LOTE_ID").change(function(){
  }
  else if (($operacion) == "BUSCA_EXISTENCIA_LS") {
    echo $resultado->EXISTENCIA;
- }
+ }else if (($operacion) == "BUSCA_LOEXT_PRODUCTO") {
+        
+    ?>
+
+   
+<div class="cabecera" >
+    <table width="100%" border="0">
+    <tr bgcolor="#CCCCCC" style="height: 30px;">
+        <td width="10%"><label>#</label></td>
+    <td width="20%"><label>Lote</label></td>
+    <td width="35%"><label>Existencia</label></td>
+    <td width="35%"><label>Cantidad</label></td>   
+      
+    </tr>
+  
+</table>
+   </div>                    
+<div class="ventanillaCobro" style="overflow-y: scroll;">
+<table width="100%" border="0" align="center" class="Estilo">
+    <?php
+  $i=1;
+    foreach ($datos as $dato){ ?>
+    <tr >
+    <td width="10%"><?php echo  $i; ?></td>
+    <td width="20%"><?php echo $dato->codigo; ?></td>
+    <td width="35%"><?php echo $dato->existencia; ?></td>
+    <td width="35%"><?php echo Form::number('cantidad'.$i, 'class="form-control"   ')  ?></td>
+    </tr>
+    <?php 
+    $i++;
+    }
+
+    ?>	
+
+    </table>
+                </div>
+  
+
+
+    <?php
+}
 ?>
 
 
