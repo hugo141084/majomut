@@ -548,13 +548,15 @@ $("#entrega_LOTE_ID").change(function(){
 <div class="ventanillaCobro" style="overflow-y: scroll;">
 <table width="100%" border="0" align="center" class="Estilo">
     <?php
-  $i=1;
-    foreach ($datos as $dato){ ?>
+  $i=0;
+    foreach ($datos as $dato){ 
+         $i++; ?>
     <tr >
     <td width="10%"><?php echo  $i; ?></td>
     <td width="20%"><?php echo $dato->codigo; ?></td>
     <td width="35%"><?php echo $dato->existencia; ?></td>
-    <td width="35%"><?php echo Form::number('cantidad'.$i, 'class="form-control"   ')  ?></td>
+    <td width="35%"><?php echo Form::number('cantidad'.$i, 'class="form-control"   ')  ?>
+                    <?php echo Form::hidden('lote'.$i, 'class="form-control"   ',$dato->id)  ?></td>
     </tr>
     <?php 
     $i++;
@@ -563,6 +565,7 @@ $("#entrega_LOTE_ID").change(function(){
     ?>	
 
     </table>
+    <?php    echo Form::hidden('num',"",$i);    ?>
                 </div>
   
 

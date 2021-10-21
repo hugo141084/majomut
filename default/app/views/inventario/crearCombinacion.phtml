@@ -69,8 +69,11 @@
         </div>
         <?php echo Form::open("inventario/crearCombinacion"); ?>
         <?php echo Form::hidden("vale.id"); ?>
-
-
+<?php if(isset($mensaje)) { ?>
+<div class="alert alert-danger" role="alert">
+ <?php echo $mensaje ?>
+</div>
+<?php } ?>
 
         <div id="margen" >
             <div class="form-row">
@@ -107,7 +110,7 @@
                             <div class="input-group-addon">       Almacen:    
                             </div>
                             <?php
-                            echo Form::dbSelect("combinacion.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="form-control" onchange="buscarOrigen()"');
+                            echo Form::dbSelect("combinacion.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'required class="form-control" onchange="buscarOrigen()"');
                             ?>
                         </div>
                     </div> 
@@ -121,7 +124,7 @@
                             <div class="input-group-addon">       Producto:    
                             </div>
                             <div id="productoEs">
-                                <?php echo Form::text("combinacion.producto_id", ' class="form-control"'); ?>
+                                <?php echo Form::text("combinacion.producto_id", 'required class="form-control"'); ?>
                             </div>
                         </div>
                     </div> 
@@ -151,7 +154,7 @@
                                 <label for="validationCustomUsername"> Lote</label>
                                 <div class="input-group">
                                     <div  id="loteProducto" >
-                                        <?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'class="form-control" '); ?>
+                                        <?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'required class="form-control" '); ?>
                                     </div>
                                 </div>
                             </div> 
@@ -160,7 +163,7 @@
                                 <label for="validationCustomUsername">cantidad</label>
                                 <div class="input-group">
 
-                                    <?php echo Form::number('vale.cantidad', ' class="form-control" '); ?>
+                                    <?php echo Form::number('cantidadS', ' class="form-control" '); ?>
 
                                 </div>
                             </div>           

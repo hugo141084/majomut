@@ -708,7 +708,7 @@ else if ($operacion=="BUSCA_UNIDADPRECIO"){
  }else if ($operacion=="BUSCA_ALMACEN"){
  echo Form::dbSelect("venta.almacen_id", 'descripcion', array('almacen', 'buscarAlmacen',$condicion), '- Seleccione -',"class='form-control' ");   
  }else if ($operacion=="BUSCA_PRODUCTO"){
- echo Form::dbSelect("venta.producto_id", 'descripcion', array('producto', 'buscarProductoV',$condicion), '- Seleccione -'," class='form-control'   onchange='buscaUnidadPrecio()'" );   
+ echo Form::dbSelect("venta.producto_id", 'descripcion', array('producto', 'buscarProductoV',$condicion), '- Seleccione -'," class='form-control' required  onchange='buscaUnidadPrecio()'" );   
  }else if ($operacion=="BUSCA_LOTE_PA"){
  echo Form::dbSelect("lote", "codigo", array('lote', 'buscarLotePA',$condicion), '- Seleccione -'," class='form-control'  onchange='buscaExistencia()'" );   
  }

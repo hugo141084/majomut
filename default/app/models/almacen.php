@@ -57,5 +57,9 @@ AND $condicion order by alm.descripcion asc");
         public function buscaAlmacen($condicion) {
             return $this->find_all_by_sql("SELECT * FROM almacen  $condicion ");
         }
+        
+       
+        
+        
 }   
 ?>

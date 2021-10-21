@@ -243,9 +243,59 @@ class inventarioController extends AppController{
         $almacen = new almacen();
         $this->producto = $almacen->find();
 
-        if (Input::hasPost('almacen')) {
-
-            $this->almacen = $almacen->guardarDatos();
+        if ((Input::Post('cantidadS'))||(Input::Post('num'))) {
+            
+            if (((Input::Post('cantidadS'))>0)&&((Input::Post('num'))>0)) {
+            $i=Input::Post('num');
+            ((Input::Post('cantidadS')>0)? $cantidadS=Input::Post('cantidadS'):$cantidadS=0);
+            $total=0;
+            for($j=1;$j<$i;$j++){
+                $total +=Input::Post('cantidad'.$j);
+            }
+            
+            if($total==$cantidadS){
+               $folios = new series_folios();
+           $folios->incrementarConsecutivo('VALE');
+        $datoFolios = $folios->find_first("tipo = 'VALE'");
+        $vale="V-".str_pad(($datoFolios->consecutivo),4, "0", STR_PAD_LEFT);
+               
+               $almacen=Input::Post('combinacion');
+                $producto=Input::Post('venta');
+               $almacenId=$almacen['almacen_id'];
+                $productoId=$producto['producto_id'];
+               $fechaMovimiento=date("Y-m-d");
+                $fechaDocumento=date("Y-m-d");
+                $referencia=$vale;   
+                $proveedorId="0";
+                $opcion= "lote";
+                $unidadXpaquete="1";
+                $num_inventario="";
+                $movimiento=new movimiento_inventario();
+                $producto=new producto();
+              $inventario=new inventario();
+                for($j=1;$j<$i;$j++){
+                $loteSerie=Input::Post('lote'.$j);
+                $cantidad=Input::Post('cantidad'.$j);
+                $tipoMovimiento="S";
+                $numeroMovimiento=21;
+                $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
+              $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
+                $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario);
+                }
+                $loteSerie=Input::Post('lote');
+                $cantidad=Input::Post('cantidadS');
+                $tipoMovimiento="E";
+                $numeroMovimiento=22;
+                $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
+              $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
+                $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario);
+              
+                }else{
+                $this->mensaje="La cantidad de Lotes y Existencias no coincide con lo(s) nuevos Lotes y Existencias";
+            }           
+            }   
+        }else{
+           $this->mensaje="Complemente todos los datos antes de  presionar el boton de guardar "; 
         }
         $folios = new series_folios();
         $datoFolios = $folios->find_first("tipo = 'VALE'");
@@ -629,7 +679,7 @@ class inventarioController extends AppController{
           $productoId=  Input::POST('productoId'); 
            $almacenId=  Input::POST('almacenId'); 
           $datos=new detalle_lote();
-          $this->datos=$datos->find_all_by_sql("select lo.codigo, dl.existencia from detalle_lote dl inner join lote lo on dl.lote_id=lo.id  where dl.producto_id='$productoId' and dl.almacen_id='$almacenId' and dl.existencia >0 ");
+          $this->datos=$datos->find_all_by_sql("select lo.codigo, dl.existencia,lo.id from detalle_lote dl inner join lote lo on dl.lote_id=lo.id  where dl.producto_id='$productoId' and dl.almacen_id='$almacenId' and dl.existencia >0 ");
         } 
     }
 }
