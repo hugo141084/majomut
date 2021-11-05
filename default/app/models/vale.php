@@ -234,6 +234,114 @@ FROM vale as com  where tipo='ET' ";
            return $valeId;
         }
     }
+    public function guardarDatosTSEA(){
+       $vale = new vale(Input::post('traspaso'));
+        $fechaDocumento=$vale->fecha_recepcion;
+        $fechaMovimiento=$vale->fecha_recepcion;
+        $referencia=$vale->documento;
+        $proveedorId=$vale->proveedor_id;
+        $folios = new series_folios();
+           $folios->incrementarConsecutivo('VALE');
+        $datoFolios = $folios->find_first("tipo = 'VALE'");
+        $vale->documento="V-".str_pad(($datoFolios->consecutivo),4, "0", STR_PAD_LEFT);
+         $vale->tipo='ST';
+        $vale->estado='Activo'; 
+        $vale->fecha_documento = strftime("%Y-%m-%d", strtotime($vale->fecha_recepcion));
+        $vale->fecha_recepcion = strftime("%Y-%m-%d", strtotime($vale->fecha_recepcion));
+        $vale->fecha_salida = strftime("%Y-%m-%d", strtotime($vale->fecha_salida));
+        $vale->usuario_id=Session::get('id'); 
+        $tipoMovimiento="S";
+        $numeroMovimiento="18";
+        if( $vale->save()){
+            $valeId=$vale->id;
+             $array_productos = Session::get('array_productos');
+            $longitud = count($array_productos);
+             for ($i = 0; $i < $longitud; $i++) {
+              $detalleCompra = new detalle_vale();
+              $lote=new detalle_lote();
+              $serie=new serie();
+              $movimiento=new movimiento_inventario();
+              $producto=new producto();
+              $inventario=new inventario();
+            //  $datoInventario=new numeroInventario();
+      $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;
+       $cantidad= $array_productos[$i]['CANTIDAD'] ;
+       $opcion= "lote";
+        $unidadXpaquete=$array_productos[$i]['UNIDAD_PAQUETE'];
+        $fechaCaducidad=$array_productos[$i]['FECHA_CADUCIDAD'];
+     $almacenId=$array_productos[$i]['ALMACEN_ID'];         
+         $loteSerie=$array_productos[$i]['LOTE_SERIE'];
+         $num_inventario=$array_productos[$i]['NUMERO_INVENTARIO'];
+       
+        
+              $detalleCompra->guardarDatos($valeId, $productoId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie, $fechaCaducidad,$num_inventario);
+              if(($opcion=="lote") || ($opcion=="loteInventario")){
+              $lote->valida_entrada($loteSerie,$fechaCaducidad,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
+              }else if (($opcion=="serie") || ($opcion=="serieInventario")){
+              $serie->valida_entrada($loteSerie,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
+              }
+              if($num_inventario!=""){
+              $datoInventario -> valida_entrada($productoId,$almacenId,$loteSerie,$num_inventario,$cantidad,$unidadXpaquete,$tipoMovimiento);   
+              }
+              $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
+              $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
+              $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario);
+              
+              
+             }
+        }
+             
+             
+             
+          //echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";
+           
+        $vale->usuario_id=Session::get('id'); 
+        $tipoMovimiento="E";
+        $numeroMovimiento="7";
+        
+            $valeId=$vale->id;
+             $array_productos = Session::get('array_productos');
+            $longitud = count($array_productos);
+             for ($i = 0; $i < $longitud; $i++) {
+              $detalleCompra = new detalle_vale();
+              $lote=new detalle_lote();
+              $serie=new serie();
+              $movimiento=new movimiento_inventario();
+              $producto=new producto();
+              $inventario=new inventario();
+            //  $datoInventario=new numeroInventario();
+      $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;
+       $cantidad= $array_productos[$i]['CANTIDAD'] ;
+       $opcion= "lote";
+        $unidadXpaquete=$array_productos[$i]['UNIDAD_PAQUETE'];
+        $fechaCaducidad=$array_productos[$i]['FECHA_CADUCIDAD'];
+     $almacenId=Input::post('destino_id');       
+         $loteSerie=$array_productos[$i]['LOTE_SERIE'];
+         $num_inventario=$array_productos[$i]['NUMERO_INVENTARIO'];
+       
+        
+              $detalleCompra->guardarDatos($valeId, $productoId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie, $fechaCaducidad,$num_inventario);
+              if(($opcion=="lote") || ($opcion=="loteInventario")){
+              $lote->valida_entrada($loteSerie,$fechaCaducidad,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
+              }else if (($opcion=="serie") || ($opcion=="serieInventario")){
+              $serie->valida_entrada($loteSerie,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento);    
+              }
+              if($num_inventario!=""){
+              $datoInventario -> valida_entrada($productoId,$almacenId,$loteSerie,$num_inventario,$cantidad,$unidadXpaquete,$tipoMovimiento);   
+              }
+              $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
+              $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
+              $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario);
+              
+              
+             }  
+             
+             
+           Input::delete();
+           session::delete('array_productos');
+           return $valeId;
+        
+    }
      public function guardarDatosECT(){
        $vale = new vale(Input::post('vale'));
         $fechaDocumento=$vale->fecha_recepcion;

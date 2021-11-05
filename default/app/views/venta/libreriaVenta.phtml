@@ -850,6 +850,42 @@ if($cliente->id!=1) $campo='readonly="readonly"'
 </table>
   <?php   
  }
+ else if (($operacion) == "BUSCA_CLIENTE_AN") {
+     $arreglod[] = "";
+$arreglod[1] = $cliente->calle;
+$arreglod[2] = $cliente->numeroexterior;
+$arreglod[3] = $cliente->numerointerior;
+$arreglod[4] = $cliente->colonia;
+$arreglod[5] = $cliente->municipio;
+$arreglod[6] = $cliente->codigopostal;
+$arreglod[7] = $cliente->estado;
+$arreglod[8] = $cliente->pais;
+$arreglod = array_filter($arreglod, "strlen"); 
+$direccion=implode(", ", $arreglod).".";
+$campo="";
+if($cliente->id!=1) $campo='readonly="readonly"'
+ ?><table width="100%" border="0">
+  <tr>
+    <td width="104"><label> Nombre:</label></td>
+    <td width="551">
+    <?php echo Form::text('anticipo.nombre', "class='form-control' $campo ",$cliente->nombrecompleto ); ?>
+    </td>
+  </tr>
+  <tr>
+    <td><label> Direccion:</label></td>
+    <td>
+    <?php echo Form::text('anticipo.direccion', "class='form-control' $campo ",$direccion ); ?>
+    </td>
+  </tr>
+  <tr>
+    <td><label> RFC:</label></td>
+    <td>
+    <?php echo Form::text('anticipo.rfc', "class='form-control' readonly='readonly' ",$cliente->rfc ); ?>
+    </td> 
+  </tr>
+</table>
+  <?php   
+ }
  else if ($operacion=="AGREGAR_PARTIDA"){
    echo $mensaje;  
  } 

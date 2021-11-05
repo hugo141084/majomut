@@ -45,6 +45,23 @@ class ventaController extends AppController{
         );
         $this->encabezado= "PEDIDOS";
     }
+     public function listadoAnticipo() {
+         $cotizacion = new anticipo();
+        $this->result = $cotizacion->listarAnticipo();
+        $this->campos = array(
+            utf8_encode('#') => 'id',
+            utf8_encode('Cliente') => 'nombre',
+            utf8_encode('Concepto') => 'concepto',
+            utf8_encode('Referencia') => 'referencia',
+            utf8_encode('Importe') => 'importe',
+            utf8_encode('Importe aplicado') => 'importe_aplicado'
+            
+            
+           
+        );
+        
+        $this->encabezado= "ANTICIPOS";
+    }
     public function listadoVenta() {
         $cotizacion = new venta();
         $this->result = $cotizacion->listarVenta();
@@ -161,6 +178,24 @@ class ventaController extends AppController{
         $datoFolios = $folios->find_first("tipo = 'REMISION'");
         
         $this->num="R-".str_pad(($datoFolios->consecutivo)+1,4, "0", STR_PAD_LEFT);
+    }
+    public function crearAnticipo() 
+    {
+     $this->accion="crearAnticipo";
+        
+        $anticipo = new anticipo();
+        $this->anticipo = $anticipo->find();
+
+         if (Input::hasPost('anticipo')) {
+           
+           
+                           
+            $this->anticipo = $anticipo->guardarDatos();
+            
+                Input::delete();
+                Redirect::to('venta/listadoAnticipo');
+            }
+        
     }
      public function crearVale() 
     {
@@ -673,6 +708,12 @@ class ventaController extends AppController{
           $this->cliente= Load::model('cliente')-> buscaCliente($clienteId);
           
         }else if (($this->operacion) == "BUSCA_CLIENTE_P") {
+          
+            $clienteId=Input::POST('clienteId');
+     
+          $this->cliente= Load::model('cliente')-> buscaCliente($clienteId);
+          
+        }else if (($this->operacion) == "BUSCA_CLIENTE_AN") {
           
             $clienteId=Input::POST('clienteId');
      

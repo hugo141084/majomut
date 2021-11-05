@@ -1,4 +1,5 @@
-<?php
+movimientos
+    <?php
 
 Load::models('inventario','producto','lote','serie','movimiento_inventario'); 
 class reportesController extends AppController{

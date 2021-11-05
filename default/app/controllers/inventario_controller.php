@@ -183,6 +183,73 @@ class inventarioController extends AppController{
         
         $this->num="V-".str_pad(($datoFolios->consecutivo)+1,4, "0", STR_PAD_LEFT);
     }
+    
+    public function traspaso() 
+    {
+     $this->accion="traspaso";
+        
+        $vale = new vale();
+        $this->vale = $vale->find();
+
+         if (Input::hasPost('traspaso')) {
+            $array_productos = Session::get('array_productos');
+            $num = count($array_productos);
+           
+            if($num == "0"){
+               
+                echo "<script>  alert ('Primero agrege partidas para poder guardar este movimiento....!');</script>"; 
+            }else {
+            $this->vale = $vale->guardarDatosTSEA();
+            ?>
+                <script>
+                    window.open('valeSalidaCT/<?php echo $this->vale; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
+                </script>
+               <?php
+                Input::delete();
+               // Redirect::to('inventario/crearSalidaCT');
+            }
+        }else{
+              session::delete('array_productos');
+        }
+         Input::delete();
+        $folios = new series_folios();
+        $datoFolios = $folios->find_first("tipo = 'VALE'");
+        
+        $this->num="V-".str_pad(($datoFolios->consecutivo)+1,4, "0", STR_PAD_LEFT);
+    }
+    public function movimiento() 
+    {
+     $this->accion="movimiento";
+        
+        $vale = new vale();
+        $this->vale = $vale->find();
+      //  $this->concepto=new concepto_movimiento();
+         if (Input::hasPost('traspaso')) {
+            $array_productos = Session::get('array_productos');
+            $num = count($array_productos);
+           
+            if($num == "0"){
+               
+                echo "<script>  alert ('Primero agrege partidas para poder guardar este movimiento....!');</script>"; 
+            }else {
+            $this->vale = $vale->guardarDatosTSEA();
+            ?>
+                <script>
+                    window.open('valeSalidaCT/<?php echo $this->vale; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
+                </script>
+               <?php
+                Input::delete();
+               // Redirect::to('inventario/crearSalidaCT');
+            }
+        }else{
+              session::delete('array_productos');
+        }
+         Input::delete();
+        $folios = new series_folios();
+        $datoFolios = $folios->find_first("tipo = 'VALE'");
+        
+        $this->num="V-".str_pad(($datoFolios->consecutivo)+1,4, "0", STR_PAD_LEFT);
+    }
     public function crearSalida() 
     {
      $this->accion="crearSalida";
