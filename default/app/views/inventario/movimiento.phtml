@@ -235,7 +235,7 @@ $.ajax({
             <div class="form-row">
 
 
-                <?php echo Form::hidden('traspaso.tipo_documento', 'maxlength="20" required class="form-control"   ', "TRASPASO"); ?>
+                <?php echo Form::hidden('traspaso.tipo_documento', 'maxlength="20" required class="form-control"   ', "AJUSTE"); ?>
 
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -274,9 +274,9 @@ $.ajax({
                             <div class="input-group-addon">Movimiento Ajuste:    
                             </div>
                             <?php
-                            echo Form::dbSelect("destino_id", "descripcion", array("concepto_movimiento", "listar"), 'Seleccione..', 'class="form-control"  '); 
+                            echo Form::dbSelect("destino_id", "descripcion", array("concepto", "listarM", '0'), 'Seleccione..', 'class="form-control"  '); 
                             ?>
-                        </div>
+                                                   </div>
                     </div> 
                 </div>
 
@@ -372,25 +372,8 @@ $.ajax({
              </table>
         <br>
        
-        <div class="col-sm-4">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">       Entrego:    
-                            </div>
-                          <?php echo Form::text('traspaso.capturo', ' required class="form-control"   '); ?>
-                    </div>
-                </div> 
-    </div>
-       <div class="col-sm-4">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">       Recibio:    
-                            </div>
-                          <?php echo Form::text('traspaso.recibio', ' required class="form-control"   '); ?>
-                    </div>
-                </div> 
-    </div>
-      <div class="col-sm-4">
+       
+      <div class="col-sm-8">
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">       Valido:    

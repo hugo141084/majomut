@@ -131,10 +131,10 @@ function cerrar()
     </tr>
   <tr>
     <td width="20%" align="center">Desde el dia</td>
-    <td ><?php echo form::date('movimiento.fecha_inicio','required class="form-control"', ''); ?> 
+    <td ><?php echo form::date('movimiento.fecha_inicio','required class="form-control"', date('Y-m-d')); ?> 
           </td>
     <td align="center">Hasta el dia</td>
-    <td ><?php echo form::date('movimiento.fecha_fin','required class="form-control"',''); ?></td>
+    <td ><?php echo form::date('movimiento.fecha_fin','required class="form-control"',date('Y-m-d')); ?></td>
     <td>&nbsp;</td>
   </tr>
   <tr >

@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-//Load::models('almacen','producto','inventario','claseRecepcion','presentacion','lote','movimientoInventario','usuario','entrega','claseSalida','detalleEntrega','empleado','departamento','numeroInventario'); 
+
 class inventarioController extends AppController{
     
     /**
@@ -232,10 +232,11 @@ class inventarioController extends AppController{
                
                 echo "<script>  alert ('Primero agrege partidas para poder guardar este movimiento....!');</script>"; 
             }else {
-            $this->vale = $vale->guardarDatosTSEA();
+             $movimiento=   Input::Post('destino_id');
+            $this->vale = $vale->guardarAjuste($movimiento);
             ?>
                 <script>
-                    window.open('valeSalidaCT/<?php echo $this->vale; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
+                    window.open('valeSalidaAJ/<?php echo $this->vale; ?>', 'Imprimir', '_blank', 'titlebar=0,toolbar=location,menubar=0,width=600,height=800');
                 </script>
                <?php
                 Input::delete();
@@ -516,6 +517,18 @@ class inventarioController extends AppController{
     // $this->datosUsuario=$usuario->listarEmpleado($this->datosCompra->USUARIO_ID);
     }
     public function valeSalidaCT($compraId){
+     $compra=new vale();
+     $this->datosCompra=$compra->listarXid($compraId);
+     $detalleCompra=new detalle_vale();
+     $this->detalleCompra=$detalleCompra->listarProductoCompra($compraId);
+     $usuario=new usuario();
+     $destino=new almacen();
+     $this->destino=$destino->destino($compraId);
+     $ciclo=new lote();
+     $this->ciclo=$ciclo->ciclo($compraId);
+    // $this->datosUsuario=$usuario->listarEmpleado($this->datosCompra->USUARIO_ID);
+    }
+     public function valeSalidaAJ($compraId){
      $compra=new vale();
      $this->datosCompra=$compra->listarXid($compraId);
      $detalleCompra=new detalle_vale();

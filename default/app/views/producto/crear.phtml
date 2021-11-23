@@ -111,7 +111,7 @@
            <div class="col-sm-4">
                 <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-addon">       Peso:    
+                        <div class="input-group-addon">       Peso Kg.:    
                         </div>
 <?php echo Form::text('producto.peso', 'class="form-control"  '); ?>
                     </div>
@@ -121,9 +121,18 @@
             <div class="col-sm-4">
                 <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-addon">       Peso Neto:    
+                        <div class="input-group-addon">       Unidad X Empaque:    
                         </div>
-<?php echo Form::text('producto.peso_neto', 'class="form-control"  '); ?>
+<?php echo Form::text('producto.unidad_empaque', 'class="form-control"  '); ?>
+                    </div>
+                </div>
+            </div> 
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">       Peso Empaque Kg.:    
+                        </div>
+<?php echo Form::text('producto.peso_empaque', 'class="form-control"  '); ?>
                     </div>
                 </div>
             </div> 
@@ -159,6 +168,7 @@
             
         </div> 
     </div>
+    
 </div>
  
         </br>

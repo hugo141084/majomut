@@ -23,7 +23,7 @@ class detalle_vale extends ActiveRecord {
         return $this->find_by_sql("select * from almacen where id='$id'");
     }
     public function listarProductoCompra($compraId) {
-         $sqlProducto = "SELECT det.id, pro.clave, pro.descripcion,pro.peso, pro.peso_neto,pro.precio, det.cantidad, alm.almacen, pp.descripcion preparacion, pre.descripcion presentacion, lo.codigo, em.descripcion embalaje FROM detalle_vale det inner join producto pro on det.producto_id=pro.id inner join almacen alm on det.almacen_id=alm.id left join presentacion pre on pro.presentacion_id=pre.id left join preparacion pp on pro.preparacion_id=pp.id inner join lote lo on det.lote_id=lo.id inner join embalaje em on pro.empaque_id=em.id WHERE det.compra_id ='$compraId' ";
+         $sqlProducto = "SELECT det.id, pro.clave, pro.descripcion,pro.peso, pro.peso_neto,pro.precio, det.cantidad, alm.almacen, pp.descripcion preparacion, pre.descripcion presentacion, lo.codigo, em.descripcion embalaje, pro.unidad_empaque, pro.peso_empaque, det.producto_id, me.descripcion medida FROM detalle_vale det inner join producto pro on det.producto_id=pro.id inner join almacen alm on det.almacen_id=alm.id left join presentacion pre on pro.presentacion_id=pre.id left join preparacion pp on pro.preparacion_id=pp.id inner join lote lo on det.lote_id=lo.id inner join embalaje em on pro.empaque_id=em.id left join medida me on pro.medida_id=me.id  WHERE det.compra_id ='$compraId' ";
         return $this->find_all_by_sql($sqlProducto);
     }
     public function listarProductoAlmacen($id) {

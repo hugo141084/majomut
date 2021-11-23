@@ -1,4 +1,4 @@
-movimientos
+
     <?php
 
 Load::models('inventario','producto','lote','serie','movimiento_inventario'); 
@@ -47,8 +47,8 @@ class reportesController extends AppController{
     
     public function movimiento() {
      $this->accion="movimiento";
-     $this->conceptos=Load::model('conceptoMovimiento')->listar();
-     
+     $conceptos=new concepto_movimiento();
+     $this->conceptos=$conceptos->listar();
     if (Input::hasPost('movimiento')) {  
              $datos = Input::Post('movimiento');
             $producto=$datos['producto_id'];

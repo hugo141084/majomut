@@ -174,7 +174,7 @@ R.F.C.  UPO111114BJ7 <br>
 <tr>
 <th colspan="2">
 <font align="center" class="resp">
-<strong>VALE  DE ENTRADA</strong>
+<strong>MOVIMIENTOS AJUSTE ALMACEN</strong>
 </font>
 </th>
 </tr>
@@ -202,7 +202,7 @@ R.F.C.  UPO111114BJ7 <br>
         <td  >Majomut </td>  
         <td  >             </td>  
         <td  >             </td>  
-        <td  >      <strong>Ciclo:</strong>    </td>  
+        <td  ><strong>Ciclo:</strong>    </td>  
         <td  >'.$cicl.'            </td>  
     </tr>
     
@@ -211,8 +211,8 @@ R.F.C.  UPO111114BJ7 <br>
         <td  >'.$alma.'  </td>  
         <td  >             </td>  
         <td  >             </td>  
-        <td  >                 </td>  
-        <td  >             </td>  
+        <td  ><strong>F. Salida:</strong>             </td>  
+        <td  >'.$datosCompra->fecha_salida.'           </td>  
     </tr> 
  </table>
 
@@ -229,42 +229,25 @@ R.F.C.  UPO111114BJ7 <br>
 <td colspan="3">
 <table style="width: 100%" border="1" class="mitabla1" cellpadding="3">
 <tr align="center" bgcolor="#CCCCCC" class="respTi">
-<td style="width: 10%">#</td>
-<td style="width: 10%">Lote</td>
-<td style="width: 25%">Tipo Preparacion</td>
-<td style="width: 25%">Presentación</td>
-<td style="width: 10%">Kilos Brutos</td>
-<td style="width: 10%">Tara</td>
-<td style="width: 10%">Kilos Netos</td>
+<td style="width: 20%">#</td>
+<td style="width: 20%">Lote</td>
+<td style="width: 30%">Tipo Preparacion</td>
+<td style="width: 30%">Presentación</td>
+
 </tr>';
 $i=1;
 $c1=0;$c2=0;$c3=0;$c4=0;
 foreach ($detalleCompra as $datos){
-
-
- $producto=new producto();
- $producto=$producto->find_first("id='$datos->producto_id'");
- $unidadEmpaque=$producto->unidad_empaque;
- $pesoEmpaque=$producto->peso_empaque;
- $peso=$producto->peso;
- $paquete= ceil($datos->cantidad/$unidadEmpaque);
- $cantidad= $datos->cantidad-$paquete;
- $kb=($cantidad)+ ($paquete* $pesoEmpaque);
- $tara=$pesoEmpaque*$paquete;
- $kn=$cantidad;
+ $paquete=  ceil($datos->cantidad/$datos->peso_neto); 
  $c1 +=$paquete;
- $c2 +=$kb;
- $c3 +=$tara;
- $c4 +=$kn;
- 
+ $c2 +=($datos->cantidad + $paquete);
+ $c3 +=$datos->cantidad;
 $html .=' <tr align="center">
-<td style="width: 10%; " >'.$paquete.' '.$datos->embalaje.' </td>
-<td style="width: 10%" >'.$datos->codigo.'</td>
-<td style="width: 25%" >'.$datos->preparacion.'</td>
-<td style="width: 25%" >'.$datos->presentacion.'</td>
-<td style="width: 10%" >'.$kb.'</td>
-<td style="width: 10%" >'.$tara.'</td>
-<td style="width: 10%" bgcolor="#CCCCCF">'.$kn.'</td>
+<td style="width: 20%; " >'.$datos->cantidad.' '.$datos->medida.' </td>
+<td style="width: 20%" >'.$datos->codigo.'</td>
+<td style="width: 30%" >'.$datos->preparacion.'</td>
+<td style="width: 30%" >'.$datos->presentacion.'</td>
+
 </tr>'; 
 $i++;
 }
@@ -272,25 +255,15 @@ $i++;
 if($i<5){
 for($j=$i;$j<=5;$j++){
  $html .=' <tr align="center">
-<td style="width: 10%;height: 19px;"></td>
-<td style="width: 10%"></td>
-<td style="width: 25%"></td>
-<td style="width: 25%"></td>
-<td style="width: 10%"></td>
-<td style="width: 10%"></td>
-<td style="width: 10%" bgcolor="#CCCCCF"></td>
+<td style="width: 20%;height: 19px;"></td>
+<td style="width: 20%"></td>
+<td style="width: 30%"></td>
+<td style="width: 30%"></td>
+
 </tr>';    
 }    
 }
-$html .=' <tr align="center" bgcolor="#CCCCCC">
-<td >'.$c1.'</td>
-<td style="width: 10%"></td>
-<td style="width: 25%"></td>
-<td style="width: 25%"></td>
-<td style="width: 10%">'.$c2.'</td>
-<td style="width: 10%">'.$c3.'</td>
-<td style="width: 10%">'.$c4.'</td>
-</tr>'; 
+ 
 $html .='</table> </td></tr>';
 
 $html .=' <tr><td colspan="3"> <table style="width: 100%" border="0" class="mitabla">
@@ -316,27 +289,9 @@ $html .=' <tr><td colspan="3"> <table style="width: 100%" border="0" class="mita
 <br><br>
  <table style="width: 100%" border="0" class="mitabla2">
 <tr align="center">
-<td style="width: 33%"> ENTREGO <BR>
-<BR>
-<BR>
-<BR>
-<BR>
-__________________________________
-<BR>
-'.$datosCompra->capturo.'  <BR>
-    
+<td style="width: 33%">  
 </td>
-<td style="width: 33%"> RECIBIO <BR>
-<BR>
-<BR>
-<BR>
-<BR>
-__________________________________
-<BR>
-'.$datosCompra->recibio.'  <BR>
-    
-</td>
-<td > VALIDO <BR>
+<td style="width: 33%">  VALIDO <BR>
 <BR>
 <BR>
 <BR>
@@ -344,6 +299,8 @@ __________________________________
 __________________________________
 <BR>
 '.$datosCompra->valido.'  <BR>
+</td>
+<td > 
     
 </td>
 </tr>
@@ -355,7 +312,7 @@ __________________________________
 </table>
       ';    
    
-  //echo $html;
+  
 //print_r($datos);
   
 // Print text using writeHTMLCell()
@@ -370,7 +327,7 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
    ob_end_clean();  
 
- $pdf->Output('valeEntrada.pdf', 'I');
+ $pdf->Output('valeSalidaCT.pdf', 'I');
 
 ?>
 

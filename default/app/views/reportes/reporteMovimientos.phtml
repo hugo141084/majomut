@@ -191,7 +191,8 @@ foreach ($movimientos as $dato){
        $subtotal=0;
         foreach ($detalle as $detalleLote){
            
-             $concepto=Load::model('conceptoMovimiento')->listarXid($detalleLote->tipo_movimiento);
+             $concepto=new concepto_movimiento();
+             $concepto->listarXid($detalleLote->tipo_movimiento);
              if($concepto->tipo_movimiento=="S"){
              $detalleLote->cantidad=$detalleLote->cantidad * (-1);
              } 
