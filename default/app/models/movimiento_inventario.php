@@ -43,9 +43,9 @@ ORDER BY  alma.almacen ASC");
     
     }
     
-    public function detalleMovimiento($clave_articulo, $almacen,$fecha_inicio, $fecha_fin) {
+    public function detalleMovimiento($clave_articulo, $almacen,$fecha_inicio, $fecha_fin,$condicion) {
       
-        return $this->find_all_by_sql("select movi.existencia,movi.fecha_documento,movi.referencia,movi.cantidad,movi.costo,movi.referencia,movi.tipo_movimiento from movimiento_inventario as movi where movi.almacen_id='$almacen' and movi.producto_id='$clave_articulo'  and (fecha_documento >= '$fecha_inicio' && fecha_documento <='$fecha_fin')  order by movi.id ");
+        return $this->find_all_by_sql("select movi.existencia,movi.fecha_documento,movi.referencia,movi.cantidad,movi.costo,movi.referencia,movi.tipo_movimiento from movimiento_inventario as movi where movi.almacen_id='$almacen' and movi.producto_id='$clave_articulo'  and (fecha_documento >= '$fecha_inicio' && fecha_documento <='$fecha_fin') $condicion order by movi.id ");
     
     }
     

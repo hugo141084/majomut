@@ -152,10 +152,19 @@ class reportesController extends AppController{
                 <?php
          }
     }
-    public function reporteMovimientos($producto,$fechaInicial,$fechaFinal,$titulo,$movimientos){
+    public function reporteMovimientos($producto=null,$fechaInicial=null,$fechaFinal=null,$titulo=null,$movimientos=null){
          ini_set('memory_limit', '512M');
         ini_set('max_execution_time', '-1');
-         $this->fechaInicial=$fechaInicial;
+        if (Input::hasPost('movimiento')) {  
+             $datos = Input::Post('movimiento');
+            $producto=$datos['producto_id'];
+            if($producto==""){$producto=0;}
+             $fechaInicial=strftime("%Y-%m-%d", strtotime($datos['fecha_inicio']));
+             $fechaFinal=strftime("%Y-%m-%d", strtotime($datos['fecha_fin']));
+             $titulo=$datos['titulo'];
+             $movimientos=  $datos['num_movimiento']; 
+             if($movimientos==""){$movimientos=0;}
+            $this->fechaInicial=$fechaInicial;
          $this->fechaFinal=$fechaFinal;
          $this->tituloReporte=$titulo;
          $condicion=" and  (movi.fecha_movimiento >= '$fechaInicial' and movi.fecha_movimiento <= '$fechaFinal') ";
@@ -166,11 +175,15 @@ class reportesController extends AppController{
          {
              $num_movi=str_replace('TM', 'movi.tipo_movimiento', $movimientos);
              $condicion= $condicion." and (".$num_movi.")";
+             $this->condicion=" and (".$num_movi.")";
      }
-         
+         $this->condicion=$condicion;
         
               $existencia=new movimiento_inventario();
               $this->movimientos=$existencia->buscaXmovimiento($condicion);
+    }
+        
+         
     }
     public function reporteAlmacen($almacen=NULL,$tipo=NULL){
         $condicion="";
