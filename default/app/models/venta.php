@@ -20,7 +20,10 @@ class venta extends ActiveRecord {
         
     }
     public function listarXid($id) {
-        return $this->find_by_sql("select * from compra where ID=$id");
+        return $this->find_by_sql("select * from venta where id=$id");
+    }
+    public function listarPendiente($id) {
+        return $this->find_all_by_sql("select * from venta where cliente_id='$id' and estado='1' and saldo > 0 " );
     }
     public function listarProductoAlmacen($id) {
          $sqlProducto = "SELECT inv.ID, pro.CLAVE_ARTICULO, pro.DESCRIPCION, inv.EXISTENCIA, inv.CANTIDAD_MINIMA, inv.CANTIDAD_MAXIMA
@@ -28,35 +31,39 @@ FROM inventario as inv, producto as pro  WHERE ALMACEN_ID =$id and inv.PRODUCTO_
         return $this->find_all_by_sql($sqlProducto);
     }
     public function listarVentaId($id) {
-        return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_recepcion, com.documento, com.tipo_documento,cli.id clienteId, cli.nombrecompleto,cli.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio 
+        return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_recepcion, com.documento, com.observacion, com.tipo_documento,cli.id clienteId, cli.nombrecompleto,cli.rfc,com.estado estadoVenta,com.subtotal,com.iva,com.monto,com.costo_envio 
  ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior)  direccion ,cli.colonia,cli.ciudad,cli.municipio,cli.estado,cli.pais,cli.codigopostal, 
  com.nombre,com.direccion as direccionP,com.rfc as rfcP
 FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
     }
     public function listarVenta() {
-         
+         $ciclocosechaId = Session::get('cicloCosecha');
          $sqlCompra = "SELECT com.id, com.fecha_documento, com.documento, com.tipo_documento, cli.nombrecompleto,cli.rfc,com.estado, com.salidaVale 
-FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id  ";
+FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id  and ciclocosecha_id='$ciclocosechaId' ";
         
         return $this->find_all_by_sql($sqlCompra);
     }
     
     public function guardarDatos(){
+        $ciclocosechaId = Session::get('cicloCosecha');
        $vale = new venta(Input::post('venta'));
         $fechaDocumento=$vale->fecha_documento;
         $fechaMovimiento=$vale->fecha_documento;
-        $referencia=$vale->documento;
-        $proveedorId=$vale->cliente_id;
+        
+         $proveedorId=$vale->cliente_id;
+         $condiciones=$vale->condicion;
         $precio=$vale->precio;
         $folios = new series_folios();
            $folios->incrementarConsecutivo('REMISION');
         $datoFolios = $folios->find_first("tipo = 'REMISION'");
-        $vale->documento="R-".str_pad(($datoFolios->consecutivo),4, "0", STR_PAD_LEFT);
+        $vale->documento="R-".str_pad(($datoFolios->consecutivo),4, "0", STR_PAD_LEFT); 
+        $referencia=$vale->documento;
         $vale->tipo='ET';
         $vale->estado='1'; 
         $vale->fecha_documento = strftime("%Y-%m-%d", strtotime($vale->fecha_documento));
         $vale->fecha_recepcion = strftime("%Y-%m-%d", strtotime($vale->fecha_documento));
         $vale->fecha_salida = strftime("%Y-%m-%d", strtotime($vale->fecha_salida));
+        $vale->ciclocosecha_id=$ciclocosechaId; 
         $vale->usuario_id=Session::get('id'); 
         $tipoMovimiento="S";
         $numeroMovimiento="11";
@@ -65,6 +72,7 @@ FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id  ";
              $array_productos = Session::get('array_venta');
              $partidaTotal=0;
              $importeTotal=0;
+             $importeTotalV=0;
              $ivaTotal=0;
              $ivaI=0;
              $totalI=0;
@@ -75,24 +83,31 @@ FROM venta as com inner join cliente as cli  WHERE com.cliente_id =cli.id  ";
               $serie=new serie();
               $movimiento=new movimiento_inventario();
               $producto=new producto();
+              $medida=new medida();
               $inventario=new inventario();
+              $llote=new lote();
             //  $datoInventario=new numeroInventario();
                $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;   
 $codigo=$array_productos[$i]['CLAVE'];
 $descripcion=$array_productos[$i]['DESCRIPCION'];
 $cantidad=$array_productos[$i]['CANTIDAD'];
 $precio=$array_productos[$i]['PRECIO'];
+$presentacionVenta=$array_productos[$i]['PRESENTACIONV'];
+$presentacion=$array_productos[$i]['PRESENTACION'];
+$loteSerie=$array_productos[$i]['LOTE_SERIE'];
+$datoLote=$llote->find_first($loteSerie);
+$cantidadP=$cantidad * (1/$presentacion);
        $pro = new producto();     
         $pro=$pro->find_first('id='.$productoId);
         $iva=$pro->impuesto; 
-              
-            $partidaTotal=$cantidad*$precio;
+         $datoMedida=$medida->find_first($pro->medida_id);     
+            $partidaTotal=$cantidadP*$precio;
          $importeTotal=$partidaTotal+$importeTotal;
          $ivaI=(round((($partidaTotal*$iva)/100),2));
          $totalI=$partidaTotal+$ivaI;
          $ivaTotal=$ivaTotal+$ivaI;
-          $importeTotal=$partidaTotal+$ivaTotal;
-              $detalleCompra->guardarDatos($valeId, $productoId, $cantidad,$precio,$ivaI,$totalI);
+          //$importeTotal=$partidaTotal+$ivaTotal;
+              $detalleCompra->guardarDatosDC($valeId, $productoId, $cantidad,$cantidadP,$precio,$ivaI,$totalI,$presentacion,$datoLote->codigo,$datoMedida->descripcion,$presentacionVenta);
               
          $productoId=  $array_productos[$i]['PRODUCTO_ID'] ;     
              
@@ -101,7 +116,7 @@ $precio=$array_productos[$i]['PRECIO'];
         $unidadXpaquete=$array_productos[$i]['UNIDAD_PAQUETE'];
         $fechaCaducidad=$array_productos[$i]['FECHA_CADUCIDAD'];
      $almacenId=$array_productos[$i]['ALMACEN_ID'];         
-         $loteSerie=$array_productos[$i]['LOTE_SERIE'];
+         
          $num_inventario=$array_productos[$i]['NUMERO_INVENTARIO'];
        
         
@@ -115,18 +130,26 @@ $precio=$array_productos[$i]['PRECIO'];
               }
               $inventario->actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId);
               $producto->actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete);
-              $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario,$precio);
+              $movimiento->validaMovimiento($productoId,$fechaDocumento,$referencia,$fechaMovimiento,$proveedorId, $cantidad, $unidadXpaquete, $almacenId, $loteSerie,$opcion,$numeroMovimiento,$num_inventario,$precio,$presentacionVenta);
               
               
              }
           //echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";
-           Input::delete();
+          // Input::delete();
            session::delete('array_venta');
            $actualizar= new venta();
+           
            $ventaTotal=$importeTotal+$ivaTotal;
-           $actualizar->update_all("subtotal =  $importeTotal,iva=$ivaTotal,monto=$ventaTotal", "id=$valeId ");
+           $actualizar->update_all("subtotal =  $importeTotal,iva=$ivaTotal,monto=$ventaTotal,saldo=$ventaTotal", "id=$valeId ");
+           
+           $cuentaCobrar=new cuenta_cobrar();
+           $cuenta=$cuentaCobrar->registraMovimiento('Venta','1',$vale->documento,$vale->fecha_documento,$vale->fecha_vencimiento,$vale->cliente_id,$ventaTotal);
+           
+         
+           
+        
            return $valeId;
-        }
+            }
     }
     public function guardarDatosVale(){
        $vale = new venta(Input::post('venta'));
@@ -209,7 +232,7 @@ $precio=$array_productos[$i]['PRECIO'];
            Input::delete();
            session::delete('array_venta');
            $actualizar= new venta();
-           $actualizar->update_all("subtotal =  $importeTotal,iva=0,monto=$importeTotal", "id=$valeId ");
+           $actualizar->update_all("subtotal =  $importeTotal,iva=0,monto=$importeTotal,saldo=$importeTotal", "id=$valeId ");
            return $valeId;
         }
     }

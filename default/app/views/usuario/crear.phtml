@@ -41,7 +41,7 @@ View::content();
                         <label for="lastName">Perfil<small class="required">*</small></label>
                         <div class="input-group">
                           <?php
-                        $tipo_valor = array(""=>"Seleccione","1"=>"ADMINISTRADOR");
+                        $tipo_valor = array(""=>"Seleccione","1"=>"ADMINISTRADOR","2"=>"VENTAS","3"=>"ALMACEN");
                         
                         echo Form::Select("usuario.Tipo", $tipo_valor,"", "class='form-control' " );
                         ?>                                  </div>

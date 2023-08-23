@@ -78,7 +78,8 @@ $pdf->setFontSubsetting(true);
 // This method has several options, check the source code documentation for more information.
 $pdf->AddPage();
 
-
+$cicloC=new ciclocosecha();
+$cicloC=$cicloC->find_first($ciclo);
 // Set some content to print
 $html ='<style>
 	.negrita{
@@ -118,9 +119,9 @@ $html ='<style>
   <tr style="font-size:10px;text-align:left;font-style:italic">
         <td width="10%" ></td>
         <td width="45%" ></td>
-        <td width="20%" ></td>
+        <td width="20%" >Ciclo Cosecha:<b>'.$cicloC->ciclo.'</b></td>
         <td width="10%" >Fecha:</td>
-        <td width="15%" >'.date('d-m-Y').'</td>
+        <td width="15%" ><b>'.date('d-m-Y').'</b></td>
         
       </tr> 
      <tr style="font-size:10px;text-align:left;font-style:italic">
@@ -144,15 +145,7 @@ $clasificacionId="0";
 $tipo=$tipo;
 $total=0;
 foreach ($almacen as $dato){
-    $desProducto=new producto();
-    $desProducto=$desProducto->listarJuntoXid($dato->id);
-    if($clasificacionId==$dato->producto_id){
-    $clasificacion="";    
-    }else{
-        $clasificacionId=$dato->producto_id;
-        $desProducto=Load::model('producto')->listarXid($clasificacionId);
-       // $clasificacion=$desProducto->descripcion;
-    }
+    
     $html.= '
             <tr class="nonegrita">
                     <td width="10%"><div class="divcentrar">'.$dato->almacen.'</div></td>
@@ -163,7 +156,12 @@ foreach ($almacen as $dato){
             </tr>
             ';
     if ($tipo=="DETALLE"){
-        $detalle=Load::model('inventario')->buscarXproducto($dato->id);
+        if($ciclo>0){
+          $existenciaL=new detalle_lote();
+          $detalle=$existenciaL->find_all_by_sql("SELECT DL.producto_id, SUM(DL.existencia) existencia FROM detalle_lote DL inner join lote L on DL.lote_id=L.id WHERE DL.almacen_id='$dato->id' and L.ciclocosecha_id='$ciclo' GROUP by DL.producto_id");
+        }else{
+        $detalle=Load::model('inventario')->buscarXalmacen($dato->id);
+        }
        $total=0;
         foreach ($detalle as $detalleInventario){
             $total+=$detalleInventario->existencia;

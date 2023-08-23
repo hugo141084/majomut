@@ -16,7 +16,7 @@ class usoCfdi extends ActiveRecord {
    
 
     public function listar() {
-        return $this->find();
+        return $this->find("estatus='1'");
     }
     
 }

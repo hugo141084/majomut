@@ -152,13 +152,7 @@ $total=0;
 foreach ($existencia as $dato){
     $desProducto=new producto();
     $desProducto=$desProducto->listarJuntoXid($dato->id);
-    if($clasificacionId==$dato->producto_id){
-    $clasificacion="";    
-    }else{
-        $clasificacionId=$dato->producto_id;
-        $desProducto=Load::model('producto')->listarXid($clasificacionId);
-       // $clasificacion=$desProducto->descripcion;
-    }
+    
     $html.= '
             <tr class="nonegrita">
                     <td width="10%"><div class="divcentrar">'.$dato->clave.'</div></td>

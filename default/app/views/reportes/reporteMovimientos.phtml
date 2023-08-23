@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 load::lib('tcpdf');
 class reporte extends TCPDF {
 
@@ -34,7 +36,7 @@ ob_end_clean();
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('');
-$pdf->SetTitle('Reportes');
+$pdf->SetTitle('Reporte - Movimientos');
 $pdf->SetSubject('');
 //================================================================
 //VARIABLES POR DECLARAR
@@ -138,18 +140,19 @@ $html ='<style>
         <td  align="center" width="15%"> </td>
     </tr>
     </table>
-      <table align="left" width="100%" border="0">
+      <table align="left" width="100%" border="0" cellpadding="2">
     
     <thead>
   <tr style="font-size:10px;text-align:left;font-style:italic">
         <td width="10%" align="left" style="border-top:1px dashed #000000;">Producto</td>
-        <td  width="50%" colspan="2" align="center" style="border-top:1px dashed #000000;">Descripción </td>
+        <td  width="50%" colspan="3" align="center" style="border-top:1px dashed #000000;">Descripción </td>
        <td width="40%" colspan="3" align="center" style="border-top:1px dashed #000000;">Almacen </td>
        
       </tr> 
       <tr style="font-size:10px;text-align:left;font-style:italic">
         <td width="10%" align="left" style="border-bottom:1px dashed #000000;">Fecha</td>
-        <td width="30%" align="center" style="border-bottom:1px dashed #000000;">Docto</td>
+        <td width="20%" align="center" style="border-bottom:1px dashed #000000;">Docto</td>
+        <td width="10%" align="center" style="border-bottom:1px dashed #000000;">Lote</td>
         <td width="20%" align="center" style="border-bottom:1px dashed #000000;">T. Movi.</td>
         <td width="20%" align="center" style="border-bottom:1px dashed #000000;">Movimiento</td>
         <td width="10%" align="center" style="border-bottom:1px dashed #000000;">Cantidad</td>
@@ -168,12 +171,13 @@ $total=0;
 $html.= '
         
             <tr class="negrita">
-                    <td width="10%"><div class="divcentrar"></div></td>
-                    <td width="50%" align="left"></td>
-                    <td width="40%"><div class="divcentrar"></div></td>
+                    <td width="10%"></td>
+                    <td width="50%" colspan="3"></td>
+                    <td width="40%" colspan="3"></td>
                     
             </tr>
             ';
+
 foreach ($movimientos as $dato){
     $desProducto=new producto();
     $desProducto=$desProducto->listarJuntoXid($dato->producto_id);
@@ -181,30 +185,41 @@ foreach ($movimientos as $dato){
         
             <tr class="negrita">
                     <td width="10%"><div class="divcentrar">'.$dato->clave.'</div></td>
-                    <td width="50%" align="left">'.'  '.$desProducto->descripcion.'</td>
-                    <td width="40%"><div class="divcentrar">'.$dato->descripcion_almacen.'</div></td>
+                    <td width="50%" align="left" colspan="3">'.'  '.$desProducto->descripcion.'</td>
+                    <td width="40%" colspan="3"><div class="divcentrar">'.$dato->descripcion_almacen.'</div></td>
                     
             </tr>
             ';
     $movi=new movimiento_inventario();
-        $detalle=$movi->detalleMovimiento($dato->producto_id,$dato->id_almacen,$fechaInicial,$fechaFinal);
+    $condicion="";
+    if($num_movi!="")$condicion=" and ".$num_movi;
+        $detalle=$movi->detalleMovimiento($dato->producto_id,$dato->id_almacen,$fechaInicial,$fechaFinal,$condicion,$loteB);
        $subtotal=0;
+       $existencia=0;
         foreach ($detalle as $detalleLote){
            
-             $concepto=new concepto_movimiento();
+             $concepto=new conceptomovimiento();
              $concepto->listarXid($detalleLote->tipo_movimiento);
              if($concepto->tipo_movimiento=="S"){
-             $detalleLote->cantidad=$detalleLote->cantidad * (-1);
+                 if($detalleLote->cantidad>0) $detalleLote->cantidad=$detalleLote->cantidad * (-1);
+                 else $detalleLote->cantidad=0;
              } 
              $subtotal+=$detalleLote->cantidad;
+             if(trim($loteB !='0')){
+                
+$existencia += ($detalleLote->cantidad );   
+             }else{
+                 $existencia=$detalleLote->existencia;
+             }
         $html.= '
             <tr class="nonegrita1">
                     <td width="10%" align="right">'.strftime("%d-%m-%Y", strtotime($detalleLote->fecha_documento)).'</td>
-                    <td width="30%" align="right">'.$detalleLote->referencia.'</td>
+                    <td width="20%" align="right">'.$detalleLote->referencia.'</td>
+                    <td width="10%" align="right">'.$detalleLote->lote.'</td>    
                     <td width="20%"><div class="divcentrar">'.$concepto->tipo_movimiento.'</div></td>
                     <td  align="center" width="20%" align="right" >'.$concepto->descripcion.' </td>
                     <td  width="10%" align="right">'.$detalleLote->cantidad.'</td>
-                    <td  width="10%" align="right">'.$detalleLote->existencia.'</td>    
+                    <td  width="10%" align="right">'.$existencia.'</td>    
             </tr>
             ';
         } 
@@ -214,7 +229,8 @@ foreach ($movimientos as $dato){
 <tr class="negrita">
             
                     <td width="10%" align="right"><div class="divcentrar"> </div></td>
-                    <td width="30%" align="left"></td>
+                    <td width="20%" align="left"></td>
+                    <td width="10%" align="left"></td>
                     <td width="20%"><div class="divcentrar"></div></td>
                     <td  width="20%"  ></td>
                     <td  width="10%"></td>
@@ -223,7 +239,7 @@ foreach ($movimientos as $dato){
             <tr class="negrita">
             
                     <td width="10%" align="right"><div class="divcentrar"> </div></td>
-                    <td width="30%" align="left"></td>
+                    <td width="30%" colspan="2"></td>
                     <td width="20%"><div class="divcentrar"></div></td>
                     <td  width="20%"  align="right">SubTotal:</td>
                     <td  width="10%" align="right">'.$subtotal.'</td>
@@ -233,10 +249,11 @@ foreach ($movimientos as $dato){
     
     
 }
+
  $html.= '
      <tr class="negrita">
                     <td width="10%" align="right"><div class="divcentrar"> </div></td>
-                    <td width="30%" align="left"></td>
+                    <td width="30%" colspan="2"></td>
                     <td width="20%"><div class="divcentrar"></div></td>
                     <td   width="20%"  > </td>
                     <td  width="10%"></td>
@@ -244,7 +261,7 @@ foreach ($movimientos as $dato){
             </tr>
             <tr class="negrita">
                     <td width="10%" align="right"><div class="divcentrar"> </div></td>
-                    <td width="30%" align="left"></td>
+                    <td width="30%" colspan="2"></td>
                     <td width="20%"><div class="divcentrar"></div></td>
                     <td   width="20%"  align="right">Total: </td>
                     <td  width="10%" align="right">'.$total.'</td>
@@ -260,7 +277,7 @@ $html.= '
         <p>
 
 
-        <p>
+        </p>
 ';
 
 // Print text using writeHTMLCell()
@@ -270,8 +287,8 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
 // Close and output PDF document
 // This method has several options, check the source code documentation for more information.
- $pdf->Output('imprime_perfil.pdf', 'I');
-
+ $pdf->Output('movimiento.pdf', 'I');   
+ob_end_clean();
 //============================================================+
 // END OF FILE
 //============================================================+

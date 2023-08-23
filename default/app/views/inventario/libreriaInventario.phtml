@@ -54,7 +54,7 @@ if($color == "#ebf3ff"){
  echo"<td  width='40%' class=\"letra\" >".$datos->descripcion."</td>"; 
  echo"<td  width='10%' class=\"letra\" ><input type='text' name=\"minimo$i\" id=\"minimo$i\" value='0' size='6' style='visibility:true; background-color:".$color.";  text-align:right ' class='letra' ></td>"; 
  echo"<td  width='10%' class=\"letra\" align=\"letf\"><input type='text' name=\"maxima$i\" id=\"maxima$i\" value='0' size='6' style='visibility:true; background-color:".$color."; width=50%; text-align:right ' class='letra' ></td>"; 
- echo"<td  width='10%' class=\"letra\" align=\"center\" ><input type='button' name=\"agregar$i\" id=\"agregar$i\" value='Agregar' style=\"visibility:true\" class='letra' onclick=agregar_producto('$datos->id',$i)></td>"; 
+ echo"<td  width='10%' class=\"letra\" align=\"center\" ><input type='button' name=\"agregar$i\" id=\"agregar$i\" value='Agregar' style=\"visibility:true\" class='btn btn-success btn-sm' onclick=agregar_producto('$datos->id',$i)></td>"; 
 
 
  echo"</tr>";
@@ -115,7 +115,7 @@ if($color == "#ebf3ff"){
  echo"<td  width='10%' class=\"letra\" >".$datos->existencia."</td>"; 
  echo"<td  width='10%' class=\"letra\" >".$datos->cantidad_minima."</td>"; 
  echo"<td  width='10%' class=\"letra\" >".$datos->cantidad_maxima."</td>"; 
- echo"<td  width='10%' class=\"letra\" ><input type='button' name=\"quitar$i\" id=\"quitar$i\" value='Quitar' style=\"visibility:true\" class='letra' onclick=quitar_producto('$datos->id','$datos->EXISTENCIA','$i')></td>"; 
+ echo"<td  width='10%' class=\"letra\" ><input type='button' name=\"quitar$i\" id=\"quitar$i\" value='Quitar' style=\"visibility:true\" class='btn btn-danger btn-sm' onclick=quitar_producto('$datos->inventarioId','$datos->EXISTENCIA','$i')></td>"; 
 
 
  echo"</tr>";
@@ -221,9 +221,10 @@ else if (($operacion) == "MOSTRAR_LISTA") {
         <tr bgcolor="#CCCCCC" style="height: 30px;">
     <td width="5%"><label>#</label></td>
     <td width="5%"><label></label></td>
+   
     <td width="10%"><label>Cantidad</label></td>
     <td width="30%"><label>Descripcion</label></td>
-    <td width="10%"><label>U. Entrada</label></td>   
+       
     <td width="10%"><label>Almacen</label></td>
     <td width="10%"><label>Lote</label></td>
     
@@ -263,16 +264,22 @@ $indice ++;
 $descripcion=$array_productos[$i]['CLAVE']." - ".$array_productos[$i]['DESCRIPCION'];
 $cantidad=$array_productos[$i]['CANTIDAD'];
 $unidad_entrada=$array_productos[$i]['UNIDAD_ENTRADA'];
+$unidad_paquete=$array_productos[$i]['UNIDAD_PAQUETE'];
 $almacen=$array_productos[$i]['ALMACEN']." - ".$array_productos[$i]['DESCRIPCION_ALMACEN'];;
 $lote_serie=$array_productos[$i]['LOTE_CODIGO'];
 $fecha_caducidad=$array_productos[$i]['FECHA_CADUCIDAD'];
 $numero_inventario=$array_productos[$i]['NUMERO_INVENTARIO'];
-	echo "<tr valign=center style='background-color:$color'>";		
-        echo "<td width='5%' align='center'>" . $indice . "</td>";
+$productoId=$array_productos[$i]['PRODUCTO_ID'];
+$consultaPro=new producto();
+$consulta=$consultaPro->find_first($productoId);
+
+	echo "<tr valign=center style='background-color:$color'>";
+        echo "<td width='5%' align='center'>" . $indice ."</td>";
         echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida($i)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
-        echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,0,'.',',')."  ".$array_productos[$i]['MEDIDA']. "</FONT></td>";
+        
+        echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($cantidad,2,'.',',')."  ".$array_productos[$i]['MEDIDA']. "</FONT></td>";
         echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion  . "</FONT></td>";
-        echo "<td align='letf' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $unidad_entrada  . "</FONT></td>";
+        
         echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $almacen . "</FONT></td>";
         echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $lote_serie . "</FONT></td>";
         
@@ -521,13 +528,22 @@ $("#entrega_LOTE_ID").change(function(){
   <?php   
  }
  else if (($operacion) == "BUSCA_EXISTENCIA_GENERAL") {
-   echo $producto->EXISTENCIA;
+  if(isset($resultado->existencia)){
+     echo $resultado->existencia;
+     }else {
+         echo "0";
+     }
  }
  else if (($operacion) == "BUSCA_EXISTENCIA_ALMACEN") {
    echo $inventario->suma;
  }
  else if (($operacion) == "BUSCA_EXISTENCIA_LS") {
-   echo $resultado->EXISTENCIA;
+    
+     if(isset($resultado->existencia)){
+     echo $resultado->existencia;
+     }else {
+         echo "0";
+     }
  }else if (($operacion) == "BUSCA_LOEXT_PRODUCTO") {
         
     ?>
@@ -539,7 +555,7 @@ $("#entrega_LOTE_ID").change(function(){
         <td width="10%"><label>#</label></td>
     <td width="20%"><label>Lote</label></td>
     <td width="35%"><label>Existencia</label></td>
-    <td width="35%"><label>Cantidad</label></td>   
+    <td width="35%"><label>Cantidad-</label></td>   
       
     </tr>
   
@@ -548,18 +564,18 @@ $("#entrega_LOTE_ID").change(function(){
 <div class="ventanillaCobro" style="overflow-y: scroll;">
 <table width="100%" border="0" align="center" class="Estilo">
     <?php
-  $i=0;
+  $i=1;
     foreach ($datos as $dato){ 
-         $i++; ?>
+         ?>
     <tr >
     <td width="10%"><?php echo  $i; ?></td>
     <td width="20%"><?php echo $dato->codigo; ?></td>
     <td width="35%"><?php echo $dato->existencia; ?></td>
-    <td width="35%"><?php echo Form::number('cantidad'.$i, 'class="form-control"   ')  ?>
+    <td width="35%"><?php echo Form::number('cantidad'.$i, 'class="form-control"  min="0" step="0.1" ')  ?>
                     <?php echo Form::hidden('lote'.$i, 'class="form-control"   ',$dato->id)  ?></td>
     </tr>
     <?php 
-    $i++;
+     $i++;
     }
 
     ?>	

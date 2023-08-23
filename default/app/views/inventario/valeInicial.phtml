@@ -195,7 +195,7 @@ R.F.C.  UPO111114BJ7 <br>
         <td style="width: 3%" border="0" >             </td>
         
         <td style="width: 15%" border="0" > <strong>Fecha:</strong>            </td>
-        <td style="width: 25%" border="0" >'.$datosCompra->fecha_usuario.'            </td>
+        <td style="width: 25%" border="0" >'.date("d-m-Y", strtotime($datosCompra->fecha_documento)).'            </td>
     </tr>
        <tr>
         <td  ><strong>Organización:      </strong>   </td>
@@ -206,14 +206,7 @@ R.F.C.  UPO111114BJ7 <br>
         <td  >'.$cicl.'            </td>  
     </tr>
     
-     <tr>
-        <td  ><strong>Destino:     </strong>    </td>
-        <td  >'.$alma.'  </td>  
-        <td  >             </td>  
-        
-        <td  >                 </td>  
-        <td  >             </td>  
-    </tr> 
+     
  </table>
 
  </td>
@@ -232,11 +225,10 @@ R.F.C.  UPO111114BJ7 <br>
 <td style="width: 10%">#</td>
 <td style="width: 10%">Lote</td>
 <td style="width: 20%">Producto</td>
+<td style="width: 10%">Categoria</td>
 <td style="width: 15%">Tipo Preparacion</td>
 <td style="width: 15%">Presentación</td>
-<td style="width: 10%">Kilos Brutos</td>
-<td style="width: 10%">Tara</td>
-<td style="width: 10%">Kilos Netos</td>
+<td style="width: 20%">Almacen</td>
 </tr>';
 $i=1;
 $c1=0;$c2=0;$c3=0;$c4=0;
@@ -246,14 +238,15 @@ foreach ($detalleCompra as $datos){
  $c2 +=($datos->cantidad + $paquete);
  $c3 +=$datos->cantidad;
 $html .=' <tr align="center">
-<td style="width: 10%; " >'.$paquete.' '.$datos->embalaje.' </td>
+<td style="width: 10%; " >'.$datos->cantidad.' '.$datos->medida.'</td>
 <td style="width: 10%" >'.$datos->codigo.'</td>
 <td style="width: 20%" >'.$datos->descripcion.'</td>
+    <td style="width: 10%" >'.$datos->presentacion.'</td>
 <td style="width: 15%" >'.$datos->preparacion.'</td>
-<td style="width: 15%" >'.$datos->presentacion.'</td>
-<td style="width: 10%" >'.($datos->cantidad + $paquete).'</td>
-<td style="width: 10%" >'.$paquete.'</td>
-<td style="width: 10%" bgcolor="#CCCCCF">'.$datos->cantidad.'</td>
+<td style="width: 15%" >'.$datos->calidad.'</td>
+
+<td style="width: 20%" >'.$datos->descripcionAl.'</td>
+
 </tr>'; 
 $i++;
 }
@@ -267,12 +260,12 @@ for($j=$i;$j<=5;$j++){
 <td style="width: 15%"></td>
 <td style="width: 15%"></td>
 <td style="width: 10%"></td>
-<td style="width: 10%"></td>
-<td style="width: 10%" bgcolor="#CCCCCF"></td>
+<td style="width: 20%"></td>
+
 </tr>';    
 }    
 }
-$html .=' <tr align="center" bgcolor="#CCCCCC">
+/*$html .=' <tr align="center" bgcolor="#CCCCCC">
 <td >'.$c1.'</td>
 <td style="width: 10%"></td>
 <td style="width: 20%"></td>
@@ -281,7 +274,7 @@ $html .=' <tr align="center" bgcolor="#CCCCCC">
 <td style="width: 10%">'.$c2.'</td>
 <td style="width: 10%">'.$c1.'</td>
 <td style="width: 10%">'.$c3.'</td>
-</tr>'; 
+</tr>'; */
 $html .='</table> </td></tr>';
 
 $html .=' <tr><td colspan="3"> <table style="width: 100%" border="0" class="mitabla">

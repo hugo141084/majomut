@@ -1,0 +1,622 @@
+<script>
+    function imprime_lista()
+    {
+        var operacion = 'MOSTRAR_LISTAE'
+        var id = $("#cotizacion_id").val()
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "operacion=" + operacion+"&id=" + id,
+            success: function (html) {
+                $("#resultado").html(html);
+                $("#cotizacion_subtotal").val($("#iSubtotal").val());
+                $("#cotizacion_iva").val($("#iImpuesto").val());
+                $("#cotizacion_monto").val($("#iTotal").val());
+            }
+        });
+
+    }
+    function buscaDetalle()
+    {
+        var productoId = $('#cotizacion_producto_id').val();
+        var operacion = 'MOSTRAR_DETALLE'
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+                html = "lote";
+                html = html.replace(/^\s+|\s+$/g, "");
+                $('#opcion').val(html);
+                if (html == "lote") {
+                    $('#loteProducto').show();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').hide();
+                    $('#serie').val('');
+                    $('#numInventario').val('');
+
+                } else if (html == "serie") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').show();
+                    $('#inventarioProducto').hide();
+                    $('#numInventario').val('');
+                    $('#lote').val('');
+                } else if (html == "loteInventario") {
+                    $('#loteProducto').show();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').show();
+                    $('#serie').val('');
+                } else if (html == "serieInventario") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').show();
+                    $('#inventarioProducto').show();
+                    $('#lote').val('');
+                } else if (html == "soloInventario") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').show();
+                    $('#lote').val('');
+                    $('#serie').val('');
+                } else {
+                    $('#inventarioProducto').hide();
+                    $('#loteProducto').hide();
+                    $('#serieProducto').hide();
+                    $('#serie').val('');
+                    $('#lote').val('');
+                    $('#numInventario').val('');
+
+                }
+                //  $("#detalleProducto").html(html);
+            }
+        });
+
+    }
+    function buscaUnidadPrecio() {
+        var productoId = $('#cotizacion_producto_id').val();
+
+        var operacion = "BUSCA_UNIDADPRECIO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+               
+                separador = ","
+                cadena=html.split(separador)
+                $("#etiqueta").html(cadena[0]);
+                var valor=cadena[1];
+                 $("#cotizacion_precio").val(valor);
+                  
+            }
+        });
+    }
+    function buscaCliente() {
+        var clienteId = $('#cotizacion_cliente_id').val();
+        if (clienteId > 0) {
+            var operacion = "BUSCA_CLIENTE_C";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "clienteId=" + clienteId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#cliente").html(html);
+                }
+            });
+        }
+    }
+    function agregarPartida()
+    {
+
+        var operacion = 'AGREGAR_PARTIDAE';
+        var cantidad = $('#cotizacion_cantidad').val();
+        var productoId = $('#cotizacion_producto_id').val();
+        var precio = $('#cotizacion_precio').val();
+        var id = $('#cotizacion_id').val();
+        var presentacionVe=$('#presentacionVenta').val();
+        if(presentacionVe=='T') var presentacion = $('#presentacionT').val();
+        else {
+            var presentacion = $('#presentacionV').val();
+            trans=presentacion;
+         
+        }
+        var serie = "";
+        var lote = $('#lote').val();
+        var opcion = 'lote';
+        var mens = "";
+        var re = /,/g;
+        cantidad = cantidad.replace(re, "");
+
+        if (cantidad == "") {
+            mens += "\n- Inserte una cantidad valida";
+        }
+        if (productoId == "") {
+            mens += "\n- Elija un producto";
+        }
+        if(presentacion=='M1'){presentacion='Molido'; trans="1"; }
+        else if(presentacion=='M1.1'){presentacion='Molido 500 gr.'; trans="0.50";}
+        else if(presentacion=='M1.2'){presentacion='Molido 250 gr.'; trans="0.25";}
+        if(presentacion=='G1'){presentacion='en Grano'; trans="1"; }
+        else if(presentacion=='G1.1'){presentacion='en Grano 500 gr.'; trans="0.50";}
+        else if(presentacion=='G1.2'){presentacion='en Grano 250 gr.'; trans="0.25";}
+        if(trans==''){trans=1;}
+        cantidad=cantidad * trans;
+
+
+        if (mens != "") {
+            alert('Verifique los siguientes campos:\n' + mens);
+
+        } else
+        {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion+ "&id=" + id+ "&presentacionV=" + presentacion+ "&presentacion=" + trans,
+                success: function (html) {
+
+                    html = html.replace(/^\s+|\s+$/g, "");
+                    if (html == 'Si') {
+                        alert('Esta partida ya existe.......!');
+                    } else {
+
+                        imprime_lista();
+                    }
+                }
+            });
+        }
+    }
+
+    function quitar_partida(linea)
+    {
+
+        var operacion = 'QUITAR_LINEAE'
+        var linea = linea;
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "operacion=" + operacion + "&linea=" + linea,
+            success: function (html) {
+                imprime_lista();
+            }
+        });
+
+
+    }
+    
+    function buscaCatalogo() {
+        var empresaId = $('#empresaE').val();
+        if (empresaId > 0) {
+            var operacion = "BUSCA_CATALOGO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "empresaId=" + empresaId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#catalogoEs").html(html);
+                    $('#cotizacion_empresa').val($('#empresaE option:selected').text());
+                    $('#cotizacion_empresa_id').val($('#empresaE').val());
+                }
+            });
+        }
+    }
+    
+   
+    function asignaPrecio(valor) {
+       
+        if (valor > 0) {
+            var operacion = "BUSCA_COSTO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                    data: "valor=" + valor + "&operacion=" + operacion,
+                success: function (html) {
+                    $('#cotizacion_costo_envio').val(html);
+                    $('#cotizacion_codigo_envio').val($('#venta_costo_id option:selected').text());
+                    $('#cotizacion_codigo_envio_id').val($('#venta_costo_id').val());
+                }
+            });
+        }
+    }
+    
+    function buscarFolio(valor){
+         if (valor > 0) {
+            var operacion = "BUSCA_SERIE";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                    data: "valor=" + valor + "&operacion=" + operacion,
+                success: function (html) {
+                    $('#cotizacion_folio').val(html);
+                }
+            });
+        }else{
+         $('#cotizacion_folio').val("");
+        }
+        
+    }
+    
+</script>    
+<?php View::content(); 
+$presentacionB = array("" => "Seleccione");?>
+<body id="cuerpo_principal">
+
+    <div id="form_container" style="width:100%;" >
+        <br>
+        <h1><a></a></h1>
+        <div id="titulo_superior"> 
+            <div id="texto_superior"  >
+                <?php echo "Cotización" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                    echo Html::linkAction('listadoCotizacion', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php echo Form::open("venta/" . $accion."/".$num); ?>
+        <?php echo Form::hidden("cotizacion.id"); ?>
+
+
+
+        <div id="margen" >
+            <div class="form-row">
+
+
+                <?php echo Form::hidden('cotizacion.tipo_documento', 'maxlength="20" required class="form-control"   ', "COTIZACION"); ?>
+
+                
+                
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Num. Cotizacion:    
+                            </div>
+                            <?php echo Form::text('cotizacion.documento', ' readonly="readonly" maxlength="20" required class="form-control"   '); ?>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Fecha:    
+                            </div>
+                            <?php echo form::date('cotizacion.fecha_documento', 'placeholder="dd-mm-aa" required class="form-control" readonly="readonly"', date('Y-m-d')); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">    Cliente:    
+                            </div>
+                            <?php echo Form::dbSelect("cotizacion.cliente_id", "nombrecompleto", array("cliente", "listar"), 'Seleccione..', ' class="form-control" '); ?>
+                        </div>
+                    </div> 
+                </div>
+
+
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Datos Cliente </div>
+                <div class="panel-body">
+                    <div id="cliente">
+                        <table width="100%" border="0">
+                            <tr>
+                                <td width="104"><label> Cliente:</label></td>
+                                <td width="551"><?php echo Form::text('cotizacion.nombre', '  maxlength="20" required class="form-control"   '); ?></td>
+                            </tr>
+                            <tr>
+                                <td><label> Direccion:</label></td>
+                                <td><?php echo Form::text('cotizacion.direccion', '  maxlength="20"  class="form-control"   '); ?></td>
+                            </tr>
+                            <tr>
+                                <td><label> Telefono:</label></td>
+                                <td><?php echo Form::text('cotizacion.telefono', '  maxlength="20"  class="form-control"   '); ?></td> 
+                            </tr>
+                            <tr>
+                                <td><label> Email:</label></td>
+                                <td><?php echo Form::text('cotizacion.correo', '  maxlength="20"  class="form-control"   '); ?></td> 
+                            </tr>
+                            <tr>
+                                <td><label> Organizacion:</label></td>
+                                <td><?php echo Form::text('cotizacion.organizacion', '  maxlength="20"  class="form-control"   '); ?></td> 
+                            </tr>
+                        </table>
+                    </div>   
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Datos Producto </div>
+                <div class="panel-body">
+                    <div class="form-row">
+                        <div class="col-md-3 mb-3">
+                            <label for="validationCustomUsername">Producto</label>
+                            <div class="input-group">
+
+                                <?php echo Form::dbSelect("cotizacion.producto_id", "descripcion", array("producto", "listarEntrada"), 'Seleccione..', ' class="form-control"'); ?>
+
+                            </div>
+                        </div> 
+                        <div class="col-md-2 " id="tipoVenta">
+                            
+                            
+                            <label >C. Venta</label>
+                            <div class="input-group">
+                                <div  id="etiqueta1" >
+                                    <?php echo Form::Select('presentacionV', $presentacionB, 'class="form-control"', ''); ?>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div class="col-md-2 ">
+                            <label >cantidad</label>
+                            <div class="input-group">
+
+                                <?php echo Form::number('cotizacion.cantidad', ' class="form-control"  ','0'); ?>
+
+                            </div>
+                        </div> 
+
+
+                        
+
+                        <div class="col-md-3 ">
+                            <label >Precio</label>
+                            <div class="input-group">
+                               
+                                  <?php echo Form::text('cotizacion.precio', '  class="form-control"  ','0'); ?>
+                                
+                            </div>
+                        </div> 
+                        <div class="col-md-2 ">
+                            <label >.</label>
+                            <div class="input-group">
+                                <?php echo Form::button("Agregar", "id='Agregar' style='width:98%;' class='btn-success btn' ") ?>
+                            </div>
+                        </div> 
+
+                    </div>      
+
+
+                    <div id="resultado" style="height: 200px; border-bottom:1px;  border-bottom-color:#000; ">
+ 
+<table width="100%" border="1" cellpadding="2">
+        <tr bgcolor="#CCCCCC" style="height: 30px; text-align: center;">
+    <td width="5%"><label>#</label></td>
+    <td width="5%"><label></label></td>
+    <td width="5%"><label>Cant. Kg.</label></td>
+    <td width="10%"><label></label></td>
+    <td width="30%"><label>Descripcion</label></td>
+    <td width="10%"><label>V. Unitario</label></td> 
+    <td width="10%"><label>Impuesto</label></td> 
+    <td width="10%"><label>Subtotal</label></td>
+   
+    
+    
+    </tr>
+  
+</table>
+<div class="ventanillaCobro">
+    
+<table width="100%" border="0" align="center" class="Estilo" cellpadding="2">
+    <?php
+  $color="#0098CD";
+  $indice=0;
+  $subtotal=0;
+  $impuestoTotal=0;
+  $partidaTotal=0;
+  $importeTotal=0;
+  $cantidadT=0;
+                    foreach ($detalleCompra as $dato) {
+
+ if($color=="#0098CD")
+        {
+$color="#FFFFFF";
+}
+else
+{
+$color="#0098CD";
+} 
+
+$indice ++;
+$codigo=$dato->clave;
+$descripcion=$dato->descripcion;
+$cantidad=$dato->cantidad;
+$precio=$dato->precio;
+$total=$dato->total;
+$presentacion=$dato->presentacion_venta;
+$pieza=$dato->pieza; 
+
+$impuesto=$dato->impuesto;
+$subtotal=$subtotal+($total-$impuesto);
+$impuestoTotal= $impuestoTotal+$impuesto;
+$partidaTotal=$cantidad*$precio;
+$importeTotal=$importeTotal+$total;
+$cantidadT +=$cantidad;    
+    
+	echo "<tr valign=center style='background-color:$color'>";		
+        echo "<td width='5%' align='center'>" . $indice ."</td>";
+        echo "<td width='5%' align='center'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1' style='cursor:pointer;' onClick='quitar_partida($dato->linea)'>";?><?php echo Html::img('unpublish_f2.png','cancel','style="text-align:center;width:15px; padding:2px;"');?> <?php echo" </FONT></td>";
+        echo "<td align='letf' width='5%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $cantidad  . "</FONT></td>";
+        echo "<td align='center' width='10%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " .((($presentacion > 0) && ($presentacion < 1) )? $pieza." Pieza(s)":$cantidad.' Kilo(s)' )."</FONT></td>";
+        echo "<td align='letf' width='30%'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . $descripcion . "".(($presentacion=='0.250')? " (250 Gr)":(($presentacion=='0.500')? " (500 Gr) ": " (Kilo(s)) "))."</FONT></td>";
+         echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($precio,2) . "</FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " .$impuesto." </FONT></td>";
+        echo "<td width='10%' align='right'><FONT FACE='Verdana, Arial, Helvetica, sans-serif' size='1'> " . number_format($total,2) . "</FONT></td>";
+        
+        
+        echo "</tr>";
+    }
+    
+    
+
+    ?>	
+
+    </table>
+                    <?php echo Form::hidden('cantidadT', ' class="form-control"   ',$cantidadT); ?>
+                    <?php echo Form::hidden("iSubtotal","",  number_format($subtotal,2)); ?> 
+                     <?php echo Form::hidden("iImpuesto","", number_format($impuestoTotal,2)); ?>                 
+                    <?php echo Form::hidden("iTotal","", number_format(($importeTotal),2)); ?>
+                </div>
+
+                    </div>
+                    </br>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> SubTotal $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('cotizacion.subtotal', '  class="form-control"  style="text-align:right;" '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Impuesto $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('cotizacion.iva', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Total $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('cotizacion.monto', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"> Empresa Envio:    
+                                </div>
+                                <?php echo Form::dbSelect("empresaE", 'nombre', array('empresa', 'listar', 0), '- Seleccione -', " class='form-control' onchange='buscaCatalogo()' ",$cotizacion->empresa_id); ?>
+                                <?php echo Form::hidden("cotizacion.empresa", "class='form-control' "); ?>
+                                <?php echo Form::hidden("cotizacion.empresa_id", "class='form-control' "); ?>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"> Catalogo Costo:    
+                                </div>
+                                <div id="catalogoEs">
+                                <?php echo Form::dbSelect("venta.costo_id", 'costo', array('costoEnvio', 'datos', 0), '- Codigo, kilos, Costo -', " class='form-control' onchange='asignaPrecio(this.value)'",$cotizacion->codigo_envio_id); ?>
+                                </div>
+                                <?php echo Form::hidden("cotizacion.codigo_envio", "class='form-control' "); ?>
+                                <?php echo Form::hidden("cotizacion.codigo_envio_id", "class='form-control' "); ?>
+                                </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Costo Envio:    
+                                </div>
+                                <?php echo Form::text("cotizacion.costo_envio", "class='form-control' "); ?>
+                            </div>
+                        </div> 
+                    </div>
+                    <table style="width: 100%" border="0">
+
+                        <tr >
+                            <td style="width: 5%">Observaciones:</td>
+                            <td><?php echo Form::textarea('cotizacion.observacion', '  class="form-control"  '); ?></td>
+
+                        </tr>
+                    </table>
+                    <br>
+            
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">       Capturo:    
+                                </div>
+                                <?php echo Form::text('cotizacion.capturo', ' required class="form-control"   '); ?>
+                            </div>
+                        </div> 
+                    </div>
+                   
+                </div>
+                
+                <div class="panel panel-success">
+                <div class="panel-heading">  </div>
+                <div class="panel-body">
+                    <div class="form-row">
+                        <div class="col-sm-6">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Cuenta de deposito:    
+                            </div>
+<?php echo Form::dbSelect("cotizacion.bancos_cuentas_id", 'cuenta', array('bancosCuentas', 'listarCuentasBancos', 0), '- Seleccione -', " class='form-control '  "); ?>
+                        </div>
+                    </div> 
+                </div>
+                        <div class="col-sm-6">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Ciclo Cosecha:    
+                            </div>
+<?php echo Form::dbSelect("cotizacion.ciclo", 'ciclo', array('lote', 'ciclos', 0), '- Seleccione -', " class='form-control '  "); ?>
+                        </div>
+                    </div> 
+                </div>
+                    </div>
+                </div>
+                </div>
+            </div>  
+            <?php $url = "'" . PUBLIC_PATH . "venta/listadoCotizacion'"; ?>
+            <table width="100%">
+                <tr align="center">
+                    <td width="33%">     
+                        <?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                    </td>
+                    <td>
+
+                    </td>
+                    <td width="33%">
+                        <?php echo Form::submit((($accion == 'crearCotizacion') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+                    </td>
+                </tr>
+            </table>
+
+        </div> 
+    </div>
+    </br>
+    <?php echo Form::close(); ?>
+
+</body>
+
+<script type="text/javascript">
+    $("#cotizacion_producto_id").change(function () {
+        buscaUnidadPrecio()
+         buscaPresentacion();
+    });
+    $("#cotizacion_cliente_id").change(function () {
+        buscaCliente();
+
+    });
+
+    $("#Agregar").click(function () {
+
+        agregarPartida();
+
+    });
+    function buscaPresentacion() {
+        var productoId = $('#cotizacion_producto_id').val();
+            var operacion = "TIPO_PRESENTACION";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "productoId=" + productoId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#tipoVenta").html(html);
+                }
+            });
+        
+    }
+</script>  
+
+
+
+
+
+

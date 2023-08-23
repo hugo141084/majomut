@@ -22,7 +22,7 @@ class usuarioController extends AppController {
         $this->usuario= $usuario->find();
         if (Input::haspost('usuario')) {
            $datosu = new usuario(Input::post('usuario'));
-            $datosu->Pas = md5(Input::post("clave"));
+            $datosu->Pas = md5($datosu->Pas);
             $datosu->Estatus = "1";
             if($datosu->save()){
                  Redirect::to('usuario/index');
@@ -35,9 +35,11 @@ class usuarioController extends AppController {
         
         $usuarios = new usuario();
             $this->usuario = $usuarios->find_first($id);
+            $empleado = new empleado();
+            $this->empleado = $empleado->find_first($this->usuario->empleado_id);
            if (Input::haspost('usuario')) {
            $datosu = new usuario(Input::post('usuario'));
-            $datosu->Pas = md5(Input::post("clave"));
+            $datosu->Pas = md5($datosu->Pas);
 
             if($datosu->update()){
                  Redirect::to('usuario/index');

@@ -41,6 +41,7 @@ class empresaController extends AppController{
 
             $this->empresa = $empresa->actualizarDatos();
             Redirect::to('empresa/index');
+            Input::delete();
         }
        
     }

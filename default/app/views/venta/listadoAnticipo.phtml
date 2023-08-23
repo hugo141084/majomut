@@ -1,14 +1,108 @@
+
+
+<?php Tag::css('demo_page'); ?>
+<?php Tag::css('demo_table'); ?>
+<?php Html::includeCss() ?>
+<?php echo Tag::js('jquery.dataTables.min'); ?>
+<?php
+View::content();
+?>
+
+   <div class="alert alert-success"> Solo se podran cancelar anticipos no aplicados, en caso contrario primero elimine la aplicacion del anticipo</div> 
+<div id="dt_example" style="margin:0 auto; padding:10px 20px 20px; background-color:#ffffff; ">    
+    <div id="container"  style="width:100%;">
+    <h1><a></a></h1> 
+        <div id="demo">
+            <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 ANTICIPOS
+            </div>
+                                   <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php                                      
+                          echo Html::linkAction('crearAnticipo',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');                 
+                    ?>
+                    
+                </div>
+            </div> 
+ 
+ <table  border="0" width="100%" id="display" class="display">
+            <thead>
+                <tr  style="font-size: 9px;letter-spacing: -0.8px;">
+                    <th > #</th>
+                    <th > Nombre / Razón Social</th>
+                    <th >Forma Pago</th>                              
+                    <th >Referencia</th>
+                    <th >Importe</th>
+                    <th >Importe Aplicado</th>
+                    <th >Acción</th>
+                    </tr>
+            </thead>
+            <tbody>
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
-<div id="form_container" style="width:100%">
-    <br>
-    <h1><a></a></h1>
-<?php View::partial("formatoTabla",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrlcrear1'=>"crear/",'valea'=>"reporte1",'eliminar'=>"eliminar",'ventana'=>"Anticipo",'tipoVale'=>'Anticipo'));  ?>
-</div>
+           $i=1;
+            foreach($result as $res){
 
+              
+                       echo "<tr>";
+                        echo "<td>".$i++."</td>";
+                        echo "<td>".$res->nombre."</td>";
+                            echo "<td>".$res->concepto."</td>";
+                            echo "<td>".$res->referencia."</td>";
+                            echo "<td>".$res->importe."</td>"; 
+                            echo "<td>".$res->importe_aplicado."</td>"; 
+                            echo "<td>";
+                            if(($res->importe != $res->importe_aplicado) &&($res->estatus=='1')){
+                            echo Html::linkAction("aplicaAnticipo/".$res->id,'<span class="glyphicon glyphicon-euro"></span>','class="btn btn-info btn-xs"  title="Aplicar Anticipo" data-toggle="tooltip"');                            
+                            }
+                            
+                            if((floatval($res->importe_aplicado) ==0)&&($res->estatus=='1') ){
+                            echo Html::linkAction("cancelaAnticipo/".$res->id,'<span class="glyphicon glyphicon-remove"></span>','class="btn btn-danger btn-xs"  title="Cancelar Anticipo" data-toggle="tooltip"');                            
+                            }
+                            echo "</td>";
+                            echo "</tr>";  
+                             
+                        
+               }
+            ?>
+            </tbody>
+        </table>
+                
+               
+        </div>     
+                            </div>
+                        </div>
+    
+    
+                    </div>
+
+
+
+
+   
+<script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(".display").dataTable({ 
+            "aaSorting": [[0,"asc"]],
+            "bAutoWidth": true,
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "aProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encuentran resultados",
+                "sInfo": "Mostrando desde _START_ hasta _END_ registros",
+                "sInfoEmpty": "Mostrando desde 0 hasta 0 de 0 registros",
+                "sInfoFiltered": "(filtrando de _MAX_ registros en total)",
+                "sSearch": "Buscar",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Ultimo"
+                }
+            }
+        });
+    });
+    
+</script>

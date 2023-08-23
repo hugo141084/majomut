@@ -39,6 +39,9 @@ View::content();
                     <?php                                      
                           echo Html::linkAction('crear',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');                 
                     ?>
+                    <?php                                      
+                          echo Html::linkAction('importar',Html::img('importar.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');                 
+                    ?>
                 </div>
             </div> 
  
@@ -46,7 +49,8 @@ View::content();
             <thead>
                 <tr  style="font-size: 9px;letter-spacing: -0.8px;">
                     <th width='5%'> #</th>
-                    <th width='30%'> NOmbre / Razón Social</th>
+                    <th width='15%'> Clave</th>
+                    <th width='30%'> Nombre / Razón Social</th>
                     <th width='30%'>R.F.C.</th>                              
                     <th width='13%'>E-mail</th>
                     <th width='13%'>Telefono</th>
@@ -62,6 +66,7 @@ View::content();
               
                        echo "<tr>";
                         echo "<td>".$res->id."</td>";
+                        echo "<td>".$res->clave."</td>";
                             echo "<td>".$res->nombrecompleto."</td>";
                             echo "<td>".$res->rfc."</td>";
                             echo "<td>".$res->correoelectronico."</td>"; 

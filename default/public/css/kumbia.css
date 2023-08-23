@@ -11,7 +11,7 @@ pre{display:block;padding:10.5px;margin:0 0 11px;line-height:1.5;word-break:brea
 .container{margin-right:auto;margin-left:auto;padding-left:15px;padding-right:15px}.container:before,.container:after{content:" ";display:table;}
 .container:after{clear:both}
 
-@media (min-width:992px){.container{max-width:90%}}@media (min-width:1200px){.container{max-width:90%}}table{max-width:100%;border-collapse:collapse}
+@media (min-width:992px){.container{max-width:95%}}@media (min-width:1200px){.container{max-width:95%}}table{max-width:100%;border-collapse:collapse}
 
 @media screen and (min-width:768px){.hero{padding-top:50px;padding-bottom:50px}.hero h1{font-size:67.5px}}
 /* Formatea los mensajes Flash::xxx() de KumbiaPHP */

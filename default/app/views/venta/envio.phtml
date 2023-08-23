@@ -1,5 +1,5 @@
 <?php View::content(); ?>
-<?php view::template('fondo'); ?>
+
 
 
 <body id="principal">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div> 
-            <div class="col-sm-12">
+            <div class="col-sm-8">
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-addon">  Numero de Rastreo:
@@ -38,12 +38,26 @@
                     </div>
                 </div>
             </div> 
+ <?php if($envio->numero_rastreo!=""){ ?>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"> 
+                           
+                            <a href="<?php echo $empresa->link.$envio->numero_rastreo ?> " target="_blank">C O N S U L T A R </a>
+                           
+                        </div>
+
+
+                    </div>
+                </div>
+            </div> <?php } ?>
             <div class="col-sm-6">
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-addon">  Fecha Envio:
                         </div>
-<?php echo Form::text( 'envio.fecha_envio', 'class="form-control"'); ?>
+<?php echo Form::date( 'envio.fecha_envio', 'class="form-control"'); ?>
 
                     </div>
                 </div>
@@ -53,7 +67,7 @@
                     <div class="input-group">
                         <div class="input-group-addon">  Fecha Entrega:
                         </div>
-<?php echo Form::text( 'envio.fecha_entrega', 'class="form-control"'); ?>
+<?php echo Form::date( 'envio.fecha_entrega', 'class="form-control"'); ?>
 
                     </div>
                 </div>
@@ -68,23 +82,20 @@
                     </div>
                 </div>
             </div>
+        
+        <table width="100%">
+        <tr align="center">
+            <td width="100%">     
+            
+            <?php echo Form::submit(((@$accion == 'crearLote') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-success btn-lg"'); ?>       
+            </td>
+        </tr>
+        </table>
         </div>
     </div>
 </div>       
             
-        <table width="100%">
-        <tr align="center">
-            <td width="50%">     
-            <?php  echo Form::button("Cancelar", "id='Salir' class='btn btn-danger btn-lg'"); ?>
-            </td>
-            <td>
-           
-            </td>
-            <td width="50%">
-            <?php echo Form::submit(((@$accion == 'crearLote') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-success btn-lg"'); ?>       
-            </td>
-        </tr>
-     </table>
+        
      <?php echo Form::close(); ?>
   </div> 
 </div>
@@ -92,7 +103,7 @@
 </body>
 <script>
     $("#Salir").click(function(){
-        window.parent.actualizar();
-        window.parent.Shadowbox.close();
+        
  });
+ 
 </script>

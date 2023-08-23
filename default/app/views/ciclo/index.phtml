@@ -1,0 +1,50 @@
+<?php View::content(); ?>
+<div id="form_container" style="width:100%">
+    <h1><a></a></h1>
+    <br/>
+</div>
+  <div class="row">
+     <div class="col-md-12">
+       
+     </div>
+  </div>
+   <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>Agregar Ciclo de Cosecha</span>
+         </strong>
+        </div>
+        <div class="panel-body">
+          <?php echo Form::open("ciclo/index/"); ?>
+            
+              <div class="form-group">
+                Ciclo <br> 
+             <?php echo Form::text('ciclo.ciclo', ' class="form-control"  required '); ?>
+        </div>
+            
+              
+             
+            <button type="submit" name="add_cat" class="btn btn-success">Agregar Cuenta</button>
+        <?php echo Form::close(); ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>
+          <span class="glyphicon glyphicon-th"></span>
+          <span>Ciclos de Cosecha</span>
+       </strong>
+      </div>
+        <div id="form_container" style="width:100%">   
+<?php View::partial("formatoC",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrleditar'=>"editarCiclo/"));  ?>
+</div>
+    </div>
+    </div>
+   </div>
+  
+

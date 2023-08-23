@@ -10,10 +10,12 @@ Load::models('embalaje','lote','preparacion','calidad');
 class catalogoController extends AppController{
     
     public function listadoLote() {
+        $ciclocosechaId = Session::get('cicloCosecha');
+        if($ciclocosechaId < 1) Redirect::to('ciclo/seleccionar');
         $lote = new lote();
-        $this->lote = $lote->find();
+        $this->lote = $lote->find("ciclocosecha_id='$ciclocosechaId'");
 
-        if (Input::hasPost('lote')) {
+        if (Input::hasPost('lote')) { 
 
             $this->lote = $lote->guardarDatos();
         }

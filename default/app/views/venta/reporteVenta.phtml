@@ -1,46 +1,46 @@
 <?php
-$id = $_GET['var'];
 
-$d=count($destino);
-$i=1;
-foreach ($destino as $des){
-    if($i<$d) $alma .=$des->descripcion.", ";
-    else $alma .=$des->descripcion.".";
+
+
+$d = count($destino);
+$i = 1;
+foreach ($destino as $des) {
+    if ($i < $d)
+        $alma .=$des->descripcion . ", ";
+    else
+        $alma .=$des->descripcion . ".";
 }
-$d=count($ciclo);
-$i=1;
-foreach ($ciclo as $cic){
-    if($i<$d) $cicl .=$cic->ciclo.", ";
-    else $cicl .=$cic->ciclo.".";
+$d = count($ciclo);
+$i = 1;
+foreach ($ciclo as $cic) {
+    if ($i < $d)
+        $cicl .=$cic->ciclo . ", ";
+    else
+        $cicl .=$cic->ciclo . ".";
 }
 Load::lib('tcpdf');
 Load::lib('funciones');
-class reporte extends TCPDF {
 
-  
+class reporte extends TCPDF {
 
     public function Header() {
         
     }
 
-    
-
 }
 
-
-
- $pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter'); 
+$pdf = new reporte($orientation = 'P', $unit = 'mm', $format = 'Letter');
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('');
 $pdf->SetTitle('Remision-Venta');
 $pdf->SetSubject('');
 
-$logo='./img/logoReporte.png';
+$logo = './img/logoReporte.png';
 
-$pdf->SetFooterData('',array(190,190,190),"Teléfonos 967 678 31 96 y 967 678 81 06 \ www.majomut.org \ mail: ventas@majomut.org \  info@majomut.org"." "."");
+$pdf->SetFooterData('', array(190, 190, 190), "Teléfonos 967 678 31 96 y 967 678 81 06 \ www.majomut.org \ mail: ventas@majomut.org \  info@majomut.org" . " " . "");
 //set margins
-$pdf->SetMargins(10,10,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
-$pdf->SetHeaderMargin('10');//PDF_MARGIN_HEADER
+$pdf->SetMargins(10, 10, 10); //PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('10'); //PDF_MARGIN_HEADER
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
@@ -48,11 +48,11 @@ $pdf->AddPage();
 
 $matrixPointSize = 10;
 $errorCorrectionLevel = 'L';
-$importeSubtotal=0;
-$logo='./img/logoReporte.png';
+$importeSubtotal = 0;
+$logo = './img/logoReporte.png';
 
 /* ############################################################################################################################################################################################## */
-$html="";
+$html = "";
 $html .= '<style>
 	table.first {
         color: #003300;
@@ -73,10 +73,10 @@ $html .= '<style>
       
     }
     table.four {
-        color: #003300;
+        
         font-family: helvetica;
-        font-size: 15pt;
-       
+        font-size: 7pt;
+       width:auto;
     }
         p.first {
         color: #003300;
@@ -84,6 +84,7 @@ $html .= '<style>
         font-size: 10pt;
         text-align: center;
         font-weight: bold;
+        width:100%;
     }
     p {
        
@@ -93,24 +94,25 @@ $html .= '<style>
         </style>';
 
 //echo $raiz;
-
+$formaPago = new venta();
+$formaPago->find_by_sql("select C.concepto from recibos_cobros RC inner join cobros CO on RC.cobros_id=CO.id inner join conceptos C on CO.concepto_id=C.id where RC.recibos_id='$datosCompra->id' ");
 $html.='<div style=" width:100%; background-color: #706f6f; margin: 0; min-height: 0; padding: 0;text-decoration: none; color:#FFF; text-align:center;" >  NOTA DE REMISION  </div> ';
 $html .= '<table class="first" width="100%" border="0">
    
   <tr>
-    <td  align="center" style="width:20%;padding-top:3px" ><img src="'.$logo.'" width="70" height="80" alt="logo" style="padding-top:1px;" /> </td>
+    <td  align="center" style="width:20%;padding-top:3px" ><img src="' . $logo . '" width="70" height="80" alt="logo" style="padding-top:1px;" /> </td>
 	
     <td  align="center" valign="middle" style="width:70%;  vertical-align:middle" ><br/><br/> UNION DE PRODUCTORES  ORGANICOS <br/>BENEFICIO MAJOMUT, S. DE P.R. DE R.L <br /> R.F.C. : UPO111114BJ7<br />	
     1a. Cerrada de la Era No. 1 Barrio Quinta San Martín C.P. 29247 <br/>
         </td>
         
-        <td  align="left" style="width:10%;padding-top:15px"  valign="top" ><br/>  <br/> Venta No. '.$datosCompra->documento.'</td>      
+        <td  align="left" style="width:10%;padding-top:15px"  valign="top" ><br/>  <br/> Venta No. ' . $datosCompra->documento . '</td>      
   </tr>
     
 </table>';
 
-if($datosCompra->clienteId=="1"){
-  $html.='
+if ($datosCompra->clienteId == "1") {
+    $html.='
 
 <table width="100%" border="0" class="second" cellpadding="3">
   <tr style="font-weight:bold;color:#FFF;" bgcolor="#e94e1b" height="20" >
@@ -119,25 +121,25 @@ if($datosCompra->clienteId=="1"){
   </tr>
   <tr height="20" >
     <td width="18%">Nombre:</td>
-    <td width="62%" colspan="3"><p>'.$datosCompra->nombre.'</p></td>
-    <td rowspan="2" align="center" valign="middle"><p>CM-'.str_pad($datosCompra->clienteId,4,0,STR_PAD_LEFT).'</p></td>
+    <td width="62%" colspan="3"><p>' . $datosCompra->nombre . '</p></td>
+    <td rowspan="2" align="center" valign="middle"><p>CM-' . str_pad($datosCompra->clienteId, 4, 0, STR_PAD_LEFT) . '</p></td>
   </tr>
   <tr height="20" >
     <td>Direccion:</td>
-    <td colspan="4"><p>'.$datosCompra->direccionP.'</p></td>
+    <td colspan="4"><p>' . $datosCompra->direccionP . '</p></td>
     
   </tr>
   <tr height="20" >
     <td>RFC:</td>
-    <td colspan="5"><p>'.$datosCompra->rfcP.'</p></td>
+    <td colspan="5"><p>' . $datosCompra->rfcP . '</p></td>
     
   </tr>
   
 </table>
 
-' ;  
-}else{
-$html.='
+';
+} else {
+    $html.='
 
 <table width="100%" border="0" class="second" cellpadding="1">
   <tr style="font-weight:bold;color:#FFF;" bgcolor="#e94e1b" height="20" >
@@ -146,127 +148,135 @@ $html.='
   </tr>
   <tr height="20" >
     <td width="18%">Nombre:</td>
-    <td width="30%"><p>'.$datosCompra->nombrecompleto.'</p></td>
+    <td width="30%"><p>' . $datosCompra->nombrecompleto . '</p></td>
     <td width="10%">&nbsp;</td>
     <td width="22%">&nbsp;</td>
-    <td rowspan="2" align="center" valign="middle"><p>CM-'.str_pad($datosCompra->clienteId,4,0,STR_PAD_LEFT).'</p></td>
+    <td rowspan="2" align="center" valign="middle"><p>CM-' . str_pad($datosCompra->clienteId, 4, 0, STR_PAD_LEFT) . '</p></td>
   </tr>
   <tr height="20" >
     <td>RFC:</td>
-    <td><p>'.$datosCompra->rfc.'</p></td>
+    <td><p>' . $datosCompra->rfc . '</p></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
   <tr height="20" >
     <td>Direccion:</td>
-    <td><p>'.$datosCompra->direccion.'</p></td>
+    <td><p>' . $datosCompra->direccion . '</p></td>
     <td>Colonia:</td>
-    <td><p>'.$datosCompra->colonia.'</p></td>
+    <td><p>' . $datosCompra->colonia . '</p></td>
     <td width="20%" ><div align="center"></div></td>
   </tr>
   <tr height="20" >
     <td>Ciudad:</td>
-    <td><p>'.$datosCompra->municipio.'</p></td>
+    <td><p>' . $datosCompra->municipio . '</p></td>
     <td>C.P.:</td>
-    <td><p>'.$datosCompra->codigopostal.'</p></td>
+    <td><p>' . $datosCompra->codigopostal . '</p></td>
     <td rowspan="2"><div align="center">  </div></td>
   </tr>
   <tr height="20" >
     <td style="font-weight:bold;color:#FFF;" bgcolor="#33a936">Correo Electronico </td>
-    <td colspan="3"><p>'.$datosCompra->correoelectronico.'</p></td>
+    <td colspan="3"><p>' . $datosCompra->correoelectronico . '</p></td>
   </tr>
 </table>
 
-' ;}
+';
+    $comentarios = $datosCompra->observacion;
+}
 
 $html .='<div> </div>';
-    
-$html .='<table class="second" border="0" cellpadding="3" style="width: 100%">
+
+$html .='<table class="second" border="0" cellpadding="1" style="width: 100%">
     <tr style="font-weight:bold;color:#FFF;" bgcolor="#33a936"  align="center" >
-    <td style="width: 15%">CODIGO <br>PRODUCTO</td>
+    <td style="width: 12%">CODIGO <br>PRODUCTO</td>
 <td style="width: 15%">CANTIDAD</td>
-<td style="width: 40%">PRODUCTO</td>
-<td style="width: 15%">PRECIO UNITARIO</td>
-<td style="width: 15%">SUBTOTAL</td>
+<td style="width: 39%">PRODUCTO</td>
+<td style="width: 8%">PIEZA(S)</td>
+<td style="width: 13%">PRECIO UNITARIO</td>
+<td style="width: 13%">SUBTOTAL</td>
     </tr>
    ';
-$i=1;
-$c1=0;$c2=0;$c3=0;$c4=0;
-foreach ($detalleCompra as $datos){
- $c1=$datos->cantidad * $datos->precio;
- 
-$html .=' <tr align="center">
-<td style="width: 15%; "  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;" >'.$datos->clave.' </td>
-<td style="width: 15%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;">'.$datos->cantidad.'</td>
-<td style="width: 40%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;">'.$datos->descripcion.'</td>
-<td style="width: 15%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"align="right"> $ '.$datos->precio.'</td>
-<td style="width: 15%"  style="border-right: 0.5px solid #636262; border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"align="right"> $ '. number_format($c1,2).'</td>
+$i = 1;
+$c1 = 0;
+$c2 = 0;
+$c3 = 0;
+$c4 = 0;
+foreach ($detalleCompra as $datos) {
+    $c1 = ((floatval($datos->presentacion_venta) < 1) ? ($datos->pieza * $datos->precio) : ($datos->cantidad * $datos->precio));
 
-</tr>'; 
-$i++;
+    $html .=' <tr align="center">
+<td style="width: 12%; "  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;" >' . $datos->clave . ' </td>
+<td style="width: 15%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;">' . number_format($datos->cantidad, 2) . ' ' . $datos->unidad . '</td>
+<td style="width: 37%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;">' . $datos->descripcion . ' (' . $datos->lote . ')</td>
+<td style="width: 10%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"align="right">' . ((floatval($datos->presentacion_venta) < 1) ? $datos->pieza : '') . '</td>
+<td style="width: 13%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"align="right"> $ ' . $datos->precio . '</td>
+<td style="width: 13%"  style="border-right: 0.5px solid #636262; border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"align="right"> $ ' . number_format($c1, 2) . '</td>
+
+</tr>';
+    $i++;
 }
 
-if($i<5){
-for($j=$i;$j<=5;$j++){
- $html .=' <tr align="center">
-<td style="width: 15%;"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+if ($i < 5) {
+    for ($j = $i; $j <= 5; $j++) {
+        $html .=' <tr align="center">
+<td style="width: 12%;"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
 <td style="width: 15%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
-<td style="width: 40%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
-<td style="width: 15%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
-<td style="width: 15%"  style="border-right: 0.5px solid #636262; border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+<td style="width: 37%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+<td style="width: 10%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+<td style="width: 13%"  style=" border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
+<td style="width: 13%"  style="border-right: 0.5px solid #636262; border-left: 1px solid #e94e1b;  border-bottom: 0.5px solid #636262;"></td>
 
-</tr>';    
-}    
+</tr>';
+    }
 }
 
 
-$descuento=0;
-$importeTotal=$datosCompra->subtotal+$datosCompra->iva-$descuento+$datosCompra->costo_envio;
+$descuento = 0;
+$importeTotal = $datosCompra->subtotal + $datosCompra->iva - $descuento + $datosCompra->costo_envio;
 $decimales = $importeTotal - (int) $importeTotal;
 $decimales = round($decimales, 2);
 $decimales = $decimales * 100;
-$decimales = ($decimales == 0) ? "00": $decimales;
+$decimales = ($decimales == 0) ? "00" : $decimales;
 $num_letras = new EnLetras();
 
 $numletras = '(' . utf8_decode(strtoupper($num_letras->ValorEnLetras((int) $importeTotal, "PESOS"))) . " " . $decimales . '/100 M.N.)';
-$txtmetpago = array("01"=>"EFECTIVO", "02"=>"CHEQUE NOMINATIVO", "03"=>"TRANSFERENCIA ELECTRÓNICA DE FONDOS", "04"=>"TARJETA DE CRÉDITO",
-                    "05"=>"MONEDERO ELECTRÓNICO", "06"=>"DINERO ELECTRÓNICO", "08"=>"VALES DE DESPENSA", "28"=>"TARJETA DE DÉBITO",
-                    "29"=>"TARJETA DE SERVICIO", "99"=>"OTROS");
+$txtmetpago = array("01" => "EFECTIVO", "02" => "CHEQUE NOMINATIVO", "03" => "TRANSFERENCIA ELECTRÓNICA DE FONDOS", "04" => "TARJETA DE CRÉDITO",
+    "05" => "MONEDERO ELECTRÓNICO", "06" => "DINERO ELECTRÓNICO", "08" => "VALES DE DESPENSA", "28" => "TARJETA DE DÉBITO",
+    "29" => "TARJETA DE SERVICIO", "99" => "OTROS");
 
-    $html .= '<tr>
+$html .= '<tr>
                 
-                <td align="center" valing="center" width="70%"  rowspan = "5" colspan="3"  style=" border-bottom: 0.5px solid #636262; border-left: 1px solid #e94e1b;"> Total con Letra: <br> '.$numletras.'</td>
-                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">SUBTOTAL: $</td> 
-                <td width="15%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right"> $ '.number_format($datosCompra->subtotal, 2, '.', ',').'</td> 
+                <td align="center" valing="center" width="74%"  rowspan = "5" colspan="4"  style=" border-bottom: 0.5px solid #636262; border-left: 1px solid #e94e1b;"> Total con Letra: <br> ' . $numletras . '</td>
+                <td width="13%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">SUBTOTAL: $</td> 
+                <td width="13%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right"> $ ' . number_format($datosCompra->subtotal, 2, '.', ',') . '</td> 
               </tr>
               
               <tr>
-                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" >IVA: + $</td> 
-                <td width="15%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right" > $ '.number_format($datosCompra->iva, 2, '.', ',').'</td> 
+                <td width="13%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" >IVA: + $</td> 
+                <td width="13%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right" > $ ' . number_format($datosCompra->iva, 2, '.', ',') . '</td> 
               </tr>
               <tr>
-                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">ANTICPOS -: $</td>    
-                <td width="15%" align="right" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;"> $ '.number_format($anticipo, 2, '.', ',').'</td>
+                <td width="13%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">ANTICPOS -: $</td>    
+                <td width="13%" align="right" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;"> $ ' . number_format(@$anticipo, 2, '.', ',') . '</td>
               </tr>
               <tr>
-                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">COSTO DE ENVIO +: $</td>    
-                <td width="15%" align="right" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;"> $ '.(($datosCompra->costo_envio>1)? number_format($datosCompra->costo_envio, 2, '.', ','):'0.00').'</td>
+                <td width="13%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">COSTO DE ENVIO +: $</td>    
+                <td width="13%" align="right" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;"> $ ' . (($datosCompra->costo_envio > 1) ? number_format($datosCompra->costo_envio, 2, '.', ',') : '0.00') . '</td>
               </tr>
               <tr>
-                <td width="15%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">TOTAL: $</td> 
-                <td width="15%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right"> $ '.number_format($importeTotal, 2, '.', ',').'</td> 
+                <td width="13%" style="border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">TOTAL: $</td> 
+                <td width="13%" style="border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;" align="right"> $ ' . number_format($importeTotal, 2, '.', ',') . '</td> 
               </tr>
               
               ';
-$html .= '</table>';  
+$html .= '</table>';
 
 $html .='
     
  <table width="100%" border="0" class="second">
   <tr>
     <td style="  border-top: 0.5px solid #636262; border-left: 1px solid #e94e1b;" width="20%"><p>Moneda:</p>    </td>
-    <td  style="  border-top: 0.5px solid #636262;" width="50%" >MXN</td>
-    <td  width="30%" rowspan="5" align="center" valign="middle" style="  border-top: 0.5px solid #636262; border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;"> </td>
+    <td  style="  border-top: 0.5px solid #636262;" width="54%" >MXN</td>
+    <td  width="26%" rowspan="5" align="center" valign="middle" style="  border-top: 0.5px solid #636262; border-right: 0.5px solid #636262;border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;"> </td>
   </tr>
   <tr>
     <td style=" border-left: 1px solid #e94e1b;" ><p>Tipo de Cambio: </p>    </td>
@@ -278,75 +288,57 @@ $html .='
   </tr>
   <tr>
     <td style=" border-left: 1px solid #e94e1b;">Forma de Pago: </td>
-    <td>'.$formaPago->concepto.'</td>
+    <td>' . $formaPago->concepto . '</td>
   </tr>
   <tr>
     <td style=" border-left: 1px solid #e94e1b; border-bottom: 0.5px solid #636262;">Motivo de Descuento: </td>
-    <td style=" border-bottom: 0.5px solid #636262;">'.$motivoDescuento.'</td>
+    <td style=" border-bottom: 0.5px solid #636262;">' . @$motivoDescuento . '</td>
   </tr>
 </table>';
-if ($comentarios != NULL) {
-    $html .= '<table border="0" class="second" width="100%">
+if (@$comentarios != '') {
+    $html .= '<table border="0" cellpadding="2" width="100%" class="four">
         <tr >
-                  <td width="15%">OBSERVACION(ES):</td>
+                  <td width="15%"><b><u>OBSERVACION(ES): </u></b></td>
                   
-                  <td >'.  $comentarios.'</td>
+                  <td >' . @$comentarios . '</td>
                  
                   </tr>
                 
     </table>';
 }
-$htm.='<BR>
-<BR>
-<p>Los datos para depositar son los siguientes:</p>
-<table style="width: 80%" class="second" border="1"   cellpadding="3">
-<tr>
-<td style="width: 30%"> Nombre </td>
-<td style="width: 70%"> Unión de Productores Orgánicos Beneficio Majomut, S. de P.R. de R.L. </td>
-</tr>
-<tr>
-<td> No. Cuenta </td>
-<td> 0190410128 </td>
-</tr>
-<tr>
-<td> CLABE Interbancaria </td>
-<td> 012130001904101289 </td>
-</tr>
-<tr>
-<td> Banco </td>
-<td> BBVA Bancomer, S.A. </td>
-</tr>
-<tr>
-<td> Sucursal </td>
-<td> 4439 </td>
-</tr>
-</table>';
 
-echo $html;
+$html .= '<br><table border="0" cellpadding="3" width="100%" class="four">
+    <tr><td ><b><u>Datos de Facturación</u></b></td></tr>
+        <tr >
+                  <td>   -Num. Factura: <b>'.$detalle->numero_factura.'</b>   -Fecha Emisión: <b>'.(($detalle->fecha_emision!='')? date("d/m/Y", strtotime($detalle->fecha_emision)):'').'</b>   -Fecha Envio a Cliente: <b>' . (($detalle->fecha_envio_factura!='')? date("d/m/Y", strtotime($detalle->fecha_envio_factura)):'') . '</b></td>
+                  
+                 
+                  </tr>
+                
+    </table><br><table border="0" cellpadding="3" width="100%" class="four">
+    <tr><td ><b><u>Datos de Envio</u></b></td></tr>
+        <tr >
+                  <td>   -Transportadora: <b>'.$detalle->empresa.'</b>   -Num. Rastreo: <b>'.$detalle->numero_rastreo.'</b>   -Fecha Envio: <b>'. (($detalle->fecha_envio!='')?date("d/m/Y", strtotime($detalle->fecha_envio)):'').'</b>   -Fecha Probable Entrega: <b>'. (($detalle->fecha_entrega!='')?date("d/m/Y", strtotime($detalle->fecha_entrega)):''). '</b></td>
+                  </tr>
+                
+    </table>';
 
 //echo $html;
-if($dr->estatus=='0'){
-// start a new XObject Template
-$template_id = $pdf->startTemplate(95, 165);
-// create Template content
-// ...................................................................
-$border = array('LRTB' => array('width' => 0.1, 'cap' => 'square', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)));
-$pdf->Image('img/cancelado.png', 0, 0, 95, 0, 'PNG', '', '', false, 300, '', false, false, $border, false, false, false);
-// ...................................................................
-// end the current Template
-$pdf->endTemplate();
-// print the selected Template various times
-$pdf->printTemplate($template_id, 50, 50, 0, 0, '', '', false);
+//echo $html;
+if ($datosCompra->estadoVenta == '0') {
+$pdf->Image('img/cancelado.png', 60, 85, 95);
 }
+
 ob_end_clean();    
 // Print text using writeHTMLCell()
 $pdf->writeHTML($html, true, false, true, false, '');
-ob_end_clean();
+//ob_end_clean();
 // ---------------------------------------------------------
 // Close and output PDF document
 // This method has several options, check the source code documentation for more information.
+ob_end_clean();
 $pdf->Output('remisionVenta.pdf', 'I');
- 
+
 
 //============================================================+
 // END OF FILE

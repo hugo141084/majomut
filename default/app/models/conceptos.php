@@ -13,9 +13,9 @@ class conceptos extends ActiveRecord {
     }
 
     public function listar() {
-        return $this->find();
+        return $this->find("estatus='1'");
     }
-      public function datosConceptoId($id){
+      public function datosConcepto($id){
                     return $this->find_by_sql("select * from conceptos where id=$id");
                     
                 }   

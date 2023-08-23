@@ -1,0 +1,172 @@
+
+<?php
+View::content();
+$anio = date('Y') - 10;
+$total=0;
+?>
+<?php $url = "'" . PUBLIC_PATH . "inventario/listadoSalidaCT'"; ?>
+<body id="cuerpo_principal">
+    <div id="form_container" style="width:100%;" >
+<h1><a></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Concentrado de Ventas" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+             <div class='btn'>
+                    <?php echo Html::img('inicio.png','cancel','style="text-align:center;width:65px;  padding:5px;"  onclick="window.location = ' . $url . '" ');?>
+                </div>  
+               
+            </div>
+    </div>  
+<?php echo Form::open("inventario/reporteSalidaT"); ?> 
+<br><br>
+        <table width="100%" border="0">
+            <tr align="center">
+                <td>
+                    <table width="100%" border="1">
+                        <tr style="width:100%;">
+                             <td>
+                                   
+                                    <table style="width:100%;" border="0">
+                                        <tr align="center">
+                                            <td  >                
+                                                <div class="tres_a">
+
+<?php echo Form::date('fecha_inicial', 'class="element text" required', date('Y-m-d')); ?>
+                                                    <br> <label> Periodo Inicial</label>       
+                                                </div>
+                                            </td>
+                                            <td><div class="tres_b">
+
+<?php echo Form::date('fecha_final', 'class="element text" required ', date('Y-m-d')); ?>
+                                                    <br>  <label> Periodo Final</label>
+                                                </div>
+
+                                            </td>
+                                            <td><div class="tres_b">
+<?php echo Form::dbSelect("producto","descripcion",array("producto","listarEntrada"),'Seleccione..',' class=" text"  required');?>
+                                                   <label> Producto</label>
+                                                </div>
+                                            </td>
+                                            <td><div class="tres_b">
+
+<?php echo Form::dbSelect("lote","codigo",array("lote","listar"),' ','  class=" text" ');?>
+                                                 <label> Lote</label>
+                                                </div>
+
+                                            </td>
+<td><div class="tres_b">
+<?php echo form::submit("MOSTRAR", 'class="btn btn-success" '); ?>
+                                                    <br>  <label> </label>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                               </td>
+                            
+                            
+                        </tr>
+                       
+                        <tr>
+                            <td  colspan="3"> 
+                                 <fieldset style="padding: 15px; width: 100%;">
+                    <legend><b>Datos de la Consulta </b></legend>
+     
+    <table class=" table table-bordered" >
+
+        <tr  bgcolor="#00984f" align="center">
+            <th width="5%">#</th>
+            <th width="10%">Docto</th>
+            <th width="10%" >F. Docto</th>
+            <th width="25%" >Producto</th>
+            <th width="10%" >Lote</th>
+            <th width="10%" >Almacen</th> 
+            <th width="10%" >Cantidad</th> 
+            <th width="10%" >Acumulado</th> 
+               
+        </tr>
+    </table>
+       <div id="contenidoCobrar" style="overflow: scroll; height: 400px">  
+           <table width="100%" class=" table table-bordered" > 
+           <?php 
+                            $color="#0174DF";
+                            $i=0;
+                            $cantidad=0;
+                            $total=0;
+                            if(isset($resultado))
+                            foreach ($resultado as $datos){
+                             $i++; 
+                             if(($datos->estado)=="Activo")
+        {
+$color="#000";
+ $cantidad=$cantidad+$datos->cantidad;
+                           $total = $total + $datos->total;
+}
+else
+{
+$color="#dc3545";
+} 
+        
+        ?>
+            <tr valign="center" style="color:<?php echo $color ?>">      
+            <td width="5%"> <?php echo $i; ?> </td>
+            <td width="10%"> <?php echo "  ".$datos->documento; ?> </td>
+            <td width="10%"> <?php echo "  ".$datos->fecha_documento; ?> </td>
+            <td width="25%"> <?php echo "  ".$datos->producto; ?> </td>
+            
+            
+            
+             <td width="10%" align="right"><?php echo $datos->codigo; ?> </td>
+            <td width="10%" align="right"><?php echo $datos->almacen; ?></td>
+            <td width="10%" align="right"><?php echo ((($datos->estado)=="Cancelado")? "Cacelado":"  ".number_format($datos->cantidad,2) ) ?> </td>
+            <td width="10%" align="right"><?php echo "  ".number_format($cantidad,2) ?> </td>
+             </tr>
+       
+                           <?php 
+                           
+                           
+                          
+}    ?>  
+             
+		</table> </div>
+                    <table  width="100%" border="0"  class="arqueo">
+                    <tr height="50px">
+              <td colspan="4" width="79%" align="right"> Total :  </td>
+              <td width="10%" align="right">   </td>
+              <td width="10%" align="right">  <?php echo "  ".number_format($cantidad,2); ?> </td>
+            <td width="1%" align="right">  </td> 
+             </tr>
+		</table>
+     </fieldset>
+                                
+                               </td> 
+                            
+                        </tr>
+                        <tr>
+                            <td colspan="3" height="50px"></td>
+                        </tr>
+                        
+                    </table>
+                </td>
+            </tr>
+        </table>
+<?php echo Form::hidden('codigo', 'class="element text" required ' ); ?>
+<?php echo Form::close(); ?>
+    </div>
+
+
+</body>               
+
+<?php ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    $("#codigoS").change(function() {
+       
+        texto=$('#codigoS option:selected').html();
+        $("#codigo").val(texto);
+    });
+});
+    </script>

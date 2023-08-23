@@ -1,0 +1,384 @@
+<script>
+ function imprime_lista()
+{
+var operacion='MOSTRAR_LISTA' 
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion,
+          success: function(html){
+            $("#resultado").html(html);
+          }
+        });
+    
+}   
+function buscaDetalle()
+{
+var productoId 	=	$('#vale_producto_id').val();
+var operacion='MOSTRAR_DETALLE' 
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+           data: "productoId=" + productoId + "&operacion="+operacion,
+          success: function(html){
+              html="lote";
+               html=html.replace(/^\s+|\s+$/g, "");
+          $('#opcion').val(html); 
+         if(html=="lote"){
+        $('#loteProducto').show();
+         $('#serieProducto').hide();
+         $('#inventarioProducto').hide(); 
+         $('#serie').val('');
+         $('#numInventario').val('');
+        
+        }else if (html=="serie"){
+         $('#loteProducto').hide();
+         $('#serieProducto').show(); 
+         $('#inventarioProducto').hide();
+         $('#numInventario').val('');
+          $('#lote').val(''); 
+        }else if (html=="loteInventario"){
+         $('#loteProducto').show();
+         $('#serieProducto').hide();
+         $('#inventarioProducto').show();
+          $('#serie').val(''); 
+        }else if (html=="serieInventario"){
+         $('#loteProducto').hide();
+         $('#serieProducto').show();
+         $('#inventarioProducto').show();
+          $('#lote').val(''); 
+        }else if (html=="soloInventario"){
+         $('#loteProducto').hide();
+         $('#serieProducto').hide();
+         $('#inventarioProducto').show();
+          $('#lote').val('');
+          $('#serie').val('');
+        }else{
+        $('#inventarioProducto').hide();    
+        $('#loteProducto').hide();
+         $('#serieProducto').hide();
+          $('#serie').val(''); 
+           $('#lote').val(''); 
+           $('#numInventario').val('');
+          
+        }
+         //  $("#detalleProducto").html(html);
+          }
+        });
+    
+} 
+function buscaAlmacen() {
+	var productoId 	=	$('#vale_producto_id').val();
+        
+        var operacion="BUSCA_ALMACEN";
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "productoId=" + productoId + "&operacion="+operacion,
+          success: function(html){
+            $("#almacen").html(html);
+          }
+        });
+        } 
+        function buscaProveedor() {
+	var proveedorId 	=	$('#vale_proveedor_id').val();
+        if(proveedorId >0 ){
+        var operacion="BUSCA_PROVEEDOR";
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "proveedorId=" + proveedorId + "&operacion="+operacion,
+          success: function(html){
+            $("#proveedor").html(html);
+          }
+        });
+        }
+        }
+function agregarPartida() 
+{
+    
+var operacion='AGREGAR_PARTIDA';	
+var cantidad 	=	$('#vale_cantidad').val();
+var unidad 	=	$('#vale_unidad').val();
+var productoId 	=	$('#vale_producto_id').val();
+var almacenId 	=	$('#vale_almacen_id').val();
+var serie="";
+var lote 	=	$('#lote').val();
+var opcion='lote';
+var mens="";
+var re = /,/g;
+cantidad=cantidad.replace(re,"");
+if(unidad==""){unidad='0';}
+	if (cantidad=="") {mens+="\n- Inserte una cantidad valida";}
+        if (productoId=="") {mens+="\n- Elija un producto";}
+        if (almacenId=="") {mens+="\n- Elija un almacen";}
+        if(opcion=='lote'){
+        if (lote=="") {mens+="\n- Indique el numero de Lote";}
+        
+        if (lote=="") {mens+="\n- Indique el numero de Lote";}
+        
+        }
+        
+
+if (mens!=""){
+     alert('Verifique los siguientes campos:\n'+mens);
+		
+}else
+	{
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: 'operacion=' + operacion + '&cantidad=' + cantidad+"&productoId=" + productoId+"&almacenId=" + almacenId+"&lote=" + lote+"&serie=" + serie+"&opcion=" + opcion+"&unidad=" + unidad,
+         
+            success: function(html){
+        
+        html=html.replace(/^\s+|\s+$/g, "");
+      if (html=='Si'){
+           alert('Esta partida ya existe.......!');
+      }else{
+         
+          imprime_lista(); 
+      }
+          }
+             });
+	}
+}
+
+function quitar_partida(linea)
+{
+    
+        var operacion='QUITAR_PARTIDA' 
+var linea=linea;
+
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion + "&linea="+ linea,
+          success: function(html){
+         imprime_lista();
+          }
+        });
+   
+
+}
+</script>    
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+    <br>
+    <h1><a></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "RECEPCIÓN DE CAFE TOSTADO" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                        echo Html::linkAction('listadoEntradaCT',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    ?>
+                </div>
+            </div>
+    </div>
+    <?php echo Form::open("inventario/" . $accion); ?>
+ <?php echo Form::hidden("vale.id"); ?>
+
+   
+    
+    <div id="margen" >
+  <div class="form-row">
+    
+    
+     <?php echo Form::hidden('vale.tipo_documento', 'maxlength="20" required class="form-control"   ',"VALE DE ENTRADA"); ?>
+      
+    <div class="col-sm-5">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Documento:    
+                            </div>
+                          <?php echo Form::text('vale.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ',$num); ?>
+                    </div>
+                </div> 
+    </div>
+      
+      <div class="col-sm-3">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Fecha:    
+                            </div>
+                          <?php echo form::text('vale.fecha_recepcion','placeholder="dd-mm-aa" required class="form-control"',date('d-m-Y')); ?>
+          </div>
+                </div> 
+    </div>
+      <div class="col-sm-3">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Referencia:    
+                            </div>
+                          <?php echo Form::dbSelect("vale.referencia_id","documento",array("vale","listarReferencia"),'Seleccione..','class="form-control" ');?>
+          </div>
+                </div> 
+    </div>
+    
+      
+  </div>
+   
+             <div class="panel panel-primary">
+        <div class="panel-heading">Datos Producto </div>
+        <div class="panel-body">
+             <div class="form-row">
+                <div class="col-md-2 ">
+      <label for="validationCustomUsername">cantidad</label>
+      <div class="input-group">
+        
+        <?php echo Form::number('vale.cantidad', 'class="form-control"  '); ?>
+        
+      </div>
+    </div> 
+                 <div class="col-md-3">
+      <label for="validationCustomUsername">Producto</label>
+      <div class="input-group">
+        
+       <?php echo Form::dbSelect("vale.producto_id","descripcion",array("producto","listarEntrada"),'Seleccione..',' class="form-control"');?>
+        
+      </div>
+    </div> 
+                  
+                 <div class="col-md-2">
+      <label for="validationCustomUsername">Lote</label>
+      <div class="input-group">
+        <div  id="loteProducto" >
+       <?php echo Form::dbSelect("lote","codigo",array("lote","listar"),'Seleccione..','class="form-control" ');?>
+        </div>
+      </div>
+    </div> 
+                  
+       <div class="col-md-3 mb-3">
+      <label >Almacen</label>
+      <div class="input-group">
+        <div id="almacen">
+      <?php echo Form::dbSelect("vale.almacen_id","descripcion",array("almacen","listar"),'Seleccione..','class="form-control" ');?>
+        </div>
+      </div>
+      
+      
+      
+    </div> <div class="col-md-2 ">
+      <label for="validationCustomUsername">U. * Empaque</label>
+      <div class="input-group">
+        
+        <?php echo Form::number('vale.unidad', 'class="form-control"  '); ?>
+        
+      </div>
+    </div> 
+               
+                 
+                 <div class="col-md-3 ">
+                            <label ></label>
+                            <div class="input-group">
+                               
+                            </div>
+                        </div> 
+                        <div class="col-md-6 ">
+                            <label ></label>
+                            <div class="input-group">
+                                <?php echo Form::button("Agregar","id='Agregar' style='width:98%;' class='btn-success btn' ")?>
+                            </div>
+                        </div> 
+<div class="col-md-3 ">
+                            <label ></label>
+                            <div class="input-group">
+                                
+                            </div>
+                        </div>
+                 
+                 
+             </div>      
+
+             
+            <div id="resultado" style="height: 200px; border-bottom:1px;  border-bottom-color:#000; "> <?php print"<script> imprime_lista() </script>"; ?></div>
+        </br>
+          
+        <table style="width: 100%" border="0">
+                
+                     <tr >
+      <td>Observaciones:</td>
+      <td><?php echo Form::textarea('vale.observacion', '  class="form-control"  '); ?></td>
+    
+                 </tr>
+             </table>
+        <br>
+       
+        <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Entrego:    
+                            </div>
+                          <?php echo Form::text('vale.capturo', ' required class="form-control"   '); ?>
+                    </div>
+                </div> 
+    </div>
+       <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Recibio:    
+                            </div>
+                          <?php echo Form::text('vale.recibio', ' required class="form-control"   '); ?>
+                    </div>
+                </div> 
+    </div>
+      <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       valido:    
+                            </div>
+                          <?php echo Form::text('vale.valido', '  class="form-control"   '); ?>
+          </div>
+                </div> 
+    </div>
+        </div>
+             </div>  
+            <?php $url = "'" . PUBLIC_PATH . "inventario/listadoEntradaCT'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="33%">
+            <?php echo Form::submit((($accion == 'crearEntradaCT') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+            </td>
+        </tr>
+     </table>
+      
+  </div> 
+</div>
+    </br>
+<?php echo Form::close(); ?>
+
+</body>
+
+<script type="text/javascript">
+           $("#vale_producto_id").change(function(){
+	buscaAlmacen();
+        buscaDetalle();
+});
+ $("#vale_proveedor_id").change(function(){
+	buscaProveedor();
+        
+});
+
+$("#Agregar").click(function(){
+	
+            agregarPartida();
+  
+});
+</script>  
+ 
+
+
+       
+                        

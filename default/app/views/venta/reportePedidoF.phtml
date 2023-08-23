@@ -1,0 +1,174 @@
+
+<?php
+View::content();
+$anio = date('Y') - 10;
+$total=0;
+?>
+<?php $url = "'" . PUBLIC_PATH . "'"; ?>
+<body id="cuerpo_principal">
+    <div id="form_container" style="width:100%;" >
+<h1><a></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Resumen de Pedidos" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+             <div class='btn'>
+                    <?php echo Html::img('inicio.png','cancel','style="text-align:center;width:65px;  padding:5px;"  onclick="window.location = ' . $url . '" ');?>
+                </div>  
+               
+            </div>
+    </div>  
+<?php echo Form::open("venta/reportePedidoF"); ?>  
+        <table width="100%" border="0">
+            <tr align="center">
+                <td>
+                    <table width="90%" border="0">
+                        <tr style="width:100%;">
+                             <td><fieldset style="padding: 15px; height: 100%">
+                                    <legend><b>OPCIONES DEL REPORTE :</b></legend> 
+                                    <table style="width:100%;" border="0">
+                                        <tr align="center">
+                                            <td style="width:50%;" >                
+                                                <div class="tres_a">
+
+<?php echo Form::date('fecha_inicial', 'class="element text" required', date('Y-m-d')); ?>
+                                                    <br> <label> Periodo Inicial</label>       
+                                                </div>
+                                            </td>
+                                            <td><div class="tres_b">
+
+<?php echo Form::date('fecha_final', 'class="element text" required ', date('Y-m-d')); ?>
+                                                    <br>  <label> Periodo Final</label>
+                                                </div>
+
+                                            </td>
+                                            
+
+                                        </tr>
+                                    </table>
+                                </fieldset></td>
+                            
+                             <td>
+                             
+                             <fieldset style="padding: 15px; height: 100px">
+                                    <legend><b>GENERAR REPORTE :</b></legend> 
+                                    <table width="100%" border="0">
+                                        <tr>
+                                            <td>Cliente</td>
+                                            <td><?php echo Form::dbSelect("cliente_id", "nombrecompleto", array("cliente", "listar"), 'Seleccione..', ' class="form-control" '); ?></td>
+                                                <td><?php echo form::submit("MOSTRAR", 'class="CSSButton" '); ?></td>
+                                        
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                             </td>
+                        </tr>
+                       
+                        <tr>
+                            <td  colspan="3"> 
+                                 <fieldset style="padding: 15px; width: 100%;">
+                    <legend><b>Datos de la Consulta </b></legend>
+     
+    <table width="100%" border="1"  class="arqueo">
+
+        <tr  bgcolor="#00984f" align="center">
+            <th width="5%">#</th>
+            <th width="10%">Documento</th>
+            <th width="5%">Orden Pedido</th>
+            <th width="10%" >Fecha</th>
+            <th width="10%" >Estatus</th>
+             <th width="20%" >Cliente</th>
+             <th width="10%" >Subtotal</th>
+              <th width="10%" >IVA</th>
+              <th width="10%" >Total</th> 
+              <th width="5%" >Venta</th> 
+        </tr>
+    </table>
+       <div id="contenidoCobrar">  
+        <table width="100%" border="0" align="center" class="arqueo"> 
+           <?php 
+                            $color="#0174DF";
+                            $i=0;
+                            if(isset($resultado))
+                            foreach ($resultado as $datos){
+                             $i++; 
+                             if($color=="#0174DF")
+        {
+$color="#FFFFFF";
+}
+else
+{
+$color="#FFFFFF";
+} 
+        (($datos->subtotal<1)? $datos->subtotal=0:'');
+        (($datos->iva<1)? $datos->iva=0:'');
+        (($datos->monto<1)? $datos->monto=0:'');
+        ?>
+            <tr valign="center" style="background-color:<?php echo $color ?>">      
+            <td width="5%"> <?php echo $i; ?> </td>
+            <td width="10%"> <?php echo "  ".$datos->documento; ?> </td>
+            <td width="5%"> <?php echo "  ".$datos->orden_compra; ?> </td>
+            <td width="10%"> <?php echo "  ".$datos->fecha_documento; ?> </td>
+            <td width="10%"> <?php echo "  ".$datos->estado; ?> </td>
+            <td width="20%"> <?php echo "  ".$datos->nombre; ?> </td>
+             <td width="10%" align="right">$ <?php echo "  ".number_format($datos->subtotal,2); ?> </td>
+            <td width="10%" align="right"> $ <?php echo "  ".number_format($datos->iva,2); ?> </td>
+            <td width="10%" align="right"> $ <?php echo "  ".number_format($datos->monto,2); ?> </td>
+            <td width="5%" align="center"> <?php echo (($datos->venta=='1')? `Si`:'N0') ?> </td>
+             </tr>
+       
+                           <?php 
+                           if($datos->estado=="Activo") 
+                           $total = $total + $datos->monto;
+                           
+                          
+}    ?>  
+             
+		</table> </div>
+                    <table  width="100%" border="0"  class="arqueo">
+                    <tr height="50px">
+              <td colspan="4" width="89%" align="right"> Total : $ </td>
+              <td width="10%" align="right">  <?php echo "  ".number_format($total,2); ?> </td> 
+            <td width="1%" align="right">  </td> 
+             </tr>
+		</table>
+     </fieldset>
+                                
+                               </td> 
+                            
+                        </tr>
+                        <tr>
+                            <td colspan="3" height="50px"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <fieldset style="padding: 15px;">
+                                    <legend><b>SALIDA DEL REPORTE :</b></legend>  
+<?php $url = "'" . PUBLIC_PATH . "'"; ?>
+                                    <table width="100%" border="0">
+                                        <tr>
+                                            <td style="width:60%;">Titulo</td>
+                                            <td style="width:20%;"></td>
+                                            <td style="width:20%;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td ><?php echo Form::text('titulo', ""); ?></td>
+                                            <td><?php echo form::submit("IMPRIMIR", 'class="CSSButton" '); ?></td>
+                                            <td><?php echo Form::button("CANCELAR", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>   </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+<?php echo Form::close(); ?>
+    </div>
+
+
+</body>               
+
+<?php ?>

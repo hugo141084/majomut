@@ -1,218 +1,457 @@
 <!DOCTYPE html>
 <html lang="es">
- <head>
-	<title>:: Union - Majomut</title>
-	<meta charset="UTF-8">
-	<meta name="description" content="loans HTML Template">
-	<meta name="keywords" content="loans, html">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
-	<!-- Favicon -->
-	<link href="<?php echo PUBLIC_PATH ?>img/favicon.ico" rel="shortcut icon"/>
+    <head>
+        <title>:: Union - Majomut</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="loans HTML Template">
+        <meta name="keywords" content="loans, html">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<!-- Google font
+        <!-- Favicon -->
+        <link href="<?php echo PUBLIC_PATH ?>img/favicon.ico" rel="shortcut icon"/>
+
+        <!-- Google font
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap" rel="stylesheet">
-  -->
-	<!-- Stylesheets -->
-        
+        -->
+        <!-- Stylesheets -->
+
 
         <?php Tag::css('form_css') ?> <!-- estilos para el form!-->
-	<?php Tag::css('mi_estilo') ?> <!-- algunos de mis estilos personalizados!-->
-       
+        <?php Tag::css('mi_estilo') ?> <!-- algunos de mis estilos personalizados!-->
+
         <?php Tag::css('bootstrap.min'); ?> 
-            <?php Tag::css('bootstrap'); ?>
+        <?php Tag::css('bootstrap'); ?>
         <?php Tag::css('font-awesome.min'); ?>
         <?php Tag::css('owl.carousel.min'); ?>
         <?php Tag::css('flaticon'); ?>
         <?php Tag::css('slicknav.min'); ?>
         <?php Tag::css('style'); ?>
         <?php Tag::css('exception') ?>
-         <?php Tag::css('jquery.alerts'); ?>
-         <?php Tag::css('kumbia'); ?>
+        <?php Tag::css('jquery.alerts'); ?>
+        <?php Tag::css('kumbia'); ?>
         <?php Tag::css('jquery/shadowbox') ?> <!-- estilos para la ventana emergente!--> 
-	<!-- Main Stylesheets -->
-	
+        <!-- Main Stylesheets -->
 
-<!--====== Javascripts & Jquery ======-->
-	
+
+        <!--====== Javascripts & Jquery ======-->
+
         <?php //echo Tag::js('owl.carousel.min'); ?>
-    <?php echo Tag::js('jquery-1.9.1.min'); ?>     
-  <?php echo Tag::js('jquery-ui.min'); ?>
-       <?php echo Tag::js('bootstrap'); ?>
+        <?php echo Tag::js('jquery-1.9.1.min'); ?>     
+        <?php echo Tag::js('jquery-ui.min'); ?>
+        <?php echo Tag::js('bootstrap'); ?>
 
         <?php //echo  Tag::js('bootstrap.min'); ?>
         <?php echo Tag::js('jquery.slicknav.min'); ?>
         <?php echo Tag::js('jquery.ui.draggable'); ?>
-            <?php echo Tag::js('jquery.alerts.mod'); ?>
-            <?php echo Tag::js('jquery.blockUI'); ?>
-      
-       
-<?php echo Tag::js('jquery/shadowbox'); ?><!-- js para la ventana emergente!-->
-<?php echo Tag::js('popper'); ?><!-- js para la ventana emergente!-->
-	<!--[if lt IE 9]>
-		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-	<![endif]-->
+        <?php echo Tag::js('jquery.alerts.mod'); ?>
+        <?php echo Tag::js('jquery.blockUI'); ?>
 
 
-  <?= Html::includeCss() ?>
+        <?php echo Tag::js('jquery/shadowbox'); ?><!-- js para la ventana emergente!-->
+        <?php echo Tag::js('popper'); ?><!-- js para la ventana emergente!-->
+        <!--[if lt IE 9]>
+                <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+                <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+        <?= Html::includeCss() ?>
         <?php
-            $valido = Load::model('usuario')->isValid();
+        $valido = Load::model('usuario')->isValid();
+        ?>
+    </head>
+    <body>
 
 
-                 
+        <header class="header-section">
 
+
+            <script type="text/javascript">
+                Shadowbox.init({
+                    overlayColor: "#000",
+                    overlayOpacity: '0.6',
+                    modal: true,
+                    handleOversize: "rezise",
+                    enableKeys: false,
+                    onClose: function () {
+                    }
+                });
+                jQuery.browser = {};
+                (function () {
+                    jQuery.browser.msie = false;
+                    jQuery.browser.version = 0;
+                    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+                        jQuery.browser.msie = true;
+                        jQuery.browser.version = RegExp.$1;
+                    }
+                })();
+                jQuery.curCSS = function (element, prop, val) {
+                    return jQuery(element).css(prop, val);
+                };
+
+            </script>                                             
+            <a href="index.html" class="site-logo"  style="padding: 0">
+                <img src="<?php echo PUBLIC_PATH ?>img/logo.png"  />
+            </a>
+            <nav class="header-nav">
+
+
+<?php
+if ($valido) {
+    $tipo = Session::get('Tipo');
+
+
+    switch ($tipo) {
+
+        case 1:
             ?>
-</head>
-<body>
-    
+                            <ul class="main-menu">
+                                <li><a href="<?php echo PUBLIC_PATH ?>">Inicio</a>   
+                                    <ul class="sub-menu">
+                                        <li>
+                                            <a  href="javascript: void(0)"  onClick="salir();" style="padding:8px 5px 2px 5px;margin:0;">Salir</a>   
+                                        </li>
+                                    </ul>
+                                </li>
 
-  <header class="header-section">
-   
-     
-       <script type="text/javascript">
-        Shadowbox.init({
-            overlayColor: "#000",
-            overlayOpacity: '0.6',
-            modal: true,
-            handleOversize: "rezise",
-            enableKeys: false,
-            onClose: function() { 
-            }
-        });
-        jQuery.browser = {};
-(function () {
-    jQuery.browser.msie = false;
-    jQuery.browser.version = 0;
-    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
-        jQuery.browser.msie = true;
-        jQuery.browser.version = RegExp.$1;
-    }
-})();
-jQuery.curCSS = function(element, prop, val) {
-    return jQuery(element).css(prop, val);
-};
+                                <li><a href="#">Catalogo</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>producto">Productos</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoPresentacion">Tipo</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoCalidad">Presentacion</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoPreparacion">Preparacion</a></li>
 
-    </script>                                             
-      <a href="index.html" class="site-logo"  style="padding: 0">
-			<img src="<?php echo PUBLIC_PATH ?>img/logo.png"  />
-		</a>
-		<nav class="header-nav">
-                    
-                    
-			<?php   if ($valido) {
-                                    $tipo = 1;
+                                        <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoLote">Lotes</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoEmbalaje">Empaque</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoMedida">Unidad Medida</a></li>
+                                    <!--    <li><a href="<?php echo PUBLIC_PATH ?>proveedor">Proveedor</a></li>  !-->
+                                    </ul>
+                                </li>
+                                <li><a href="#">Inventario</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoAlmacen">Almacen</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/inventarioIni">Inventario Inicial</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoRecepcion">Recepcion de Cafe Oro Verde</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoSalidaCT">Salida para Tostado</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoEntradaCT">Recepcion de Cafe Tostado</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoCombinacion">Combinacion de Lotes</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/asignar">Asignacion de Inventarios</a></li>
+                                        <li><a href="#">Movimientos</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoSTraspaso">Salida Traspasos Almacenes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoETraspaso">Entrada Traspasos Almacenes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoMovimiento">Ajustes al Inventarios</a></li>
 
-                                    switch ($tipo) {
-                                       
-                                                case 1:
-                                                  
-                                                    ?>
-			<ul class="main-menu">
-				<li><a href="<?php echo PUBLIC_PATH ?>">Inicio</a>   
+                                            </ul>
+                                        </li>    
+                                    </ul>
+                                </li>
+                                <li><a >clientes</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>cliente">Listado</a></li>  
+                                        <li><a href="#">Reportes</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="#">Catalogo</a>
                                                     <ul class="sub-menu">
-                                                        <li>
-                                                            <a  href="javascript: void(0)"  onClick="salir();" style="padding:8px 5px 2px 5px;margin:0;">Salir</a>   
-                                                        </li>
+                                                        <li><a href="<?php echo PUBLIC_PATH ?>cliente/general">General</a></li>    
+                                                        <li><a href="<?php echo PUBLIC_PATH ?>cliente/tipoCliente">Tipo</a></li>
+                                                        <li><a href="<?php echo PUBLIC_PATH ?>cliente/metodoPago">M. Pago</a></li>
                                                     </ul>
                                                 </li>
-				
-				<li><a href="#">Catalogo</a>
-					<ul class="sub-menu">
-						<li><a href="<?php echo PUBLIC_PATH ?>producto">Productos</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoPresentacion">Tipo</a></li>
-						<li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoCalidad">Presentacion</a></li>
-						<li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoPreparacion">Preparacion</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>cliente/cobros">Cobros</a></li>
+                                              <!--  <li><a href="<?php echo PUBLIC_PATH ?>venta/saldos">Saldos</a></li>
                                                 
-                                                <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoLote">Lotes</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoEmbalaje">Empaque</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>catalogo/listadoMedida">Unidad Medida</a></li>
-                                            <!--    <li><a href="<?php echo PUBLIC_PATH ?>proveedor">Proveedor</a></li>  !-->
-					</ul>
-				</li>
-                                <li><a href="#">Inventario</a>
-					<ul class="sub-menu">
-						<li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoAlmacen">Almacen</a></li>
-						<li><a href="<?php echo PUBLIC_PATH ?>inventario/inventarioIni">Inventario Inicial</a></li>
-						<li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoRecepcion">Recepcion de Cafe</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoSalidaCT">Salida para Tostado</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoEntradaCT">Recepcion de Cafe Tostado</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/crearCombinacion">Combinacion de Lotes</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/asignar">Asignacion de Inventarios</a></li>
-					        <li><a href="#">Movimientos</a>
-                                                    <ul class="sub-menu">
-                                                         <li><a href="<?php echo PUBLIC_PATH ?>inventario/traspaso">Traspasos Almacenes</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/movimiento">Ajustes al Inventarios</a></li>
-					        
-                                                    </ul>
-                                                </li>    
-                                        </ul>
-				</li>
-                                <li><a href="<?php echo PUBLIC_PATH ?>cliente">clientes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/estadoCuenta">Estado Cuenta</a></li> -->
+                                            </ul>
+                                        </li> 
+                                    </ul>
+
+                                </li>
                                 <li><a href="#">Ventas</a>
-					<ul class="sub-menu">
-                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoVenta">Directa</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/crearVale">Vales</a></li>
-						<li><a href="<?php echo PUBLIC_PATH ?>venta/listadoCotizacion">Cotización</a></li>
-						<li><a href="<?php echo PUBLIC_PATH ?>venta/listadoPedido">Pedidos</a></li>
-                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoAnticipo">Anticipos</a></li>
-						</ul>
-				</li>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoVenta">Directa</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/crearVale">Vales</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoCotizacion">Cotización</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoPedido">Pedidos</a></li>
+
+                                        <li><a href="#">Reportes</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reporteFactura">Ventas</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/concentradoVentas">Concentrado Ventas</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reportePedidoF">Pedidos</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reporteCotizacionF">Cotizaciones</a></li>
+
+                                            </ul>
+                                        </li> 	
+                                    </ul>
+                                </li>
+                                <li><a href="#">Cobros</a>
+                                    <ul class="sub-menu">
+
+                                        <li><a href="<?php echo PUBLIC_PATH ?>cobro/listadoCobros">Listado</a> </li>    
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoAnticipo">Anticipos</a></li>
+                                        <li><a href="#">Reportes</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="<?php echo PUBLIC_PATH ?>cobro/cobros">Cobros</a></li>
+                                             </ul>
+                                        </li> 
+
+                                    </ul>
+                                </li>
                                 <li><a href="">Configuracion</a>
-                                <ul class="sub-menu">
-                                    <li><a href="<?php echo PUBLIC_PATH ?>banco">Bancos</a></li>
-                                    <li><a href="<?php echo PUBLIC_PATH ?>empresa">Empresa Envio</a></li>
-                                    <li><a href="<?php echo PUBLIC_PATH ?>envios">Costos Envios</a></li>
-                                                        <li><a href="<?php echo PUBLIC_PATH ?>empleado">Empleados</a></li>
-                                <li><a href="<?php echo PUBLIC_PATH ?>usuario">Usuarios</a></li>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>ciclo/seleccionar">Selec. Ciclo Cosecha</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>banco">Bancos</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>empresa">Empresa Envio</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>envios">Costos Envios</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>empleado">Empleados</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>usuario">Usuarios</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/validarExistencia">Validar Existencias</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>ciclo">Ciclo Cosecha</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="">Reporte</a>
+                                    <ul class="sub-menu">
+                                        <li><li><a href="<?php echo PUBLIC_PATH ?>reportes/producto" >Productos</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/almacen" >Almacenes</a></li>
+                                        <li>  <a href="<?php echo PUBLIC_PATH ?>inventario/valeInicial/1" target="_black">Inventario Inicial</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/existencia" >Existencias</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/movimiento2" >Movimientos</a></li>
+                                        <!--			<li><a href="">Existencias</a></li> -->
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/lote">Lotes</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/seguimientoProducto">Seguimiento de producto</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/movimiento" >Movimientos al Inventario</a></li>
+
+                                    </ul>
+                                </li>
+
+                            </ul><?php
+                break;
+            case 2:
+                ?>
+                            <ul class="main-menu">
+                                <li><a href="<?php echo PUBLIC_PATH ?>">Inicio</a>   
+                                    <ul class="sub-menu">
+                                        <li>
+                                            <a  href="javascript: void(0)"  onClick="salir();" style="padding:8px 5px 2px 5px;margin:0;">Salir</a>   
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <li><a href="#">Inventario</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoAlmacen">Almacen</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoSalidaCT">Salida para Tostado</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoEntradaCT">Recepcion de Cafe Tostado</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoCombinacion">Combinacion de Lotes</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/asignar">Asignacion de Inventarios</a></li>
+                                        <li><a href="#">Movimientos</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoSTraspaso">Salida Traspasos Almacenes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoETraspaso">Entrada Traspasos Almacenes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoMovimiento">Ajustes al Inventarios</a></li>
+
+                                            </ul>
+                                        </li>    
+                                    </ul>
+                                </li>
+                                <li><a >clientes</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>cliente">Listado</a></li>  
+                                        <li><a href="#">Reportes</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="#">Catalogo</a>
+                                                    <ul class="sub-menu">
+                                                        <li><a href="<?php echo PUBLIC_PATH ?>cliente/general">General</a></li>    
+                                                        <li><a href="<?php echo PUBLIC_PATH ?>cliente/tipoCliente">Tipo</a></li>
+                                                        <li><a href="<?php echo PUBLIC_PATH ?>cliente/metodoPago">M. Pago</a></li>
                                                     </ul>
-                                </li>
-				<li><a href="">Reporte</a>
-                                <ul class="sub-menu">
-                                    <li><li><a href="<?php echo PUBLIC_PATH ?>reportes/producto" >Productos</a></li>
-                                    <li><a href="<?php echo PUBLIC_PATH ?>reportes/almacen" >Almacenes</a></li>
-                                       <li>  <a href="<?php echo PUBLIC_PATH ?>inventario/valeInicial/1" target="_black">Inventario Inicial</a></li>
-						<li><a href="<?php echo PUBLIC_PATH ?>reportes/existencia" >Existencias</a></li>
-						<li><a href="<?php echo PUBLIC_PATH ?>reportes/movimiento" >Movimientos al Inventario</a></li>
-			<!--			<li><a href="">Existencias</a></li> -->
-                                                <li><a href="<?php echo PUBLIC_PATH ?>reportes/lote">Lotes</a></li>
+                                                </li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>cliente/cobros">Cobros</a></li>
+                                              <!--  <li><a href="<?php echo PUBLIC_PATH ?>venta/saldos">Saldos</a></li>
                                                 
-					</ul>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/estadoCuenta">Estado Cuenta</a></li> -->
+                                            </ul>
+                                        </li> 
+                                    </ul>
+
                                 </li>
-				
-			</ul><?php
-                                                    break;
-                                                
-                                            }
-                                        }?>
-			
-                    
-                    
-			<div class="header-right">
-				<a href="index.html" class="site-logo" style="padding: 0">
-			<img src="<?php echo PUBLIC_PATH ?>img/logo.png"  />
-		</a>
-			</div>
-		</nav>
-                                      
-	</header>
-    <section class="why-section spad">
-		<div class="container">
-  <?php View::content() ?>
+                                <li><a href="#">Ventas</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoVenta">Directa</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/crearVale">Vales</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoCotizacion">Cotización</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoPedido">Pedidos</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoAnticipo">Anticipos</a></li>
+                                        <li><a href="#">Reportes</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reporteFactura">Ventas</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reportePedidoF">Pedidos</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reporteCotizacionF">Cotizaciones</a></li>
+
+                                            </ul>
+                                        </li> 	
+                                    </ul>
+                                </li>
+                                <li><a href="#">Cobros</a>
+                                    <ul class="sub-menu">
+
+                                        <li><a href="<?php echo PUBLIC_PATH ?>cobro/listadoCobros">Listado</a> </li>    
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoAnticipo">Anticipos</a></li>
+
+
+                                    </ul>
+                                </li>
+                                <li><a href="">Reporte</a>
+                                    <ul class="sub-menu">
+                                        <li><li><a href="<?php echo PUBLIC_PATH ?>reportes/producto" >Productos</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/almacen" >Almacenes</a></li>
+                                        <li>  <a href="<?php echo PUBLIC_PATH ?>inventario/valeInicial/1" target="_black">Inventario Inicial</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/existencia" >Existencias</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/movimiento2" >Movimientos</a></li>
+                                        <!--			<li><a href="">Existencias</a></li> -->
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/lote">Lotes</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/seguimientoProducto">Seguimiento de producto</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/movimiento" >Movimientos al Inventario</a></li>
+
+                                    </ul>
+                                </li>
+                                <li><a href="">Configuracion</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>ciclo/seleccionar">Selec. Ciclo Cosecha</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/validarExistencia">Validar Existencias</a></li>
+                                    </ul>
+                                </li>
+
+                            </ul><?php
+                break;
+            case 3:
+                ?>
+                            <ul class="main-menu">
+                                <li><a href="<?php echo PUBLIC_PATH ?>">Inicio</a>   
+                                    <ul class="sub-menu">
+                                        <li>
+                                            <a  href="javascript: void(0)"  onClick="salir();" style="padding:8px 5px 2px 5px;margin:0;">Salir</a>   
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <li><a href="#">Inventario</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoAlmacen">Almacen</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/inventarioIni">Inventario Inicial</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoRecepcion">Recepcion de Cafe Oro Verde</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoSalidaCT">Salida para Tostado</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoEntradaCT">Recepcion de Cafe Tostado</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoCombinacion">Combinacion de Lotes</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>inventario/asignar">Asignacion de Inventarios</a></li>
+                                        <li><a href="#">Movimientos</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoSTraspaso">Salida Traspasos Almacenes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoETraspaso">Entrada Traspasos Almacenes</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>inventario/listadoMovimiento">Ajustes al Inventarios</a></li>
+
+                                            </ul>
+                                        </li>    
+                                    </ul>
+                                </li>
+
+                                <li><a href="#">Ventas</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>venta/listadoVenta">Directa</a></li>
+
+                                        <li><a href="#">Reportes</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reporteFactura">Ventas</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reportePedidoF">Pedidos</a></li>
+                                                <li><a href="<?php echo PUBLIC_PATH ?>venta/reporteCotizacionF">Cotizaciones</a></li>
+
+                                            </ul>
+                                        </li> 	
+                                    </ul>
+                                </li>
+
+                                <li><a href="">Reporte</a>
+                                    <ul class="sub-menu">
+
+                                        <li>  <a href="<?php echo PUBLIC_PATH ?>inventario/valeInicial/1" target="_black">Inventario Inicial</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/almacen" >Almacenes</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/existencia" >Existencias</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/movimiento" >Movimientos al Inventario</a></li>
+                                        <!--			<li><a href="">Existencias</a></li> -->
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/lote">Lotes</a></li>
+                                        <li><a href="<?php echo PUBLIC_PATH ?>reportes/seguimientoProducto">Seguimiento de producto</a></li>
+
+                                    </ul>
+                                </li>
+                                <li><a href="">Configuracion</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="<?php echo PUBLIC_PATH ?>ciclo/seleccionar">Selec. Ciclo Cosecha</a></li>
+                                        
+                                    </ul>
+                                </li>
+                            </ul><?php
+                break;
+        }
+    }
+?>
+
+
+
+                <div class="header-right">
+                    <a href="index.html" class="site-logo" style="padding: 0">
+                        <img src="<?php echo PUBLIC_PATH ?>img/logo.png"  />
+                    </a>
                 </div>
-    </section>
-  <?php View::partial('kumbia/footer') ?>
+            </nav>
+
+        </header>
+        
+        <section class="why-section spad">
+            <div class="alert alert-primary" role="alert" style="margin-top: -15px">
+                <div class="row">
+                    <div class="col-sm-1" >
+                <div class="form-group" style="margin:0px ">
+                                         
+                    </div>
+                </div>
+                     <div class="col-sm-3" >
+                <div class="form-group" style="margin:0px ">
+                    Usuario: <?php echo  Session::get('Usr'); ?>                         
+                    </div>
+                </div>
+                     <div class="col-sm-4" >
+                <div class="form-group" style="margin:0px ">
+                                         
+                    </div>
+                </div>
+                    <div class="col-sm-2" >
+                <div class="form-group" style="margin:0px ">
+                            Ciclo Cosecha: <?php echo  Session::get('textoCicloCosecha'); ?>             
+                    </div>
+                </div>
+            </div>
+                </div>       
 </div>
+            <div class="container-md">
+                
+<?php View::content() ?>
+            </div>
+        </section>
+<?php View::partial('kumbia/footer') ?>
+    </div>
 </body>
 </html>
 <script languaje="JavaScript">
 
-        function salir() {
-            
-                    location.href = '<?php echo PUBLIC_PATH . "index/salir"; ?>';
-               
-        }
-        
-        
-        
-        </script>
+    function salir() {
+
+        location.href = '<?php echo PUBLIC_PATH . "index/salir"; ?>';
+
+    }
+
+
+
+</script>

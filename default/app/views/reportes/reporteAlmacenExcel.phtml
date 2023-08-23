@@ -1,0 +1,76 @@
+<?php
+$objPHPExcel = new PHPExcel();
+$objPHPExcel->getProperties()->setCreator("");
+$objPHPExcel->getProperties()->setLastModifiedBy("");
+$objPHPExcel->getProperties()->setTitle("majomut");
+$objPHPExcel->getProperties()->setSubject("majomut");
+$objPHPExcel->getProperties()->setDescription("majomut");
+	
+$objPHPExcel->setActiveSheetIndex(0);
+$objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Clave');
+$objPHPExcel->getActiveSheet()->SetCellValue('B2', 'Clave');
+$objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Descripcion');
+$objPHPExcel->getActiveSheet()->SetCellValue('C1', 'producto');
+$objPHPExcel->getActiveSheet()->SetCellValue('D2', 'existencia');
+$objPHPExcel->getActiveSheet()->SetCellValue('E1', 'tipo');
+
+
+
+// Set some content to print
+
+$clasificacionId="0";
+$tipo=$tipo;
+$total=0;
+$a=3;
+foreach ($almacen as $dato){
+    
+    
+    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$a, $dato->almacen);
+    $objPHPExcel->getActiveSheet()->SetCellValue('B'.$a, $dato->descripcion);
+    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$a, "");
+    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$a, "");
+    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$a, $dato->tipo);
+    $a++;
+    if ($tipo=="DETALLE"){
+        if($ciclo>0){
+          $existenciaL=new detalle_lote();
+          $detalle=$existenciaL->find_all_by_sql("SELECT DL.producto_id, SUM(DL.existencia) existencia FROM detalle_lote DL inner join lote L on DL.lote_id=L.id WHERE DL.almacen_id='$dato->id' and L.ciclocosecha_id='$ciclo' GROUP by DL.producto_id");
+        }else{
+        $detalle=Load::model('inventario')->buscarXalmacen($dato->id);
+        }
+        
+       $total=0;
+        foreach ($detalle as $detalleInventario){
+            $total+=$detalleInventario->existencia;
+          $almacen=Load::model('producto')->listarXid($detalleInventario->producto_id);   
+       
+        $objPHPExcel->getActiveSheet()->SetCellValue('A'.$a,"");
+        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$a, $almacen->clave);
+    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$a, $almacen->descripcion);
+    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$a, (($detalleInventario->existencia >=0)? number_format($detalleInventario->existencia,2):"0"));
+    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$a, "");
+    $a++;
+        }
+        $a++;
+        $objPHPExcel->getActiveSheet()->SetCellValue('A'.$a,"");
+        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$a,"");
+    $objPHPExcel->getActiveSheet()->SetCellValue('C'.$a, "");
+    $objPHPExcel->getActiveSheet()->SetCellValue('D'.$a, "");
+    $objPHPExcel->getActiveSheet()->SetCellValue('E'.$a,"Total".(($total >=0)? number_format($total,2):"0"));
+      $a++;
+       $a++;
+    }
+    
+}
+
+$objPHPExcel->setActiveSheetIndex(0);
+header('Content-Type: application/vnd.ms-excel');
+header('Content-Disposition: attachment;filename=reporteAlmacen.xlsx');
+header('Cache-Control: max-age=0');
+
+$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+$objWriter->save('php://output');
+//============================================================+
+// END OF FILE
+//============================================================+
+?>

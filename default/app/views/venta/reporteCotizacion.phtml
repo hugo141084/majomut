@@ -9,9 +9,11 @@ foreach ($destino as $des){
 $d=count($ciclo);
 $i=1;
 $cicl="";
+$aux="";
 foreach ($ciclo as $cic){
-    if($i<$d) $cicl .=$cic->ciclo.", ";
-    else $cicl .=$cic->ciclo.".";
+    if($aux!=$cic->ciclo)
+        $cicl .=$cic->ciclo."";
+    
 }
 Load::lib('tcpdf');
 Load::lib('funciones');
@@ -159,7 +161,7 @@ $html .='
  </table>
 <p>Presente</p>
 <p>Es un gusto para nosotros atenderle, de acuerdo a su solicitud, nos dirigimos para presentarle la cotización
-del café cosecha ciclo 2019-2020, los precios y las calidades, que a continuación se presenta:</p>
+del café cosecha ciclo '.$datosCompra->ciclo.', los precios y las calidades, que a continuación se presenta:</p>
 
  </td>
 </tr>
@@ -174,8 +176,8 @@ del café cosecha ciclo 2019-2020, los precios y las calidades, que a continuaci
 <td colspan="3">
 <table style="width: 100%" border="1" class="mitabla1" cellpadding="3">
 <tr align="center" bgcolor="#CCCCCC" class="respTi">
-<td style="width: 15%">Codigo <br>Producto</td>
-<td style="width: 10%">Cantidad</td>
+<td style="width: 13%">Cantidad Kg.</td>
+<td style="width: 12%"></td>
 <td style="width: 40%">Producto</td>
 <td style="width: 10%">Precio Unitario</td>
 <td style="width: 10%">Impuesto</td>
@@ -187,9 +189,9 @@ foreach ($detalleCompra as $datos){
  $c1=$datos->cantidad * $datos->precio;
  
 $html .=' <tr align="center">
-<td style="width: 15%; " >'.$datos->clave.' </td>
-<td style="width: 10%" >'.$datos->cantidad.'</td>
-<td style="width: 40%" >'.$datos->descripcion.'</td>
+<td style="width: 13%" >'.$datos->cantidad.'</td>
+    <td style="width: 12%; " >'.(($datos->cantidad!=$datos->pieza)? $datos->pieza." Pieza(s)":'').' </td>
+<td style="width: 40%" >'.$datos->descripcion.(($datos->presentacion!='')? " (".$datos->presentacion.")" : (($datos->presentacion_venta=='0.250')? " (250 Gr)":(($datos->presentacion_venta=='0.500')? " (500 Gr) ": " (Kilo(s)) "))).(($datos->observacion!="")? "<br>".$datos->observacion:"").'</td>
 <td style="width: 10%" align="right">'.number_format($datos->precio,2).'</td>
 <td style="width: 10%" align="right">'.number_format($datos->impuesto,2).'</td>
 <td style="width: 15%" align="right">'. number_format($datos->total,2).'</td>
@@ -201,8 +203,8 @@ $i++;
 if($i<5){
 for($j=$i;$j<=5;$j++){
  $html .=' <tr align="center">
-<td style="width: 15%;height: 19px;"></td>
-<td style="width: 10%"></td>
+<td style="width: 13%;height: 19px;"></td>
+<td style="width: 12%"></td>
 <td style="width: 40%"></td>
 <td style="width: 10%"></td>
 <td style="width: 10%"></td>
@@ -211,44 +213,36 @@ for($j=$i;$j<=5;$j++){
 }    
 }
 $html .=' <tr align="center" bgcolor="#CCCCCC">
-<td style="width: 15%"></td>
-<td style="width: 10%"></td>
-<td style="width: 40%"></td>
+<td style="width: 65%" colspan="3"></td>
 
 <td style="width: 20%" colspan="2" align="right">Subtotal</td>
 <td style="width: 15%" align="right">'.$datosCompra->subtotal.'</td>
 
 </tr>'; 
 $html .=' <tr align="center" bgcolor="#CCCCCC">
-<td style="width: 15%"></td>
-<td style="width: 10%"></td>
-<td style="width: 40%"></td>
-
+<td style="width: 65%" colspan="3"></td>
 <td style="width: 20%" colspan="2" align="right">I.V.A.</td>
 <td style="width: 15%" align="right">'.$datosCompra->iva.'</td>
 
 </tr>'; 
 $html .=' <tr align="center" bgcolor="#CCCCCC">
-<td style="width: 15%"></td>
-<td style="width: 10%"></td>
-<td style="width: 40%"></td>
-
+<td style="width: 25%" colspan="2">Codigo Envio:</td>
+<td style="width: 40%">Empresa Envio:</td>
 <td style="width: 20%" colspan="2" align="right">Costo Envio</td>
 <td style="width: 15%" align="right">'.(($datosCompra->costo_envio < 1)? "0.00": $datosCompra->costo_envio).'</td>
 
 </tr>'; 
 $html .=' <tr align="center" bgcolor="#CCCCCC">
-<td style="width: 15%"></td>
-<td style="width: 10%"></td>
-<td style="width: 40%"></td>
+<td style="width: 25%" colspan="2">'.$datosCompra->codigo_envio.'</td>
+<td style="width: 40%">'.$datosCompra->empresa.'</td>
 <td style="width: 20%" colspan="2" align="right">Total</td>
 <td style="width: 15%" align="right">'. number_format(($datosCompra->monto + $datosCompra->costo_envio),2).'</td>
 
-</tr></table> 
-<p>
-'.$datosCompra->observacion.'
-</p>
-<p>
+</tr></table>';
+if($datosCompra->observacion!=""){
+$html .='<p>Observacion(es): '.$datosCompra->observacion.'</p>';
+    }
+$html .='<p>
 El envió se hará dentro de 4 a 5 días hábiles después de haber recibido el pedido y el deposito correspondiente, el tiempo de entrega por mensajería 
 oscila máximo 5 días hábiles. El costo  de envió varia  en cuanto al peso total.</p>
 <p>
@@ -352,17 +346,17 @@ e-mail: ventas@majomut.org</p>
  
 
  ';
-  echo $html;
+  //echo $html;
 //print_r($datos);
   ob_end_clean(); 
 // Print text using writeHTMLCell()
 $pdf->writeHTML($html, true, false, true, false, '');
-
+// ob_end_clean();
 // ---------------------------------------------------------
 
 // Close and output PDF document
 // This method has several options, check the source code documentation for more information.
-  ob_end_clean(); 
+ // ob_end_clean(); 
 $pdf->Output('cotizacion.pdf', 'I');
 
 

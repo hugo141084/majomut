@@ -1,13 +1,111 @@
+
+
+<?php Tag::css('demo_page'); ?>
+<?php Tag::css('demo_table'); ?>
+<?php Html::includeCss() ?>
+<?php echo Tag::js('jquery.dataTables.min'); ?>
+
+<div id="container" >
+    <br/>
+    <div id="form_container" style="width:100%;" >
+        <h1 class="lineaSuperior"><a></a></h1>
+        
+        
+
+        
+                <div id="dt_example" style="margin:0 auto; padding:10px 20px; background-color:#ffffff; ">      
+                   
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default">
+
+                            <div class="panel-body">
+                             <div class="col-md-12">
+                                   <div style="text-align:right;margin: 0 0; width:100%; float: left; ">
+                                       <div id="texto_superior"  >
+                 <?php echo "ENTRADA DE CAFE TOSTADO" ?> 
+            </div>
+                <div class='btn'>
+              <?php   echo Html::linkAction('crearEntradaCT',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),''); ?>
+                </div>
+            </div> 
+ 
+ <table  border="0" width="100%" id="display" class="display">
+            <thead>
+                <tr  style="font-size: 9px;letter-spacing: -0.8px;">
+                    <th width='5%'> #</th>
+                    <th width='20%'> Tipo Documento</th>
+                    <th width='15%'> Documento</th>
+                    <th width='25%'>Fecha Docto.</th>                              
+                    <th width='13%'>F. Recepcion</th>
+                    <th width='13%'>Estato</th>
+                    <th width='13%'>Accion</th>
+                    
+                    </tr>
+            </thead>
+            <tbody>
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
-<div id="form_container" style="width:100%">
-    <h1><a></a></h1>
-<?php View::partial("formatoTabla",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrlcrear1'=>"crear/",'vale'=>"vale",'eliminar'=>"eliminar",'ventana'=>"EntradaCT",'tipoVale'=>'Salida'));  ?>
+           $i=1;
+            foreach($result as $res){
+
+              
+                       echo "<tr>";
+                        echo "<td>".$res->id."</td>";
+                             echo "<td>".$res->tipo_documento."</td>";
+                            echo "<td>".$res->documento."</td>";
+                            echo "<td>".$res->fecha_documento."</td>"; 
+                            echo "<td>".$res->fecha_recepcion."</td>"; 
+                            echo "<td>".$res->estado."</td>"; 
+                            
+                            echo "<td>";
+                            
+                                echo Html::linkAction('valeEntradaCT/'.$res->id, Html::img('printer.png', 'cancel', 'style="text-align:center;width:17px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir éste Vale?\'))window.open(this.href,this.target);return false;"'));
+                            if($res->estado=='Activo')
+                                echo Html::linkAction("cancelarEntradaT/".$res->id, '<span class="glyphicon glyphicon-trash"></span>','class="btn btn-danger btn-xs" title="" data-toggle="tooltip" data-original-title="Eliminar" onclick="return confirm(\'Está Seguro que desea Cancelar el Vale.?\')"');
+                            
+                            
+                            echo "</td>";
+                            echo "</tr>";  
+                             
+                        $i++; 
+               }
+            ?>
+            </tbody>
+        </table>
+        </div>     
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+
+       
+
+    </div>
 </div>
 
+<script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(".display").dataTable({ 
+            "aaSorting": [[0,"desc"]],
+            "bAutoWidth": true,
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "aProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encuentran resultados",
+                "sInfo": "Mostrando desde _START_ hasta _END_ registros",
+                "sInfoEmpty": "Mostrando desde 0 hasta 0 de 0 registros",
+                "sInfoFiltered": "(filtrando de _MAX_ registros en total)",
+                "sSearch": "Buscar",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Ultimo"
+                }
+            }
+        });
+    });
+    
+</script>

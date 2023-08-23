@@ -9,7 +9,7 @@
 
 class clase_recepcion {
 
-    function introduce_movimiento( $cantidad,$productoId, $almacenId,$lote,$fecha_caducidad,$serie,$opcion,$num_inventario) {
+    function introduce_movimiento( $cantidad,$productoId, $almacenId,$lote,$fecha_caducidad,$serie,$opcion,$num_inventario,$unidad) {
         
         
         $array_productos = Session::get('array_productos');
@@ -25,11 +25,10 @@ class clase_recepcion {
         //$detalle_presentacion=$presentacion->listarXid($detalle->UNIDAD_ENTRADA);
         $array_productos[$num]['UNIDAD_ENTRADA'] = $detalle->empaque;
         $array_productos[$num]['OPCION']=$opcion;
-        if(($detalle->UNIDAD_PAQUETE=="") || ($detalle->UNIDAD_PAQUETE==0)){
-        $array_productos[$num]['UNIDAD_PAQUETE']=1;        
-        }else{
-        $array_productos[$num]['UNIDAD_PAQUETE']=$detalle->UNIDAD_PAQUETE;    
-        }
+        
+        $array_productos[$num]['UNIDAD_PAQUETE']=$unidad;    
+        
+        
         $loteD=new lote();
         $detalle_lote=$loteD->listarXid($lote);
         $array_productos[$num]['LOTE_CODIGO'] = $detalle_lote->codigo;
@@ -50,7 +49,48 @@ class clase_recepcion {
         
         Session::set('array_productos', $array_productos);
     }
-
+    function introduce_movimientoF( $cantidad,$productoId, $almacenId,$lote,$fecha_caducidad,$serie,$opcion,$num_inventario,$unidad) {
+        
+        
+        $array_productos = Session::get('array_productos');
+        $num = count($array_productos);
+        $array_productos[$num]['PRODUCTO_ID'] = $productoId;
+        $producto=new producto();
+        $detalle=$producto->listarXid($productoId);
+        $array_productos[$num]['CLAVE'] = $detalle->clave;
+        $array_productos[$num]['DESCRIPCION'] = $detalle->descripcion;
+        $array_productos[$num]['CANTIDAD'] = $cantidad;
+        $array_productos[$num]['MEDIDA'] = $detalle->medida;
+        //$presentacion=new presentacion();
+        //$detalle_presentacion=$presentacion->listarXid($detalle->UNIDAD_ENTRADA);
+        $array_productos[$num]['UNIDAD_ENTRADA'] = $detalle->empaque;
+        $array_productos[$num]['OPCION']=$opcion;
+        
+        $array_productos[$num]['UNIDAD_PAQUETE']=$unidad;    
+        
+        $consultaExis=new detalle_lote();
+        $lote=$consultaExis->find_first($lote);
+        $lote=$lote->lote_id;
+        $loteD=new lote();
+        $detalle_lote=$loteD->listarXid($lote);
+        $array_productos[$num]['LOTE_CODIGO'] = $detalle_lote->codigo;
+        if(($lote!="") and ($serie=="")){
+        $array_productos[$num]['LOTE_SERIE'] = $lote;
+        }else if(($lote=="") and ($serie!="")){
+          $array_productos[$num]['LOTE_SERIE'] = $serie;  
+        }  else {
+         $array_productos[$num]['LOTE_SERIE'] = "";   
+        }
+        $array_productos[$num]['FECHA_CADUCIDAD'] = $fecha_caducidad;
+        $array_productos[$num]['NUMERO_INVENTARIO']= $num_inventario;
+        $array_productos[$num]['ALMACEN_ID']= $almacenId;
+          $almacen=new almacen();
+        $detalle_almacen=$almacen->listarXid($almacenId);     
+        $array_productos[$num]['ALMACEN']= $detalle_almacen->almacen;
+        $array_productos[$num]['DESCRIPCION_ALMACEN']= $detalle_almacen->descripcion;
+        
+        Session::set('array_productos', $array_productos);
+    }
     function guarda_movimiento($idSujeto, $importe, $formaPago, $fechaElaboracion, $referencia, $idCobro, $idRecibo, $conceptoDescuento) {
 
 

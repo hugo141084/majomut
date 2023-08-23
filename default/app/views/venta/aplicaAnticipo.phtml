@@ -1,0 +1,335 @@
+<script type="text/javascript">
+   
+    
+    function buscaCliente() {
+        var clienteId = $('#anticipo_cliente_id').val();
+        if (clienteId > 0) {
+            var operacion = "BUSCA_CLIENTE_AN";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "clienteId=" + clienteId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#cliente").html(html);
+                }
+            });
+        }
+    }
+    
+</script>    
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+    <div id="form_container" style="width:100%;" >
+        <br>
+        <h1><a></a></h1>
+        <div id="titulo_superior"> 
+            <div id="texto_superior"  >
+                <?php echo "Aplicacion de Anticipo" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                    echo Html::linkAction('listadoAnticipo', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php echo Form::open("venta/aplicaAnticipo/".$anticipo->id); ?>
+        <?php echo Form::hidden("anticipo.id"); ?>
+
+
+
+        <div id="margen" >
+            
+            <div class="card card-statistics" >
+            <div class="card-header" style="background: #d1e7dd;color:#FFF">
+               
+            </div>
+            <div class="card-body">
+                <h4>Datos del Cliente:</h4>
+                <hr>
+                    <div id="cliente">
+                        <table width="100%" border="0" class="table table-bordered">
+                            <tr>
+                                <td width="15%"> Nombre:</td>
+                                <td width="85%"><?php echo form::text('anticipo.nombre', ' required class="form-control" '); ?></td>
+                               
+                            </tr>
+                            <tr>
+                                <td> Direccion:</td>
+                                <td ><?php echo form::text('anticipo.direccion', ' required class="form-control" '); ?></td>
+                            </tr>
+                            
+                        </table>
+                    </div>   
+                </div>
+            </div>
+            
+<?php $ar2 = array('Contado', 'Credito'); ?>
+            <div class="card card-statistics" >
+            <div class="card-header" style="background: #d1e7dd;color:#FFF">
+               
+            </div>
+            <div class="card-body">
+                <h4>Datos del Anticipo:</h4>
+                <hr>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Fecha:
+                            </div>
+<?php echo form::date('anticipo.fecha_anticipo', ' required class="form-control" '); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Forma de pago:
+                            </div>
+<?php echo Form::dbSelect("anticipo.concepto_id", 'concepto', array('conceptos', 'listar', 0), '- Seleccione -', " class='form-control' "); ?>
+                        </div>
+                    </div> 
+                </div>
+
+                    <div id="cajaDetalle" style="display: none">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Referencia:    
+                            </div>
+<?php echo Form::text('anticipo.referencia', 'maxlength="30" class="form-control"  '); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Fecha de documento:    
+                            </div>
+<?php echo Form::date('anticipo.fecha_referencia', 'type="text" class="form-control" placeholder="dd-mm-aa" '); ?> 
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Cuenta Bancaria:    
+                            </div>
+<?php echo Form::dbSelect("anticipo.bancos_cuentas_id", 'cuenta', array('bancosCuentas', 'listarCuentasBancos', 0), '- Seleccione -', " class='form-control '  "); ?>
+                        </div>
+                    </div> 
+                </div>
+                    </div>
+                    
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Uso del CFDI :    
+                            </div>
+<?php echo Form::dbSelect("anticipo.uso_id", 'descripcion', array('usoCfdi', 'listar', 0), '- Seleccione -', " class='form-control input-sm'   "); ?>
+                        </div>
+                    </div> 
+                </div>
+                <table width="100%" class="table tablaSinBorde">
+
+
+
+                    <tr>
+                        <td colspan="4"  width="60%">
+                            <label class="description"> Observaciones </label>  
+
+                       <?php echo Form::textarea('anticipo.observacion', '  class="form-control"  '); ?></td>
+                    </tr>
+                    <tr>
+                        <td  >Importe del Anticipo  $</td>
+                        <td  valign="middle">
+                            <div style="margin-top: 4px" class="input-group">
+
+<?php echo Form::text('anticipo.importe', 'maxlength="20" class="form-control" size="10" style="text-align:right;" '); ?>
+
+                            </div>
+                        </td>
+                        <td  >Importe Aplicado  $</td>
+                        <td  valign="middle">
+                            <div style="margin-top: 4px" class="input-group">
+
+<?php echo Form::text('anticipo.importe_aplicado', 'maxlength="20" class="form-control" size="10" style="text-align:right;" '); ?>
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    
+                </table>  
+                
+                <div class="card card-statistics" >
+            <div class="card-header" style="background: #d1e7dd;color:#FFF">
+               
+            </div>
+            <div class="card-body">
+                <h4>Remision(es):</h4>
+                <hr>
+                  <div class="cabecera">
+       
+     <h5><a id="letra1">Dostos. con saldo pendiente</a></h5> 
+   
+        
+    </div>
+
+
+                 <table width="100%" border="1" class="letra">
+ <tr align="center">
+        <td width="10%">#</td>
+        <td width="15%">Docto</td>
+        <td width="15%">Fecha</td>
+        <td width="10%">Subtotal</td>
+        <td width="10%">I.V.A.</td>
+        <td width="10%">Total</td>
+        <td width="10%">Saldo</td>
+        <td width="20%">I. a Aplicar</td>
+        </tr>
+        
+</table>
+     
+   <div class="contenido6">
+ 		
+  <table  width="100%"  border="1" class="letra"  >
+      <?php 
+      $i=1;
+      $color = "";
+    foreach ($listar as $datos){
+if($color == "#ebf3ff"){
+				$color = "#ffffff";
+			}else{
+				$color = "#ebf3ff";
+			}
+		
+
+ echo "<tr bgcolor='".$color."' class=\"letra\" >";	
+ echo "<td width='10%' align=\"center\"  >".$i."</td>";
+ echo "<td  width='15%' class=\"letra\" >".$datos->documento."</td>";  
+ echo "<td  width='15%' class=\"letra\" >".$datos->fecha_documento."</td>";
+ echo "<td  width='10%' class=\"letra\" >".$datos->subtotal."</td>";
+ echo "<td  width='10%' class=\"letra\" >".$datos->iva."</td>";
+ echo "<td  width='10%' class=\"letra\" >".$datos->monto."</td>";
+ echo "<td  width='10%' class=\"letra\" >".$datos->saldo."</td>";
+ echo "<td  width='20%' class=\"letra\" ><input type='text' name=\"aplicar$datos->id\" id=\"aplicar$datos->id\"  style='visibility:true;   text-align:right ' class='letra' ></td>"; 
+ 
+
+ echo"</tr>";
+$i++;
+ }
+
+
+?>
+    </table>
+                </div>  
+                
+            </div>
+</div>
+        </div>
+
+            </div>
+        </div>
+        <br>
+
+<?php $url = "'" . PUBLIC_PATH . "venta/listadoAnticipo'"; ?>
+    <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+<?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+
+            </td>
+            <td width="33%">
+<?php echo Form::submit((($accion == 'aplicaAnticipo') ? 'Aplicar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+            </td>
+        </tr>
+    </table>
+
+</div> 
+</div>
+</br>
+<?php echo Form::close(); ?>
+
+</body>
+
+<script type="text/javascript">
+   
+    
+    $("#anticipo_cliente_id").change(function () {
+        buscaCliente();
+
+    });
+
+   
+    $("#anticipo_concepto_id").change(function () {
+        var idConcepto = $('#anticipo_concepto_id').val();
+        
+        if (idConcepto != '') {
+            operacion = 'BUSCA_MOVIMIENTO';
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/funciones'; ?>",
+                data: "operacion=" + operacion + "&idConcepto=" + idConcepto,
+                success: function (html) {
+                    var aux = html;
+                    aux = aux.replace(/^\s+|\s+$/g, "");
+                    $('#tipo_operacion').val(aux);
+                    if (aux != "C") {
+                        $('#cambio').hide();
+                        $('#etiqCb').hide();
+                        $('#p').hide();
+                        //MUESTRA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
+                        $('#cajaDetalle').show();
+                        operacion = 'BUSCA_BANCO';
+                        $.ajax({
+                            type: "POST",
+                            url: "<?php echo PUBLIC_PATH . 'venta/funciones'; ?>",
+                            data: "operacion=" + operacion,
+                            success: function (html) {
+
+                                $("#bancoI").html(html);
+                            }
+                        });
+
+
+                    } else {
+                        $('#cambio').show();
+                        $('#etiqCb').show();
+                        $('#p').show();
+                        //OCULTA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
+                        $('#cajaDetalle').hide();
+                       
+
+
+                    }
+                }
+            });
+        }
+
+    });
+    $("#importe_recibido").keyup(function(){
+     validaMonto();
+ }); 
+ 
+    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
+   var n = this,
+   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+   decSeparator = decSeparator === undefined ? "." : decSeparator,
+   thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
+   sign = n < 0 ? "-" : "",
+   i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+   j = (j = i.length) > 3 ? j % 3 : 0;
+   return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+};
+</script>  
+
+
+
+
+
+

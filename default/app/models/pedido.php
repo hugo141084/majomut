@@ -21,7 +21,7 @@ class pedido extends ActiveRecord {
     }
     public function listarXid($id) {
         return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_entrega, com.documento, com.tipo_documento, com.direccion,com.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio,com.nombre 
- ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior,cli.colonia,cli.ciudad,cli.estado,cli.pais,cli.codigopostal)  direccion,com.bancos_cuentas_id FROM pedido as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
+ ,cli.telefono,cli.correoelectronico,concat_ws(',',cli.calle,cli.numerointerior,cli.numeroexterior,cli.colonia,cli.ciudad,cli.estado,cli.pais,cli.codigopostal)  direccion,com.bancos_cuentas_id,com.empresa, com.codigo_envio, com.observacion FROM pedido as com inner join cliente as cli  WHERE com.cliente_id =cli.id and  com.id=$id");
     }
     public function listarXidDC($id) {
         return $this->find_by_sql("SELECT com.id, com.fecha_documento, com.fecha_entrega, com.documento, com.tipo_documento,cli.id, cli.nombrecompleto,cli.rfc,com.estado,com.subtotal,com.iva,com.monto,com.costo_envio 
@@ -34,27 +34,31 @@ FROM inventario as inv, producto as pro  WHERE ALMACEN_ID =$id and inv.PRODUCTO_
     }
     
     public function listarPedido() {
-         
-         $sqlCompra = "SELECT com.id, com.fecha_documento, com.fecha_entrega, com.documento, com.tipo_documento, cli.nombrecompleto,cli.rfc,com.estado 
-FROM pedido as com inner join cliente as cli  WHERE com.cliente_id =cli.id  ";
+         $ciclocosechaId = Session::get('cicloCosecha');
+         $sqlCompra = "SELECT com.id, com.fecha_documento, com.fecha_entrega, com.documento, com.tipo_documento, cli.nombrecompleto,cli.rfc,com.estado,com.venta 
+FROM pedido as com inner join cliente as cli  WHERE com.cliente_id =cli.id and ciclocosecha_id='$ciclocosechaId' order by com.id desc ";
         
         return $this->find_all_by_sql($sqlCompra);
     }
     
     public function guardarDatos(){
+        $ciclocosechaId = Session::get('cicloCosecha');
        $compra = new pedido(Input::post('pedido'));
         $fechaDocumento=$compra->fecha_documento;
         $fechaEntrega=$compra->fecha_entrega;
         $cliente_id=$compra->cliente_id;
+       
+           $aux = Input::Post("pedido");
+                $serieId = $aux['serie_id'];
         $folios = new series_folios();
-           $folios->incrementarConsecutivo('PEDIDO');
-        $datoFolios = $folios->find_first("tipo = 'PEDIDO'");
-        $compra->documento="P-".str_pad(($datoFolios->consecutivo),4, "0", STR_PAD_LEFT);
+           $folios->incrementarConsecutivoId($serieId);
+        $datoFolios = $folios->find_first($serieId);
+       $compra->documento=$datoFolios->serie."-".str_pad(($datoFolios->consecutivo),4, "0", STR_PAD_LEFT);
         
         $compra->estado='1'; 
         $compra->fecha_documento = strftime("%Y-%m-%d", strtotime($compra->fecha_documento));
         $compra->fecha_entrega = strftime("%Y-%m-%d", strtotime($compra->fecha_entrega));
-   
+        $compra->ciclocosecha_id=$ciclocosechaId; 
         $compra->usuario_id=Session::get('id'); 
         
         if( $compra->save()){
@@ -75,13 +79,17 @@ $codigo=$array_productos[$i]['CLAVE'];
 $descripcion=$array_productos[$i]['DESCRIPCION'];
 $cantidad=$array_productos[$i]['CANTIDAD'];
 $precio=$array_productos[$i]['PRECIO'];
+$presentacionVenta=$array_productos[$i]['PRESENTACIONV'];
+$presentacion=$array_productos[$i]['PRESENTACION'];
+$cantidadP=$cantidad * (1/$presentacion);
        $detalleCompra = new detalle_pedido();
               
             $pro = new producto();     
         $pro=$pro->find_first('id='.$productoId);
         $iva=$pro->impuesto; 
-              
-        $partidaTotal=$cantidad*$precio;
+         $medida=new medida();
+        $datoMedida=$medida->find_first($pro->medida_id);       
+        $partidaTotal=$cantidadP*$precio;
          
          $ivaI=(round((($partidaTotal*$iva)/100),2));
          $totalI=$partidaTotal+$ivaI;
@@ -89,7 +97,7 @@ $precio=$array_productos[$i]['PRECIO'];
           $importeTotal=$importeTotal+$totalI;
           $subtotal=$subtotal+$partidaTotal;
              
-              $detalleCompra->guardarDatos($compraId, $productoId, $cantidad,$precio,$ivaI,$totalI);
+              $detalleCompra->guardarDatos($compraId, $productoId, $cantidad,$precio,$ivaI,$totalI,$cantidadP,$presentacion,$datoMedida->descripcion);
               
              }
          //echo "<script>  jAlert ('Registro Insertado....!','AVISO');</script>";

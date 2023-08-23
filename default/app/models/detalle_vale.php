@@ -23,7 +23,11 @@ class detalle_vale extends ActiveRecord {
         return $this->find_by_sql("select * from almacen where id='$id'");
     }
     public function listarProductoCompra($compraId) {
-         $sqlProducto = "SELECT det.id, pro.clave, pro.descripcion,pro.peso, pro.peso_neto,pro.precio, det.cantidad, alm.almacen, pp.descripcion preparacion, pre.descripcion presentacion, lo.codigo, em.descripcion embalaje, pro.unidad_empaque, pro.peso_empaque, det.producto_id, me.descripcion medida FROM detalle_vale det inner join producto pro on det.producto_id=pro.id inner join almacen alm on det.almacen_id=alm.id left join presentacion pre on pro.presentacion_id=pre.id left join preparacion pp on pro.preparacion_id=pp.id inner join lote lo on det.lote_id=lo.id inner join embalaje em on pro.empaque_id=em.id left join medida me on pro.medida_id=me.id  WHERE det.compra_id ='$compraId' ";
+         $sqlProducto = "SELECT det.id, pro.clave, pro.descripcion,pro.peso, pro.peso_neto,pro.precio, det.cantidad, det.unidad, alm.almacen, alm.descripcion descripcionAl, pp.descripcion preparacion, pre.descripcion presentacion, lo.codigo, em.descripcion embalaje, pro.unidad_empaque, pro.peso_empaque, det.producto_id, me.descripcion medida,c.descripcion calidad FROM detalle_vale det inner join producto pro on det.producto_id=pro.id inner join almacen alm on det.almacen_id=alm.id left join presentacion pre on pro.presentacion_id=pre.id left join preparacion pp on pro.preparacion_id=pp.id inner join lote lo on det.lote_id=lo.id inner join embalaje em on pro.empaque_id=em.id left join medida me on pro.medida_id=me.id left join calidad c  on pro.calidad_id=c.id  WHERE det.compra_id ='$compraId' ";
+        return $this->find_all_by_sql($sqlProducto);
+    }
+    public function listarProductoMovimiento($compraId) {
+         $sqlProducto = "SELECT pro.clave, pro.descripcion,pro.peso, pro.peso_neto,pro.precio, mi.cantidad, alm.descripcion almacen, pp.descripcion preparacion, pre.descripcion presentacion, lo.codigo, em.descripcion embalaje, pro.unidad_empaque, pro.peso_empaque, mi.producto_id, me.descripcion medida,c.descripcion calidad, cm.descripcion movimiento FROM vale v inner join movimiento_inventario mi on v.documento=mi.referencia inner join producto pro on mi.producto_id=pro.id inner join almacen alm on mi.almacen_id=alm.id left join presentacion pre on pro.presentacion_id=pre.id left join preparacion pp on pro.preparacion_id=pp.id inner join lote lo on mi.lote_id=lo.id inner join embalaje em on pro.empaque_id=em.id left join medida me on pro.medida_id=me.id left join calidad c on pro.calidad_id=c.id INNER join concepto_movimiento cm on cm.id=mi.tipo_movimiento WHERE v.id ='$compraId' ";
         return $this->find_all_by_sql($sqlProducto);
     }
     public function listarProductoAlmacen($id) {
@@ -40,7 +44,8 @@ FROM inventario as inv, producto as pro  WHERE ALMACEN_ID =$id and inv.PRODUCTO_
         $detalleCompra->lote_id=$loteSerie;
         $detalleCompra->numero_inventario=$numInventario;
         $detalleCompra->fecha_caducidad = strftime("%Y-%m-%d", strtotime($fechaCaducidad));
-        $detalleCompra->usuario_id=Session::get('id'); 
+        $detalleCompra->unidad=$unidadXpaquete; 
+        $detalleCompra->usuario_id=Session::get('Id'); 
         $detalleCompra->save();
         
     }

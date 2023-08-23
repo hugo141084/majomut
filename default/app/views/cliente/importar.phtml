@@ -1,0 +1,21 @@
+<h1>
+    Consideraciones.
+</h1>
+<p class="text-left">
+    > El archivo debe contener  la estructura del formato sin modificar su estructura.  <a href="<?php echo PUBLIC_PATH . "files/descargas/formato/cliente.xls" ?>" target="_blank">
+                                <img src="<?php echo PUBLIC_PATH ?>img/excel.png" width="25">
+                            </a></p>
+<p>    > El archivo  debe tener extension ".xls" excel 2013. </p>
+<p>   > El primer registro debe empezar en la linea 5 y entre registros no deben existir  lineas en blanco.
+    
+</p>
+<fieldset style="width:90%; margin: 4%;">
+                <legend  class="letra">Cargar Archivo </legend>
+                <?php echo Form::openMultipart("cliente/leerArchivo/") ?>         
+                <?php
+                echo Form::file('file');
+               echo  Form::hidden('oculto',"","2");
+                ?><?php echo Form::submit('Subir Excel') ?>
+<?php echo Form::close() ?> 
+                <br>
+            </fieldset>

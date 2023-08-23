@@ -28,7 +28,7 @@
                
                 separador = ","
                 cadena=html.split(separador)
-                $("#etiqueta").html(cadena[0]);
+                
                 var valor=cadena[1];
                  $("#pedido_precio").val(valor);
                   
@@ -51,26 +51,40 @@
     }
     function agregarPartida()
     {
-
+trans=0;
         var operacion = 'AGREGAR_PARTIDA_PEDIDO';
         var cantidad = $('#pedido_cantidad').val();
         var productoId = $('#pedido_producto_id').val();
         var precio = $('#pedido_precio').val();
+         var presentacionVe=$('#presentacionVenta').val();
+        if(presentacionVe=='T') var presentacion = $('#presentacionT').val();
+        else {
+            var presentacion = $('#presentacionV').val();
+            trans=presentacion;
+         
+        }
         var serie = "";
         var lote = $('#lote').val();
         var opcion = 'lote';
         var mens = "";
         var re = /,/g;
+        
         cantidad = cantidad.replace(re, "");
-
+        
         if (cantidad == "") {
             mens += "\n- Inserte una cantidad valida";
         }
         if (productoId == "") {
             mens += "\n- Elija un producto";
         }
-        
-
+        if(presentacion=='M1'){presentacion='Molido'; trans="1"; }
+        else if(presentacion=='M1.1'){presentacion='Molido 500 gr.'; trans="0.50";}
+        else if(presentacion=='M1.2'){presentacion='Molido 250 gr.'; trans="0.25";}
+        if(presentacion=='G1'){presentacion='en Grano'; trans="1"; }
+        else if(presentacion=='G1.1'){presentacion='en Grano 500 gr.'; trans="0.50";}
+        else if(presentacion=='G1.2'){presentacion='en Grano 250 gr.'; trans="0.25";}
+        if(trans==''){trans=1;}
+        cantidad=cantidad * trans;
 
         if (mens != "") {
             alert('Verifique los siguientes campos:\n' + mens);
@@ -80,7 +94,7 @@
             $.ajax({
                 type: "POST",
                 url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
-                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion,
+                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion+ "&presentacionV=" + presentacion+ "&presentacion=" + trans,
                 success: function (html) {
 
                     html = html.replace(/^\s+|\s+$/g, "");
@@ -112,8 +126,62 @@
 
 
     }
+    
+    function buscaCatalogo() {
+        var empresaId = $('#empresaE').val();
+        if (empresaId > 0) {
+            var operacion = "BUSCA_CATALOGO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "empresaId=" + empresaId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#catalogoEs").html(html);
+                    $('#pedido_empresa').val($('#empresaE option:selected').text());
+                    $('#pedido_empresa_id').val($('#empresaE').val());
+                }
+            });
+        }
+    }
+    
+   
+    function asignaPrecio(valor) {
+       
+        if (valor > 0) {
+            var operacion = "BUSCA_COSTO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                    data: "valor=" + valor + "&operacion=" + operacion,
+                success: function (html) {
+                    $('#pedido_costo_envio').val(html);
+                    $('#pedido_codigo_envio').val($('#venta_costo_id option:selected').text());
+                    $('#pedido_codigo_envio_id').val($('#venta_costo_id').val());
+                }
+            });
+        }
+    }
+    
+    function buscarFolio(valor){
+         if (valor > 0) {
+            var operacion = "BUSCA_SERIE";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                    data: "valor=" + valor + "&operacion=" + operacion,
+                success: function (html) {
+                    $('#pedido_folio').val(html);
+                }
+            });
+        }else{
+         $('#pedido_folio').val("");
+        }
+        
+    }
 </script>    
-<?php View::content(); ?>
+<?php View::content();
+$presentacionB = array("" => "Seleccione");
+?>
 <body id="cuerpo_principal">
 
     <div id="form_container" style="width:100%;" >
@@ -126,7 +194,7 @@
             <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
                 <div class='btn'>
                     <?php
-                    echo Html::linkAction('listadoCotizacion', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
+                    echo Html::linkAction('listadoPedido', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
                     ?>
                 </div>
             </div>
@@ -142,12 +210,24 @@
 
                 <?php echo Form::hidden('pedido.tipo_documento', 'maxlength="20" required class="form-control"   ', "PEDIDO"); ?>
 
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <div class="form-group">
                         <div class="input-group">
-                            <div class="input-group-addon">       Documento:    
+                            <div class="input-group-addon">       Serie:    
                             </div>
-                            <?php echo Form::text('pedido.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ', $num); ?>
+                            
+                        <?php $ar2 = array("" =>'Seleccione', "5" =>'PEV', "9" =>'PET'); ?>
+                       <?php echo Form::Select('pedido.serie_id', $ar2," class='form-control' required onchange='buscarFolio(this.value)' ");   ?>
+                        </div>
+                    </div> 
+                </div>
+                
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Folio:    
+                            </div>
+                            <?php echo Form::text('pedido.folio', ' readonly="readonly" maxlength="20" required class="form-control"   '); ?>
                         </div>
                     </div> 
                 </div>
@@ -224,6 +304,17 @@
 
                             </div>
                         </div> 
+                        <div class="col-md-2 " id="tipoVenta">
+                            
+                            
+                            <label >C. Venta</label>
+                            <div class="input-group">
+                                <div  id="etiqueta1" >
+                                    <?php echo Form::Select('presentacionV', $presentacionB, 'class="form-control"', ''); ?>
+                                </div>
+                            </div>
+                        
+                        </div>
                         <div class="col-md-2 ">
                             <label >cantidad</label>
                             <div class="input-group">
@@ -234,14 +325,7 @@
                         </div> 
 
 
-                        <div class="col-md-2 ">
-                            <label >.</label>
-                            <div class="input-group">
-                                <div  id="etiqueta" >
-                                   
-                                </div>
-                            </div>
-                        </div> 
+                         
 
                         <div class="col-md-3 ">
                             <label >Precio</label>
@@ -281,25 +365,49 @@
                         </tr>
                     </table>
                     <br/>
-
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"> Empresa Envio:    
+                                </div>
+                                <?php echo Form::dbSelect("empresaE", 'nombre', array('empresa', 'listar', 0), '- Seleccione -', " class='form-control' onchange='buscaCatalogo()' "); ?>
+                                <?php echo Form::hidden("pedido.empresa", "class='form-control' "); ?>
+                                <?php echo Form::hidden("pedido.empresa_id", "class='form-control' "); ?>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"> Catalogo Costo:    
+                                </div>
+                                <div id="catalogoEs">
+                                <?php echo Form::dbSelect("venta.costo_id", 'costo', array('costoEnvio', 'datos', 0), '- Codigo, kilos, Costo -', " class='form-control' onchange='asignaPrecio(this.value)'"); ?>
+                                </div>
+                                <?php echo Form::hidden("pedido.codigo_envio", "class='form-control' "); ?>
+                                <?php echo Form::hidden("pedido.codigo_envio_id", "class='form-control' "); ?>
+                                </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Costo Envio:    
+                                </div>
+                                <?php echo Form::text("pedido.costo_envio", "class='form-control' "); ?>
+                            </div>
+                        </div> 
+                    </div>
                     <table style="width: 100%" border="0">
 
                         <tr >
-                            <td>Observaciones:</td>
+                            <td style="width: 5%">Observaciones:</td>
                             <td><?php echo Form::textarea('pedido.observacion', '  class="form-control"  '); ?></td>
 
                         </tr>
                     </table>
                     <br>
-            <div class="col-sm-4">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-addon">       Costo Envio:    
-                                </div>
-                                <?php echo Form::dbSelect("pedido.costo_envio", 'costo', array('costoEnvio', 'datos', 0), '- Seleccione -', " class='form-control' "); ?>
-                            </div>
-                        </div> 
-                    </div>
+            
                     <div class="col-sm-8">
                         <div class="form-group">
                             <div class="input-group">
@@ -353,6 +461,7 @@
 <script type="text/javascript">
     $("#pedido_producto_id").change(function () {
         buscaUnidadPrecio()
+        buscaPresentacion()
     });
     $("#pedido_cliente_id").change(function () {
         buscaCliente();
@@ -364,6 +473,20 @@
         agregarPartida();
 
     });
+    
+    function buscaPresentacion() {
+        var productoId = $('#pedido_producto_id').val();
+            var operacion = "TIPO_PRESENTACION";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "productoId=" + productoId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#tipoVenta").html(html);
+                }
+            });
+        
+    }
 </script>  
 
 

@@ -34,7 +34,7 @@ ob_end_clean();
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('');
-$pdf->SetTitle('Reportes');
+$pdf->SetTitle('Reporte - Lotes');
 $pdf->SetSubject('');
 
 
@@ -170,7 +170,7 @@ foreach ($existencia as $dato){
         }
       $html.= '
             <tr class="nonegrita1">
-                    <td width="10%" align="right"><div class="divcentrar">Total: '.$total.' </div></td>
+                    <td width="10%" align="right"><div class="divcentrar"><b>Total: '.$total.' </b></div></td>
                     <td width="45%" align="left"></td>
                     <td width="20%"><div class="divcentrar"></div></td>
                     <td  align="center" width="10%"  ></td>

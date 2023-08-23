@@ -141,6 +141,7 @@
                 $("#venta_precio").val(valor);
                  buscaLote();
         buscaDetalle();
+         buscaPresentacion();
             }
         });
     }
@@ -158,29 +159,86 @@
             });
         }
     }
+    function buscaCatalogo() {
+        var empresaId = $('#empresaE').val();
+        if (empresaId > 0) {
+            var operacion = "BUSCA_CATALOGO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "empresaId=" + empresaId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#catalogoEs").html(html);
+                }
+            });
+        }
+    }
+    function buscaPresentacion() {
+        var productoId = $('#venta_producto_id').val();
+            var operacion = "TIPO_PRESENTACION";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "productoId=" + productoId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#tipoVenta").html(html);
+                }
+            });
+        
+    }
+   
+    function asignaPrecio(valor) {
+       
+        if (valor > 0) {
+            var operacion = "BUSCA_COSTO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                    data: "valor=" + valor + "&operacion=" + operacion,
+                success: function (html) {
+                    $('#venta_costo_envio').val(html);
+                }
+            });
+        }
+    }
+    
     function agregarPartida()
     {
-
+trans=0;
         var operacion = 'AGREGAR_PARTIDA_VENTA';
         var cantidad = $('#venta_cantidad').val();
         var productoId = $('#venta_producto_id').val();
         var precio = $('#venta_precio').val();
         var almacenId = $('#venta_almacen_id').val();
+        var presentacionVe=$('#presentacionVenta').val();
+        if(presentacionVe=='T') var presentacion = $('#presentacionT').val();
+        else {
+            var presentacion = $('#presentacionV').val();
+            trans=presentacion;
+         
+        }
+        var existencia 	=	$('#existencia').val();
         var serie = "";
         var lote = $('#lote').val();
         var opcion = 'lote';
         var mens = "";
         var re = /,/g;
         cantidad = cantidad.replace(re, "");
-
-        if (cantidad == "") {
-            mens += "\n- Inserte una cantidad valida";
+if (productoId == "") {
+            mens += "\n- Seleccione un producto";
         }
-        if (productoId == "") {
-            mens += "\n- Elija un producto";
-        }
-
-
+         if (lote=="") {mens+="\n- Seleccione el numero de Lote";}
+        if ((cantidad=="") || (cantidad <= 0 )) {mens+="\n- Inserte una cantidad valida";}
+        
+        if(presentacion=='M1'){presentacion='Molido'; trans="1"; }
+        else if(presentacion=='M1.1'){presentacion='Molido 500 gr.'; trans="0.50";}
+        else if(presentacion=='M1.2'){presentacion='Molido 250 gr.'; trans="0.25";}
+        if(presentacion=='G1'){presentacion='en Grano'; trans="1"; }
+        else if(presentacion=='G1.1'){presentacion='en Grano 500 gr.'; trans="0.50";}
+        else if(presentacion=='G1.2'){presentacion='en Grano 250 gr.'; trans="0.25";}
+        if(trans==''){trans=1;}
+        cantidad=cantidad * trans;
+         if (parseInt(cantidad) > parseInt(existencia)) {mens+="\n- La cantidad no puede ser mayor a la existencia de producto";} 
 
         if (mens != "") {
             alert('Verifique los siguientes campos:\n' + mens);
@@ -190,7 +248,7 @@
             $.ajax({
                 type: "POST",
                 url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
-                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion + "&almacenId=" + almacenId,
+                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion + "&almacenId=" + almacenId+ "&presentacionV=" + presentacion+ "&presentacion=" + trans,
                 success: function (html) {
 
                     html = html.replace(/^\s+|\s+$/g, "");
@@ -288,7 +346,9 @@ else $('#venta_costo_envio').val("0");
         
     }
 </script>    
-<?php View::content(); ?>
+<?php View::content(); 
+$presentacionB = array("" => "Seleccione");
+?>
 <body id="cuerpo_principal">
 
     <div id="form_container" style="width:100%;" >
@@ -306,15 +366,15 @@ else $('#venta_costo_envio').val("0");
                 </div>
             </div>
         </div>
-        <?php echo Form::open("venta/" . $accion); ?>
+        <?php echo Form::open("venta/" . $accion,"POST"); ?>
         <?php echo Form::hidden("venta.id"); ?>
 
 
 
         <div id="margen" >
             <div class="form-row">
-
-
+<?php $ar2 = array("C" =>'Contado', "CR" =>'Credito'); ?>
+<?php //echo Form::Select('venta.condicion', $ar2," class='form-control' required");   ?>
                 <?php echo Form::hidden('venta.tipo_documento', 'maxlength="20" required class="form-control"   ', "VENTA"); ?>
 
                 <div class="col-sm-4">
@@ -344,7 +404,7 @@ else $('#venta_costo_envio').val("0");
                         <div class="input-group">
                             <div class="input-group-addon">       Fecha:    
                             </div>
-<?php echo form::text('venta.fecha_documento', 'placeholder="dd-mm-aa" required class="form-control"', date('d-m-Y')); ?>
+<?php echo form::date('venta.fecha_documento', 'placeholder="dd-mm-aa" required class="form-control"', date('Y-m-d')); ?>
                         </div>
                     </div> 
                 </div>
@@ -378,6 +438,10 @@ else $('#venta_costo_envio').val("0");
                                 <td><input name="venta.rfc" id="venta.rfc" type="text" size="15"   class="letra" readonly="readonly"/></td> 
                             </tr>
                         </table>
+                        <?php 
+$fecha_actual = date("Y-m-d");
+$fecha_vencimiento=date("Y-m-d",strtotime($fecha_actual."+ 0 days"));
+echo Form::hidden('fecha_vencimiento', "class='form-control' readonly='readonly' ",$fecha_vencimiento ); ?>
                     </div>   
                 </div>
             </div>
@@ -385,14 +449,25 @@ else $('#venta_costo_envio').val("0");
                 <div class="panel-heading">Datos Producto </div>
                 <div class="panel-body">
                     <div class="form-row">
-                        <div class="col-md-3 ">
-                            <label for="validationCustomUsername">Producto</label>
+                        <div class="col-md-2 ">
+                            <label for="validationCustomUsername">C. Inventario</label>
                             <div class="input-group">
 <div id="productoEs">
 <?php echo Form::text("venta.producto_id", ' class="form-control"'); ?>
 </div>
                             </div>
                         </div> 
+                        <div class="col-md-2 " id="tipoVenta">
+                            
+                            
+                            <label >C. Venta</label>
+                            <div class="input-group">
+                                <div  id="etiqueta1" >
+                                    <?php echo Form::Select('presentacionV', $presentacionB, 'class="form-control"', ''); ?>
+                                </div>
+                            </div>
+                        
+                        </div>
                         
                         <div class="col-md-2 ">
                             <label >Lote</label>
@@ -418,20 +493,13 @@ else $('#venta_costo_envio').val("0");
                             <label >cantidad</label>
                             <div class="input-group">
 
-<?php echo Form::number('venta.cantidad', ' class="form-control"  ', '0'); ?>
+<?php echo Form::number('venta.cantidad', ' class="form-control"  min="0" step="0.1"', '0'); ?>
 
                             </div>
                         </div> 
 
 
-                        <div class="col-md-1 ">
-                            <label >.</label>
-                            <div class="input-group">
-                                <div  id="etiqueta" >
-
-                                </div>
-                            </div>
-                        </div> 
+                         
 
 
 
@@ -478,13 +546,32 @@ else $('#venta_costo_envio').val("0");
                     </table>
 
                     <br>
-                    <div class="col-sm-5">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <div class="input-group">
-                                <div class="input-group-addon">       Costo Envio:    
+                                <div class="input-group-addon"> Empresa Envio:    
                                 </div>
-<?php //echo Form::number('venta.costo_envio', ' required class="form-control"   '); ?>
-                                <?php echo Form::dbSelect("venta.costo_envio", 'costo', array('costoEnvio', 'datos', 0), '- Seleccione -', " class='form-control' "); ?>
+                                <?php echo Form::dbSelect("empresaE", 'nombre', array('empresa', 'listar', 0), '- Seleccione -', " class='form-control' onchange='buscaCatalogo()' "); ?>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"> Catalogo Costo:    
+                                </div>
+                                <div id="catalogoEs">
+                                <?php echo Form::dbSelect("venta.costo_id", 'costo', array('costoEnvio', 'datos', 0), '- Codigo, kilos, Costo -', " class='form-control' onchange='asignaPrecio(this.value)'"); ?>
+                                </div>
+                                </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Costo Envio:    
+                                </div>
+                                <?php echo Form::text("venta.costo_envio", "class='form-control' "); ?>
                             </div>
                         </div> 
                     </div>
@@ -501,18 +588,37 @@ else $('#venta_costo_envio').val("0");
 
                 </div>
             </div>
-<?php $ar2 = array('Contado', 'Credito'); ?>
+            
+
             <fieldset style="padding: 15px;">
                 <legend><b>Datos del Pago :</b></legend> 
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">Condiciones de pago:    
                             </div>
-<?php echo Form::Select('condiciones', $ar2," class='form-control' required", 'Contado');   ?>
+<?php echo  Form::Select('venta.condicion', $ar2," class='form-control' required");   ?>
+      
                         </div>
                     </div> 
                 </div>
+                <div id="cajaCredito" style="display: none">
+                    <div class="col-sm-5">
+                 <table width="100%">
+        <tr align="center">
+            <td width="40%">     
+               Fecha Probable de Cobro: 
+            </td>
+            <td width="60%">     
+               <?php echo Form::date('venta.fecha_vencimiento', '  class="form-control"  '); ?>
+            </td>
+           
+            
+        </tr>
+                 </table>   </div>
+                </div>
+                
+                
                 <div id="cajaCondiciones">
 
                 <div class="col-sm-9">
@@ -520,7 +626,7 @@ else $('#venta_costo_envio').val("0");
                         <div class="input-group">
                             <div class="input-group-addon">Forma de pago:
                             </div>
-<?php echo Form::dbSelect("concepto_id", 'concepto', array('conceptos', 'listar', 0), '- Seleccione -', " class='form-control' required"); ?>
+<?php echo Form::dbSelect("concepto_id", 'concepto', array('conceptos', 'listar', 0), '- Seleccione -', " class='form-control' "); ?>
                         </div>
                     </div> 
                 </div>
@@ -540,7 +646,7 @@ else $('#venta_costo_envio').val("0");
                         <div class="input-group">
                             <div class="input-group-addon">Fecha de documento:    
                             </div>
-<?php echo Form::text('fecha_referencia', 'type="text" class="form-control" placeholder="dd-mm-aa" '); ?> 
+<?php echo Form::date('fecha_referencia', 'type="text" class="form-control" placeholder="dd-mm-aa" '); ?> 
                         </div>
                     </div> 
                 </div>
@@ -560,7 +666,7 @@ else $('#venta_costo_envio').val("0");
                         <div class="input-group">
                             <div class="input-group-addon">Uso del CFDI :    
                             </div>
-<?php echo Form::dbSelect("uso_id", 'descripcion', array('usoCfdi', 'listar', 0), '- Seleccione -', " class='form-control input-sm' required  "); ?>
+<?php echo Form::dbSelect("uso_cfdi", 'descripcion', array('usoCfdi', 'listar', 0), '- Seleccione -', " class='form-control input-sm'   "); ?>
                         </div>
                     </div> 
                 </div>
@@ -595,6 +701,7 @@ else $('#venta_costo_envio').val("0");
                     </tr>
                 </table>    
         </div>
+                
 
     </fieldset>
 
@@ -634,12 +741,16 @@ else $('#venta_costo_envio').val("0");
         agregarPartida();
 
     });
-    $("#condiciones").change(function () {
-      var condiciones = $('#condiciones').val();  
-      if(condiciones=="1"){
+    $("#venta_condicion").change(function () {
+      var condiciones = $('#venta_condicion').val();  
+      if(condiciones=="CR"){
            $('#cajaCondiciones').hide();
+            $('#cajaCredito').show();
+            $('#venta_fecha_vencimiento').val( $('#fecha_vencimiento').val());
+            
       }else {
            $('#cajaCondiciones').show();
+            $('#cajaCredito').hide();
       }
    });
     $("#concepto_id").change(function () {

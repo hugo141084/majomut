@@ -1,0 +1,457 @@
+<script type="text/javascript">
+    function busca_remision()
+    {
+        var operacion = 'MOSTRAR_REMISION_SALDO'
+        var cliente=$("#cobro_cliente_id").val()
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'cobro/libreriaCobro/'; ?>",
+            data: "operacion=" + operacion+"&cliente=" + cliente,
+            success: function (html) {
+                $("#remisionSaldo").html(html);
+                
+                
+            }
+        });
+
+    }
+    function buscaProducto() {
+        var almacenId = $('#cobro_almacen_id').val();
+
+        var operacion = "BUSCA_PRODUCTO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'cobro/libreriaVenta/'; ?>",
+            data: "almacenId=" + almacenId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#productoEs").html(html);
+            }
+        });
+    }
+    function buscaLote() {
+        var almacenId = $('#cobro_almacen_id').val();
+        var productoId = $('#cobro_producto_id').val();
+        var operacion = "BUSCA_LOTE_PA";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'cobro/libreriaVenta/'; ?>",
+            data: "almacenId=" + almacenId + "&productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#loteProducto").html(html);
+            }
+        });
+    }
+    
+    function buscaExistencia() {
+        var lote = $('#lote').val();
+        var operacion = "BUSCA_EXISTENCIA_PA";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'cobro/libreriaVenta/'; ?>",
+            data: "lote=" + lote  + "&operacion=" + operacion,
+            success: function (html) {
+                $("#existencia").val(html);
+            }
+        });
+    }
+    function buscaProveedor() {
+        var proveedorId = $('#cobro_proveedor_id').val();
+        if (proveedorId > 0) {
+            var operacion = "BUSCA_PROVEEDOR";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'incobrorio/libreriaIncobrorio/'; ?>",
+                data: "proveedorId=" + proveedorId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#proveedor").html(html);
+                }
+            });
+        }
+    }
+  
+    
+    function buscaCatalogo() {
+        var empresaId = $('#empresaE').val();
+        if (empresaId > 0) {
+            var operacion = "BUSCA_CATALOGO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'cobro/libreriaVenta/'; ?>",
+                data: "empresaId=" + empresaId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#catalogoEs").html(html);
+                }
+            });
+        }
+    }
+    function buscaPresentacion() {
+        var productoId = $('#cobro_producto_id').val();
+            var operacion = "TIPO_PRESENTACION";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'cobro/libreriaVenta/'; ?>",
+                data: "productoId=" + productoId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#tipoVenta").html(html);
+                }
+            });
+        
+    }
+   
+    function asignaPrecio(valor) {
+       
+        if (valor > 0) {
+            var operacion = "BUSCA_COSTO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'cobro/libreriaVenta/'; ?>",
+                    data: "valor=" + valor + "&operacion=" + operacion,
+                success: function (html) {
+                    $('#cobro_costo_envio').val(html);
+                }
+            });
+        }
+    }
+    
+    function agregarPartida()
+    {
+trans=0;
+        var operacion = 'AGREGAR_PARTIDA_VENTA';
+        var cantidad = $('#cobro_cantidad').val();
+        var productoId = $('#cobro_producto_id').val();
+        var precio = $('#cobro_precio').val();
+        var almacenId = $('#cobro_almacen_id').val();
+        var presentacionVe=$('#presentacionVenta').val();
+        if(presentacionVe=='T') var presentacion = $('#presentacionT').val();
+        else {
+            var presentacion = $('#presentacionV').val();
+            trans=presentacion;
+         
+        }
+        var existencia 	=	$('#existencia').val();
+        var serie = "";
+        var lote = $('#lote').val();
+        var opcion = 'lote';
+        var mens = "";
+        var re = /,/g;
+        cantidad = cantidad.replace(re, "");
+if (productoId == "") {
+            mens += "\n- Seleccione un producto";
+        }
+         if (lote=="") {mens+="\n- Seleccione el numero de Lote";}
+        if ((cantidad=="") || (cantidad <= 0 )) {mens+="\n- Inserte una cantidad valida";}
+        
+        if(presentacion=='M1'){presentacion='Molido'; trans="1"; }
+        else if(presentacion=='M1.1'){presentacion='Molido 500 gr.'; trans="0.50";}
+        else if(presentacion=='M1.2'){presentacion='Molido 250 gr.'; trans="0.25";}
+        if(presentacion=='G1'){presentacion='en Grano'; trans="1"; }
+        else if(presentacion=='G1.1'){presentacion='en Grano 500 gr.'; trans="0.50";}
+        else if(presentacion=='G1.2'){presentacion='en Grano 250 gr.'; trans="0.25";}
+        if(trans==''){trans=1;}
+        cantidad=cantidad * trans;
+         if (parseInt(cantidad) > parseInt(existencia)) {mens+="\n- La cantidad no puede ser mayor a la existencia de producto";} 
+
+        if (mens != "") {
+            alert('Verifique los siguientes campos:\n' + mens);
+
+        } else
+        {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'cobro/libreriaVenta/'; ?>",
+                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion + "&almacenId=" + almacenId+ "&presentacionV=" + presentacion+ "&presentacion=" + trans,
+                success: function (html) {
+
+                    html = html.replace(/^\s+|\s+$/g, "");
+                    if (html == 'Si') {
+                        alert('Esta partida ya existe.......!');
+                    } else {
+
+                        imprime_lista();
+                    }
+                }
+            });
+        }
+    }
+
+    function quitar_partida(linea)
+    {
+
+        var operacion = 'QUITAR_PARTIDA_VENTA'
+        var linea = linea;
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'cobro/libreriaVenta/'; ?>",
+            data: "operacion=" + operacion + "&linea=" + linea,
+            success: function (html) {
+                imprime_lista();
+            }
+        });
+
+
+    }
+   
+</script>    
+<?php View::content(); 
+$presentacionB = array("" => "Seleccione");
+?>
+<body id="cuerpo_principal">
+
+    <div id="form_container" style="width:100%;" >
+        <br>
+        <h1><a></a></h1>
+        <div id="titulo_superior"> 
+            <div id="texto_superior"  >
+                <?php echo "Registro de Cobros" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                    echo Html::linkAction('listadoCobros', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php echo Form::open("cobro/" . $accion,"POST"); ?>
+        
+
+
+
+        <div id="margen" >
+            <div class="form-row">
+<?php $ar2 = array("C" =>'Contado'); ?>
+
+
+            </div>
+           
+            <br>
+            <br>
+            
+            <div class="card card-statistics" >
+            <div class="card-header" style="background: #d1e7dd;color:#FFF">
+               
+            </div>
+            <div class="card-body">
+                <h4>Datos del Pago:</h4>
+                <hr>
+                <div class="col-sm-7">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Cliente:    
+                            </div>
+<?php echo Form::dbSelect("cobro.cliente_id", "nombrecompleto", array("cliente", "listar"), 'Seleccione..', ' class="form-control" required '); ?>
+      
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-7">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Condiciones de pago:    
+                            </div>
+<?php echo  Form::Select('cobro.condicion', $ar2," class='form-control' required");   ?>
+      
+                        </div>
+                    </div> 
+                </div>
+                <div id="cajaCredito" style="display: none">
+                    <div class="col-sm-5">
+                 <table width="100%">
+        <tr align="center">
+            <td width="40%">     
+               Fecha Probable de Cobro: 
+            </td>
+            <td width="60%">     
+               <?php echo Form::date('cobro.fecha_vencimiento', '  class="form-control"  '); ?>
+            </td>
+           
+            
+        </tr>
+                 </table>   </div>
+                </div>
+                
+                
+                <div id="cajaCondiciones">
+
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Forma de pago:
+                            </div>
+<?php echo Form::dbSelect("concepto_id", 'concepto', array('conceptos', 'listar', 0), '- Seleccione -', " class='form-control' "); ?>
+                        </div>
+                    </div> 
+                </div>
+
+                    <div id="cajaDetalle" style="display: none">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Referencia:    
+                            </div>
+<?php echo Form::text('referencia', 'maxlength="30" class="form-control"  '); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Fecha de documento:    
+                            </div>
+<?php echo Form::date('fecha_referencia', 'type="text" class="form-control" placeholder="dd-mm-aa" '); ?> 
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Cuenta Bancaria:    
+                            </div>
+<?php echo Form::dbSelect("cuenta_id", 'cuenta', array('bancosCuentas', 'listarCuentasBancos', 0), '- Seleccione -', " class='form-control '  "); ?>
+                        </div>
+                    </div> 
+                </div>
+                    </div>
+                    
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Uso del CFDI :    
+                            </div>
+<?php echo Form::dbSelect("uso_cfdi", 'descripcion', array('usoCfdi', 'listar', 0), '- Seleccione -', " class='form-control input-sm'   "); ?>
+                        </div>
+                    </div> 
+                </div>
+               
+        </div>
+                
+
+            </div></div>
+             <br>
+           
+<div class="card card-statistics" >
+            <div class="card-header" style="background: #d1e7dd;color:#FFF">
+               
+            </div>
+            <div class="card-body">
+                <h4>Aplicar a:</h4>
+                <hr>
+                
+                
+            </div>
+</div>
+             <br>
+<?php $url = "'" . PUBLIC_PATH . "cobro/listadoVenta'"; ?>
+    <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+<?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+
+            </td>
+            <td width="33%">
+<?php echo Form::submit((($accion == 'crearVenta') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+            </td>
+        </tr>
+    </table>
+
+</div> 
+</div>
+</br>
+<?php echo Form::close(); ?>
+
+</body>
+
+<script type="text/javascript">
+   $("#cobro_cliente_id").change(function () {
+        busca_remision();
+
+    });
+    
+    
+
+    $("#Agregar").click(function () {
+
+        agregarPartida();
+
+    });
+    $("#cobro_condicion").change(function () {
+      var condiciones = $('#cobro_condicion').val();  
+      if(condiciones=="CR"){
+           $('#cajaCondiciones').hide();
+            $('#cajaCredito').show();
+            $('#cobro_fecha_vencimiento').val( $('#fecha_vencimiento').val());
+            
+      }else {
+           $('#cajaCondiciones').show();
+            $('#cajaCredito').hide();
+      }
+   });
+    $("#concepto_id").change(function () {
+        var idConcepto = $('#concepto_id').val();
+        if (idConcepto != '') {
+            operacion = 'BUSCA_MOVIMIENTO';
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'cobro/funciones'; ?>",
+                data: "operacion=" + operacion + "&idConcepto=" + idConcepto,
+                success: function (html) {
+                    var aux = html;
+                    aux = aux.replace(/^\s+|\s+$/g, "");
+                    $('#tipo_operacion').val(aux);
+                    if (aux != "C") {
+                        $('#cambio').hide();
+                        $('#etiqCb').hide();
+                        $('#p').hide();
+                        //MUESTRA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
+                        $('#cajaDetalle').show();
+                        operacion = 'BUSCA_BANCO';
+                        $.ajax({
+                            type: "POST",
+                            url: "<?php echo PUBLIC_PATH . 'cobro/funciones'; ?>",
+                            data: "operacion=" + operacion,
+                            success: function (html) {
+
+                                $("#bancoI").html(html);
+                            }
+                        });
+
+
+                    } else {
+                        $('#cambio').show();
+                        $('#etiqCb').show();
+                        $('#p').show();
+                        //OCULTA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
+                        $('#cajaDetalle').hide();
+                       
+
+
+                    }
+                }
+            });
+        }
+
+    });
+    $("#importe_recibido").keyup(function(){
+     validaMonto();
+ }); 
+ 
+    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
+   var n = this,
+   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+   decSeparator = decSeparator === undefined ? "." : decSeparator,
+   thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
+   sign = n < 0 ? "-" : "",
+   i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+   j = (j = i.length) > 3 ? j % 3 : 0;
+   return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+};
+</script>  
+
+
+
+
+
+
