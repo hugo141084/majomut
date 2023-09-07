@@ -9,7 +9,7 @@ class concepto extends ActiveRecord {
         return $this->find_by_sql("select * from concepto_movimiento where id=$id");
     } 
     public function listarM() {
-        return $this->find_all_by_sql("select concat_ws(' -- ',descripcion,tipo_movimiento) descripcion, id from concepto ");
+        return $this->find_all_by_sql("select concat_ws(' -- ',descripcion,tipo_movimiento) descripcion, id from concepto_movimiento where estatus='1'");
     }
 }   
 ?>

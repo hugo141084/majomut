@@ -1,0 +1,47 @@
+<?php View::content(); ?>
+<div id="form_container" style="width:100%">
+    <h1><a></a></h1>
+    <br/>
+</div>
+  <div class="row">
+     <div class="col-md-12">
+       
+     </div>
+  </div>
+   <div class="row">
+    <div class="col-md-9">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>Seleccionar Ciclo de Cosecha</span>
+         </strong>
+        </div>
+        <div class="panel-body">
+          <?php echo Form::open("ciclo/seleccionar/"); ?>
+            
+            
+              <div class="form-group col-md-7">
+                Ciclo <br> 
+             <?php echo Form::dbSelect("ciclo.id", 'ciclo', array('ciclocosecha', 'listar', 0), '- Seleccione -'," class='form-control ' required  ");?>
+        </div>
+              
+           <?php $url ="'" .  PUBLIC_PATH . "ciclo/index'"; ?>  
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <?php echo Form::button("Cancelar", 'class="btn btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                   <button type="submit" name="add_cat" class="btn btn-success">Seleccionar</button>  
+                </div>
+            </div>
+        <?php echo Form::close(); ?>
+        </div>
+      </div>
+    </div>
+    
+   </div>
+  
+

@@ -12,9 +12,11 @@ class empresa extends ActiveRecord {
     public function nombreEmpresa($idEmpresa) {
         return $this->find_first("conditions: id=$idEmpresa ", "");
     }
-
+      public function listar() {
+        return $this->find("conditions: estatus='1' ");
+    }
     public function datosEmpresa() {
-        return $this->find_all_by_sql("SELECT em.*,concat_ws(' - ',ba.nombre_banco,em.numero_cuenta,em.clabe_interbancaria) datosPago 
+        return $this->find_all_by_sql("SELECT em.id, em.*,concat_ws(' - ',ba.nombre_banco,em.numero_cuenta,em.clabe_interbancaria) datosPago 
                     FROM empresa  em   left join  bancos  ba on em.banco_id=ba.id
                   WHERE em.estatus='1'");
     }

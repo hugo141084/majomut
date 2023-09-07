@@ -1,0 +1,190 @@
+<script>
+    function imprime_listado()
+{
+var operacion='MOSTRAR' 
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion,
+          success: function(html){
+            $("#resultado").html(html);
+          }
+        });
+    
+}
+
+    function imprime_almacen(almacen)
+{
+var operacion='MOSTRAR_INICIAL'; 
+var almacenSeleccionado=almacen;
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion + "&almacen=" + almacen,
+          success: function(html){
+            $("#resultado_almacen").html(html);
+          }
+        });
+    
+}
+function guardar_partidas()
+{
+    $('#Guardar').attr("disabled", true);
+   var partidas=$("#partidas").val(); 
+   var almacenId=$("#almacen_almacen_id").val(); 
+   var j=0;
+    if(partidas==1){
+        jAlert("Primero seleccione un almacen e inserte cantidades iniciales","ATENCION");
+        $('#Guardar').attr("disabled", false);
+    }else{
+        
+   for(i=1;i < partidas;i++){ 
+       
+        var operacion='AGREGAR_INICIAL'; 
+        var valida="";
+var productoId=$("#productoId"+i).val(); 
+var cantidad=$("#cantidad"+i).val();
+var tipoMovimiento='E';
+var numeroMovimiento='8';
+var opcion=$("#opcion"+i).val();
+if(opcion=='serie'){
+var loteSerie=$("#loteSerie"+i).val();
+}else if(opcion=='lote'){
+var loteSerie=$("#loteSerie"+i).val();
+var fechaCaducidad=$("#fechaCaducidad"+i).val();
+}else{
+var loteSerie="";
+var fechaCaducidad="";
+}
+if(opcion=="serie"){
+if(loteSerie==""){
+valida="no";
+}
+}else if(opcion=='lote'){
+if((loteSerie=="") || (fechaCaducidad=="") ){
+valida="no";
+}
+}
+if(cantidad==0){
+valida="no";
+}
+ if(valida==""){
+     
+$.ajax({
+    
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion + "&almacenId=" + almacenId + "&productoId=" + productoId + "&cantidad=" + cantidad+ "&tipoMovimiento=" + tipoMovimiento+ "&numeroMovimiento=" + numeroMovimiento+ "&opcion=" + opcion + "&loteSerie=" + loteSerie + "&fechaCaducidad=" + fechaCaducidad    ,
+          success: function(html){
+           j=j+1;
+          }
+        });
+    }
+   
+    }
+     
+  
+    }
+    alert("Registros insertados correctamente");
+    actualizar();
+}
+function quitar_producto(id,existencia,i)
+{
+    $('#quitar'+i).attr("disabled", true); 
+     if( existencia == 0){
+        var operacion='QUITAR_PRODUCTO' 
+var idRegistro=id;
+
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion + "&id="+ idRegistro,
+          success: function(html){
+         
+          }
+        });
+    }else{
+    jAlert('Solo se pueden retirar articulos con existencia IGUAL a "CERO" ',"Atencion");}
+
+}
+
+function actualizar(){
+ window.location.reload();
+}
+
+</script>    
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+
+    <h1><a>Crear</a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Inventario Inicial" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                      
+                    ?>
+                </div>
+            </div>
+    </div>
+    <?php echo Form::open("inventarioInicial/" . $accion); ?>
+   
+
+    <div id="margen" >
+<fieldset>     
+<table width="100%" border="0" class="letra">
+  <tr>
+    <td >Almacen</td>
+    <td width="10%"><?php echo Form::dbSelect("almacen.almacen_id","descripcion",array("almacen","listar"),'Seleccione..','type="text" required class="element text" style="width:425px"');?></td>
+  </tr>
+  
+        <tr>
+      <td  colspan="2" scope="col"><div id="resultado_almacen" > <?php print"<script> imprime_almacen('0') </script>"; ?></div> </td>
+        </tr>
+</table>
+</fieldset>
+
+
+
+        </br>
+            <?php $url = "'" . PUBLIC_PATH . "'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+           
+            </td>
+            <td width="33%">
+            <?php echo Form::button((($accion == 'inventarioInicial') ? 'Guardar' : 'Actualizar'), 'type="button" class="CSSButton" id="Guardar"'); ?>       
+            </td>
+        </tr>
+     </table>
+     
+  </div> 
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>
+
+<script>
+           $("#almacen_almacen_id").change(function(){
+	imprime_almacen($("#almacen_almacen_id").val());
+});
+$("#Guardar").click(function(){
+	guardar_partidas();
+});
+</script>
+            
+  
+
+
+                        
+

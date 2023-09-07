@@ -1,0 +1,190 @@
+
+<?php
+View::content();
+$anio = date('Y') - 10;
+$total = 0;
+$totalC = 0;
+?>
+<?php $url = "'" . PUBLIC_PATH . "'"; ?>
+<body id="cuerpo_principal">
+    <div id="form_container" style="width:100%;" >
+        <h1><a></a></h1>
+        <div id="titulo_superior"> 
+            <div id="texto_superior"  >
+                <?php echo "Reporte de Cobros" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php echo Html::img('inicio.png', 'cancel', 'style="text-align:center;width:65px;  padding:5px;"  onclick="window.location = ' . $url . '" '); ?>
+                </div>  
+
+            </div>
+        </div>  
+        <?php echo Form::open("cobro/cobros"); ?>  
+        <table width="100%" border="0">
+            <tr align="center">
+                <td>
+                    <table width="90%" border="0" class="table table-bordered">
+                        <tr style="width:100%;">
+                            <td style="width:60%;"><fieldset style="padding: 15px; height: 100%">
+                                    <legend><b>OPCIONES DEL REPORTE :</b></legend> 
+                                    <table style="width:100%;" border="0">
+                                        <tr align="center">
+                                            <td style="width:30%;" >                
+                                                
+
+                                                    <?php echo Form::date('fecha_inicial', 'class="form-control" required', date('Y-m-d')); ?>
+                                                    <br> <label> Periodo Inicial</label>       
+                                               
+                                            </td>
+                                            <td>
+
+                                                    <?php echo Form::date('fecha_final', 'class="form-control" required ', date('Y-m-d')); ?>
+                                                    <br>  <label> Periodo Final</label>
+                                              
+
+                                            </td>
+                                            <td>
+                                                    <?php echo Form::dbSelect("pago_id", "concepto", array("conceptos", "listar"), 'Seleccione..', 'class="form-control" '); ?>
+                                                   <label> Forma de Pago</label>
+                                     
+
+                                            </td>
+
+
+                                        </tr>
+                                    </table>
+                                </fieldset></td>
+
+                            <td>
+
+                                <fieldset style="padding: 15px; height: 100px">
+                                    <legend><b>GENERAR REPORTE :</b></legend> 
+                                    <table width="100%" border="0">
+                                        <tr>
+                                            <td>Cliente</td>
+                                            <td><?php echo Form::dbSelect("cliente_id", "nombrecompleto", array("cliente", "listar"), 'Seleccione..', ' class="form-control" '); ?></td>
+                                            <td width="2%"></td>
+                                            <td><?php echo form::submit("MOSTRAR", 'class="form-control"  '); ?></td>
+
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td  colspan="3"> 
+                            <fieldset style="padding: 15px; width: 100%;">
+                    <legend><b>Datos de la Consulta </b></legend>
+     
+    <table width="100%" border="0"  class="arqueo">
+
+        <tr  bgcolor="#00984f" align="center">
+            <th width="5%">#</th>
+            <th width="8%">Documento</th>
+            <th width="8%" >N°. Factura</th>
+            <th width="27%">Cliente</th>
+            <th width="8%" >Fecha</th>
+            <th width="8%" >Monto</th>
+            <th width="8%" >Condicion</th>
+            <th width="8%" >M. pago</th>
+             <th width="8%" >Pago</th>
+            <th width="10%" >Estatus</th>        
+        </tr>
+    </table>
+                    <div style="overflow: scroll; height: 400px">  
+                        <table width="100%" border="0" align="center"  class="table table-bordered"> 
+           <?php 
+                            $color="#0174DF";
+                            $i=0;
+                            
+                            
+                            if(isset($resultado))
+                            foreach ($resultado as $datos){
+                             $i++; 
+                             if($color=="#0174DF")
+        {
+$color="#FFFFFF";
+}
+else
+{
+$color="#FFFFFF";
+} 
+        (($datos->subtotal<1)? $datos->subtotal=0:'');
+        (($datos->iva<1)? $datos->iva=0:'');
+        (($datos->monto<1)? $datos->monto=0:'');
+        ?>
+            <tr valign="center" style="background-color:<?php echo $color ?>">      
+            <td width="5%"> <?php echo $i; ?> </td>
+            <td width="8%"> <?php echo "  ".$datos->documento; ?> </td>
+            <td width="8%"> <?php echo "  ".$datos->numero_factura; ?> </td>
+             <td width="27%"> <?php echo "  ".$datos->nombrecompleto; ?> </td>
+            <td width="8%"> <?php echo "  ".$datos->fecha_documento; ?> </td>
+            <td width="8%" align="right"><?php echo "  ".$datos->total; ?> </td>
+            <td width="8%" align="right"><?php echo (($datos->condicion=='C')? "Contado":"Credito") ?> </td>
+             <td width="8%" align="right"><?php echo "  ".$datos->concepto; ?> </td>
+            
+            <td width="8%"> <?php echo "  ".$datos->monto; ?> </td>
+            <td width="8%"> <?php echo "  ".(($datos->estado=='1')? "Activo":"Cancelar"); ?> </td>
+            
+            
+             </tr>
+       
+                           <?php 
+                           if($datos->estado=="1") {
+                           $total = $total + $datos->total;
+                           $totalC = $totalC + $datos->monto;
+                           }
+                           
+                          
+}    ?>  
+             
+		</table> </div>
+                    <table  width="100%" border="1"  class="arqueo">
+                    <tr height="50px">
+              <td colspan="7" width="54%" align="right"> Total : $ </td>
+              <td  align="right" width="8%">  <?php echo "  ".number_format($total,2); ?> </td> 
+              <td  colspan="2" width="14%">  </td> 
+              <td  align="right" width="8%">  <?php echo "  ".number_format($totalC,2); ?> </td> 
+              <td  width="10%">  </td>
+             </tr>
+		</table>
+     </fieldset>
+                            </td> 
+
+                        </tr>
+                        <tr>
+                            <td colspan="3" height="50px"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                             <!--        <fieldset style="padding: 15px;">
+                                 <legend><b>SALIDA DEL REPORTE :</b></legend>  
+<?php $url = "'" . PUBLIC_PATH . "'"; ?>
+                                    <table width="100%" border="0">
+                                        <tr>
+                                            <td style="width:60%;">Titulo</td>
+                                            <td style="width:20%;"></td>
+                                            <td style="width:20%;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td ><?php echo Form::text('titulo','class="form-control"', ""); ?></td>
+                                            <td><?php echo form::submit("IMPRIMIR", 'class="CSSButton" '); ?></td>
+                                            <td><?php echo Form::button("CANCELAR", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>   </td>
+                                        </tr>
+                                    </table>
+                                </fieldset> !-->
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <?php echo Form::close(); ?>
+    </div>
+
+
+</body>               
+
+<?php ?>

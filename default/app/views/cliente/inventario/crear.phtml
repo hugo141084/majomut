@@ -1,0 +1,115 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+    <br/>
+    <h1><a></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Agregar almacen" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                        echo Html::linkAction('listadoAlmacen',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    
+                    
+                    ?>
+                </div>
+            </div>
+    </div>
+    <?php echo Form::open("inventario/" . $accion); ?>
+
+ <?php echo Form::hidden("almacen.id"); ?>
+   
+    
+    <div id="margen" >
+        
+     <div class="col-sm-12">                  
+    <div class="panel panel-primary">
+        <div class="panel-heading">ALMACEN </div>
+        <div class="panel-body">
+<div class="form-row">
+            <div class="col-sm-7">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">   Clave:
+                        </div>
+                        
+                        <?php echo Form::text('almacen.almacen', 'class="form-control" '); ?>
+                       
+
+                    </div>
+                </div>
+            </div> 
+
+            <div class="col-sm-7">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">     Descripción:    
+                        </div>
+                        <?php echo Form::text('almacen.descripcion', 'class="form-control"  '); ?>
+                    </div>
+                </div>
+            </div> 
+     
+            
+            <div class="col-sm-7">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">     Tipo:    
+                        </div>
+                        <?php    if ($accion == 'crear') {
+                    $select = '0';
+                } else {
+                    @$select = $almacen->TIPO;
+                }
+                $arregloEstado = array(''=>'Seleccione...','GENERAL'=>'General','PUNTO VENTA'=>'Punto de Venta');?>
+                <?php echo Form::Select('almacen.tipo', $arregloEstado,'class="form-control"',$select); ?>
+                    </div>
+                </div>
+            </div>
+</div>
+           
+        </div> 
+    </div>
+</div>   
+        
+        
+
+
+
+        </br>
+            <?php $url = "'" . PUBLIC_PATH . "inventario/listadoAlmacen'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+            <?php echo Form::reset('Reiniciar', 'class="CSSButton"'); //Crea un botón con el texto 'reiniciar';?>
+            </td>
+            <td width="33%">
+            <?php echo Form::submit((($accion == 'crear') ? 'Guardar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            </td>
+        </tr>
+     </table>
+     
+  </div> 
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>
+
+

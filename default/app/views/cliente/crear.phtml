@@ -31,6 +31,7 @@
              <?php
            
                         echo Form::hidden('cliente.id');
+                        echo Form::hidden('cliente.clave');
             ?>
             <div class="col-sm-12">                  
                 <div class="panel panel-success">
@@ -202,7 +203,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Forma de pago: <i class="glyphicon glyphicon-envelope"></i>       </div>
-                            <?php echo Form::dbSelect("cliente.concepto_id", "concepto", array("conceptos", "listar"), 'Seleccione..', 'class="form-control" '); ?>
+                            <?php echo Form::dbSelect("cliente.pago_id", "concepto", array("conceptos", "listar"), 'Seleccione..', 'class="form-control" '); ?>
                             </div>
                             
                             </div>
@@ -262,7 +263,17 @@
 
                                 </div>
                             </div>
-                        </div> 
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">  Reginmen Fiscal:
+                                    </div>
+                                    <?php echo Form::dbSelect('cliente.uso_cfdi_id', 'descripcion', array('uso_cfdi', 'listar'), '- seleccione -', 'class="form-control" ', ""); ?>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

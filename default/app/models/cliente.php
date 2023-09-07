@@ -8,6 +8,9 @@ class cliente extends ActiveRecord {
     public function listar() {
         return $this->find('conditions: estatus = "1"', '');
     } 
+    public function listarCsaldo() {
+        return $this->find_all_by_sql("select DISTINCT(C.id) id, C.nombrecompleto from cliente  C inner join venta V on V.cliente_id=C.id where V.saldo > 0 ");
+    } 
     public function listarInactivo() {
         return $this->find('conditions: estatus = "0"', 'order: id asc');
     }
@@ -19,14 +22,19 @@ class cliente extends ActiveRecord {
     }
     public function guardarDatos(){
         $producto = new cliente(Input::post('cliente'));
-        $producto->costo_promedio=$producto->costo; 
+   
         $producto->fecha_usuario=date('Y-m-d H:i:s'); 
         $producto->usuario_id=Session::get('id'); 
         $producto->estatus='1'; 
         
         if( $producto->save()){
          // echo "<script>  alert ('Registro Insertado....!');</script>"; 
-          Redirect::to('cliente/index');
+         $producto->id;
+         $clave=new cliente();
+            $clave=$clave->find_first($producto->id);
+            $clave->clave="UPOBM-".str_pad($clave->id,4,"0", STR_PAD_LEFT);
+            $clave->update();
+         Redirect::to('cliente/index');
         }
     }
     public function before_save() {

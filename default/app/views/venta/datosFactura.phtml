@@ -32,7 +32,7 @@
                     <div class="input-group">
                         <div class="input-group-addon">  Fecha de Emision:
                         </div>
-<?php echo Form::text( 'envio.numero_rastreo', 'class="form-control"'); ?>
+<?php echo Form::date('factura.fecha_emision', 'class="form-control"'); ?>
 
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                     <div class="input-group">
                         <div class="input-group-addon">  Fecha Envio:
                         </div>
-<?php echo Form::text( 'envio.fecha_entrega', 'class="form-control"'); ?>
+<?php echo Form::date( 'factura.fecha_envio', 'class="form-control"'); ?>
 
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                     <div class="input-group">
                         <div class="input-group-addon">  Observaciones:
                         </div>
-<?php echo Form::textarea( 'envio.observaciones', 'class="form-control"'); ?>
+<?php echo Form::textarea( 'factura.observaciones', 'class="form-control"'); ?>
 
                     </div>
                 </div>
@@ -64,14 +64,14 @@
             
         <table width="100%">
         <tr align="center">
-            <td width="50%">     
+            <td width="33%">     
             <?php  echo Form::button("Cancelar", "id='Salir' class='btn btn-danger btn-lg'"); ?>
             </td>
             <td>
-           
+           <?php echo Form::submit(((@$accion == 'crearLote') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-success btn-lg"'); ?>
             </td>
-            <td width="50%">
-            <?php echo Form::submit(((@$accion == 'crearLote') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-success btn-lg"'); ?>       
+            <td width="33%">
+             <?php  echo Form::button("Regresar", "id='regresar' class='btn btn-danger btn-lg'"); ?>      
             </td>
         </tr>
      </table>
@@ -82,6 +82,10 @@
 </body>
 <script>
     $("#Salir").click(function(){
+        window.parent.actualizar();
+        window.parent.Shadowbox.close();
+ });
+ $("#regresar").click(function(){
         window.parent.actualizar();
         window.parent.Shadowbox.close();
  });

@@ -15,24 +15,30 @@ class lote extends ActiveRecord {
     }
 
     public function listar() {
-        return $this->find("estatus='1'");
+        $ciclocosechaId = Session::get('cicloCosecha');
+        return $this->find("ciclocosecha_id='$ciclocosechaId' and estatus='1'");
     }
      public function listarXid($id) {
-        return $this->find_by_sql("select * from lote where id=$id");
+        return $this->find_by_sql("select * from lote where id='$id'");
     }
     public function ciclo($id) {
         return $this->find_all_by_sql("select distinct(lo.ciclo) from lote lo inner join detalle_vale dv on dv.lote_id=lo.id where dv.compra_id='$id'");
     }
+     public function ciclos($id) {
+        return $this->find_all_by_sql("select distinct(lo.ciclo) as id,lo.ciclo from lote lo order by lo.ciclo desc");
+    }
     public function guardarDatos(){
+        $ciclocosechaId = Session::get('cicloCosecha');
         $lote = new lote(Input::post('lote'));       
-        
+        $lote->ciclocosecha_id=$ciclocosechaId;
         if( $lote->save()){
         //  echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }
      public function actualizarDatos(){
+         $ciclocosechaId = Session::get('cicloCosecha');
         $lote = new lote(Input::post('lote'));       
-        
+         $lote->ciclocosecha_id=$ciclocosechaId;
         if( $lote->update()){
           //echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
@@ -103,11 +109,16 @@ class lote extends ActiveRecord {
     
                }
                public function buscarLotes($productoId){
-                  
-                   return $this->find_all_by_sql("select l.codigo, dl.existencia, dl.almacen_id from detalle_lote dl inner join lote l on dl.lote_id=l.id where dl.producto_id=$productoId  ");                 
+                   $ciclocosechaId = Session::get('cicloCosecha');
+                   return $this->find_all_by_sql("select l.codigo, dl.existencia, dl.almacen_id from detalle_lote dl inner join lote l on dl.lote_id=l.id where dl.producto_id=$productoId and l.ciclocosecha_id='$ciclocosechaId'  ");                 
     
                }
                public function buscarLotePA($condicion){
+                   $ciclocosechaId = Session::get('cicloCosecha');
+                   return $this->find_all_by_sql("select dl.id,lo.codigo from lote lo inner join detalle_lote dl on dl.lote_id=lo.id where $condicion  and  lo.ciclocosecha_id='$ciclocosechaId'");                 
+    
+               }
+                public function buscarLotePAAn($condicion){
                   
                    return $this->find_all_by_sql("select lo.id,lo.codigo from lote lo inner join detalle_lote dl on dl.lote_id=lo.id where $condicion ");                 
     

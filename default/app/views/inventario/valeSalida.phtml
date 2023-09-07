@@ -161,41 +161,25 @@ VALE DE SALIDA DE CAFÉ VERDE<br>
 
 <table style="width: 100%" border="0" class="mitabla">   
     <tr >
-        <td style="width: 15%" border="0" >   FOLIO ID:         </td>
-        <td style="width: 15%" border="0" >             </td>
-        <td style="width: 15%" border="0" >             </td>
-        <td style="width: 25%" border="0" >             </td>
-        <td style="width: 15%" border="0" >     No.:        </td>
-        <td style="width: 15%" border="0" >             </td>
+        <td style="width: 20%" border="0" ><strong>FOLIO ID: </strong>      </td>
+        <td style="width: 15%" border="0" >'.$datosCompra->documento.'           </td>
+        <td style="width: 10%" border="0" >             </td>
+        <td style="width: 10%" border="0" >             </td>
+        <td style="width: 15%" border="0" > <strong>Fecha:</strong>            </td>
+        <td style="width: 25%" border="0" >'.$datosCompra->fecha_salida.'            </td>
     </tr>
        <tr>
-        <td  >          Organización:         </td>
+        <td  ><strong>Organización:      </strong>   </td>
         <td  >Majomut </td>  
         <td  >             </td>  
         <td  >             </td>  
-        <td  >          Fecha:         </td>  
-        <td  >             </td>  
-    </tr>
-    <tr>
-        <td  >          Calidad:         </td>
-        <td  > </td>  
-        <td  >             </td>  
-        <td  >             </td>  
-        <td  >          Ciclo:         </td>  
-        <td  >             </td>  
+        <td  >      <strong>Ciclo:</strong>    </td>  
+        <td  >'.$cicl.'            </td>  
     </tr>
     
-   <tr>
-        <td  >          Cliente:         </td>
-        <td  > </td>  
-        <td  >             </td>  
-        <td  >             </td>  
-        <td  >                   </td>  
-        <td  >             </td>  
-    </tr>
      <tr>
-        <td  >          Destino:         </td>
-        <td  > </td>  
+        <td  ><strong>Destino:     </strong>    </td>
+        <td  >'.$alma.'  </td>  
         <td  >             </td>  
         <td  >             </td>  
         <td  >                 </td>  
@@ -214,33 +198,60 @@ VALE DE SALIDA DE CAFÉ VERDE<br>
 
 <tr>
 <td colspan="3">
-<table style="width: 100%" border="1" class="mitabla1">
+<table style="width: 100%" border="1" class="mitabla1" cellpadding="3">
 <tr align="center" bgcolor="#CCCCCC" class="respTi">
-<td style="width: 5%">#</td>
+<td style="width: 10%">#</td>
 <td style="width: 10%">Lote</td>
-<td style="width: 10%">Tipo Preparacion</td>
-<td style="width: 45%">Presentación</td>
+<td style="width: 25%">Tipo Preparacion</td>
+<td style="width: 25%">Presentación</td>
 <td style="width: 10%">Kilos Brutos</td>
 <td style="width: 10%">Tara</td>
 <td style="width: 10%">Kilos Netos</td>
 </tr>';
 $i=1;
-foreach ($detalleEntrega as $datos){
-  $datos->FECHA_CADUCIDAD=  strftime("%d-%m-%Y", strtotime($datos->FECHA_CADUCIDAD));
- if($datos->FECHA_CADUCIDAD=="31-12-1969"){
-  $FECHA_CADUCIDAD="";   
+$c1=0;$c2=0;$c3=0;$c4=0;
+foreach ($detalleCompra as $datos){
+
+
+ $producto=new producto();
+ $producto=$producto->find_first("id='$datos->producto_id'");
+ $unidadEmpaque=$producto->unidad_empaque;
+ $pesoEmpaque=$producto->peso_empaque;
+ $peso=$producto->peso;
+ $paquete= ceil($datos->cantidad/$unidadEmpaque);
+ $cantidad= $datos->cantidad;
+ $kb=($cantidad)+ ($paquete* $pesoEmpaque);
+ $tara=$pesoEmpaque*$paquete;
+ $kn=$cantidad;
+ 
+ if($producto->medida_id=="1"){
+ $unidadEmpaque=$datos->unidad;
+ $pesoEmpaque=$producto->peso_empaque;
+ if($unidadEmpaque>0){
+ $paquete= $cantidad/$unidadEmpaque;
+ $residuo= $cantidad%$unidadEmpaque;
+ $paquete=floor($paquete);
+ if($residuo > $pesoEmpaque){$paquete++; $pesoPaquete=$paquete;  }
+ else {$pesoPaquete=$paquete;}
+ $cantidadA=$cantidad-($pesoPaquete);
  }else{
-    $FECHA_CADUCIDAD =$datos->FECHA_CADUCIDAD;
+     $paquete=0;
+     $cantidadA=$cantidad;
  }
-     
+ 
+ }
+ $c1 +=$paquete;
+ $c2 +=$cantidad;
+ $c3 +=$paquete;
+ $c4 +=$cantidadA;
 $html .=' <tr align="center">
-<td style="width: 5%; height: 20px;" class="resp">'.$i.'</td>
-<td style="width: 10%" class="resp">'.$datos->CANTIDAD.'</td>
-<td style="width: 10%" class="resp">'.$datos->UNIDAD_SALIDA.'</td>
-<td style="width: 45%" class="resp">'.$datos->DESCRIPCION.'</td>
-<td style="width: 10%" class="resp">'.$datos->LOTE_SERIE.'</td>
-<td style="width: 10%" class="resp">'.$FECHA_CADUCIDAD.'</td>
-<td style="width: 10%" class="resp">'.$datos->NUMERO_INVENTARIO.'</td>
+<td style="width: 10%; " >'.$paquete.' '.$datos->embalaje.' </td>
+<td style="width: 10%" >'.$datos->codigo.'</td>
+<td style="width: 25%" >'.$datos->descripcion.' '.$datos->presentacion.' '.$datos->preparacion.'</td>
+<td style="width: 25%" >'.$datos->calidad.'</td>
+<td style="width: 10%" >'.$datos->cantidad.'</td>
+<td style="width: 10%" >'.$paquete.'</td>
+<td style="width: 10%" bgcolor="#CCCCCF">'.$cantidadA.'</td>
 </tr>'; 
 $i++;
 }
@@ -248,10 +259,10 @@ $i++;
 if($i<5){
 for($j=$i;$j<=5;$j++){
  $html .=' <tr align="center">
-<td style="width: 5%;height: 19px;"></td>
+<td style="width: 10%;height: 19px;"></td>
 <td style="width: 10%"></td>
-<td style="width: 10%"></td>
-<td style="width: 45%"></td>
+<td style="width: 25%"></td>
+<td style="width: 25%"></td>
 <td style="width: 10%"></td>
 <td style="width: 10%"></td>
 <td style="width: 10%" bgcolor="#CCCCCF"></td>
@@ -259,13 +270,13 @@ for($j=$i;$j<=5;$j++){
 }    
 }
 $html .=' <tr align="center" bgcolor="#CCCCCC">
-<td ></td>
+<td >'.$c1.'</td>
 <td style="width: 10%"></td>
-<td style="width: 10%"></td>
-<td style="width: 45%"></td>
-<td style="width: 10%"></td>
-<td style="width: 10%"></td>
-<td style="width: 10%"></td>
+<td style="width: 25%"></td>
+<td style="width: 25%"></td>
+<td style="width: 10%">'.$c2.'</td>
+<td style="width: 10%">'.$c3.'</td>
+<td style="width: 10%">'.$c4.'</td>
 </tr>'; 
 $html .='</table> </td></tr>';
 
@@ -278,7 +289,7 @@ $html .=' <tr><td colspan="3"> <table style="width: 100%" border="0" class="mita
 <table style="width: 100%" border="0" class="mitabla">
 <tr class="respTi">
 <td style="width: 14%" border="0"> Observaciones:</td>
-<td border="1" style="width: 86%"> '.$datosEntrega->OBSERVACION.' </td>
+<td border="1" style="width: 86%"> '.$datosCompra->observacion.' </td>
 </tr>
 </table> 
 
@@ -289,7 +300,7 @@ $html .=' <tr><td colspan="3"> <table style="width: 100%" border="0" class="mita
 <td> </td>
 </tr>
 </table>
- <table style="width: 100%" border="1" class="mitabla2">
+ <table style="width: 100%" border="0" class="mitabla2">
 <tr align="center">
 <td style="width: 33%"> ENTREGO <BR>
 <BR>
@@ -298,27 +309,24 @@ $html .=' <tr><td colspan="3"> <table style="width: 100%" border="0" class="mita
 <BR>
 __________________________________
 <BR>
-'.$datosUsuario->ETIQUETA.' '.$datosUsuario->nombreEmpleado.' <BR>
-    Consejo de Vigilancia
+'.$datosCompra->capturo.' <BR>
+    
 </td>
-<td style="width: 33%"> CONDUCTOR <BR>
+<td style="width: 33%">  <BR>
 <BR>
 <BR>
 <BR>
 <BR>
-__________________________________
-<BR>
-'.$datosEmpleado->ETIQUETA.' '.$datosEmpleado->NOMBRE.' <BR>
-    CHOFER
+
 </td>
 <td > RECIBIO <BR>
 <BR>
 <BR>
 <BR>
 <BR>
-__________________________________
-<BR>'.$datosSalida->comercializacion.' <BR>
-    COMERCIALIZACIÓN
+__________________________________<BR>
+'.$datosCompra->recibioPro.'  <BR>
+    
 </td>
 </tr>
  

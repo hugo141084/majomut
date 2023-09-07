@@ -1,0 +1,100 @@
+<?php
+Tag::css('tablas');
+View::content(); 
+$camino;?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Documento sin t&iacute;tulo</title>
+</head>
+<body><table width="100%" class="table table-bordered">
+  <tr>
+    <th >Clave </th>
+    <th >Descripcion  </th>
+    <th >Categoria </th>   
+    <th >Presentacion </th>
+    <th >Preparacion </th>
+    <th >Empaque </th>
+    <th >Unidad Medida</th>
+    <th >Peso Kg. </th>
+    <th >Unidad X Empaque  </th>
+    <th >Peso Empaque Kg.  </th>
+    <th >Precio  </th>
+    <th >Impuesto </th>
+    
+  </tr>
+<?php $array_datos = Session::get("array_datos"); ?>
+  
+    <?php $url = "'" . PUBLIC_PATH . "producto/importar/'"; ?>
+    <?php 
+    
+    echo form::open("producto/generaRegistro/");
+    
+    $tamano = count($array_datos);
+    $var=""; 
+    
+        for ($i = 0; $i < $tamano; $i++) {
+         
+             
+            ?>   
+            
+  
+  
+  <tr>
+    <td ><?php echo $array_datos[$i]['texto1']; ?></td>
+    <td ><?php echo utf8_encode($array_datos[$i]['texto2']); ?></td>
+    <td ><?php echo utf8_encode($array_datos[$i]['texto3']); ?></td>
+    <td ><?php echo utf8_encode($array_datos[$i]['texto4']); ?></td>
+    <td ><?php echo utf8_encode($array_datos[$i]['texto5']); ?></td>
+    <td ><?php echo utf8_encode($array_datos[$i]['texto6']); ?></td>
+     <td ><?php echo $array_datos[$i]['texto7']; ?></td>
+     <td ><?php echo $array_datos[$i]['texto8']; ?></td>
+    <td ><?php echo $array_datos[$i]['texto9']; ?></td>
+    <td ><?php echo $array_datos[$i]['texto10']; ?></td>
+    <td ><?php echo $array_datos[$i]['texto11']; ?></td>
+    <td ><?php echo $array_datos[$i]['texto12']; ?></td>
+    
+  </tr>
+  
+  
+    
+    
+    
+  <?php }
+?>
+    </table>
+    <br/>
+    <div class="progress progress-striped">
+  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"  style="width: 100%">
+  </div>
+</div>
+    <table style="width: 100%; text-align: center;">
+        
+                
+            
+        
+                
+           
+                
+           
+    <?php
+      
+    
+      echo ' <tr>
+            <td>';
+        echo Form::button("Cancelar", 'class="btn btn-danger" onclick="window.location = ' . $url. '" '); 
+        echo '</td>
+            <td>';
+        echo form::submit("Agregar",'class="btn btn-success"');
+     echo  '</td>
+        </tr>';
+      
+     echo'</table>';  
+    ?>
+<?php
+    
+echo form::close();
+?>
+</body>
+</html>

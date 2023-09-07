@@ -69,12 +69,12 @@
     }
     function buscarOrigen() {
         var almacen = $("#vale_almacen_id").val();
-       
+
         if (almacen >= 1) {
-          
+
             buscaProducto();
         } else {
-           
+
         }
 
     }
@@ -94,7 +94,7 @@
                 var valor = cadena[1];
                 $("#venta_precio").val(valor);
                 // buscaLote();
-        buscaDetalle();
+                buscaDetalle();
             }
         });
     }
@@ -130,6 +130,7 @@
 
         var operacion = 'AGREGAR_PARTIDA';
         var cantidad = $('#vale_cantidad').val();
+        var unidad = $('#vale_unidad').val();
         var productoId = $('#venta_producto_id').val();
         var almacenId = $('#vale_almacen_id').val();
         var serie = "";
@@ -138,10 +139,8 @@
         var mens = "";
         var re = /,/g;
         cantidad = cantidad.replace(re, "");
-
-        if (cantidad == "") {
-            mens += "\n- Inserte una cantidad valida";
-        }
+        if(unidad==""){unidad='0';}
+       if ((cantidad=="") || (cantidad <= 0 )) {mens+="\n- Inserte una cantidad valida";}
         if (productoId == "") {
             mens += "\n- Elija un producto";
         }
@@ -168,7 +167,7 @@
             $.ajax({
                 type: "POST",
                 url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
-                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&almacenId=" + almacenId + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion,
+                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&almacenId=" + almacenId + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion+ "&unidad=" + unidad,
                 success: function (html) {
 
                     html = html.replace(/^\s+|\s+$/g, "");
@@ -177,6 +176,11 @@
                     } else {
 
                         imprime_lista();
+                         $('#vale_cantidad').val("");
+        $('#vale_unidad').val("");
+         $('#venta_producto_id').val("");
+         $('#vale_almacen_id').val("");
+         $('#lote').val("");
                     }
                 }
             });
@@ -209,18 +213,18 @@
         <h1><a></a></h1>
         <div id="titulo_superior"> 
             <div id="texto_superior"  >
-<?php echo "RECEPCIÓN DE CAFE" ?> 
+                <?php echo "RECEPCIÓN DE  CAFE ORO VERDE" ?> 
             </div>
             <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
                 <div class='btn'>
-<?php
-echo Html::linkAction('listadoRecepcion', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
-?>
+                    <?php
+                    echo Html::linkAction('listadoRecepcion', Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
+                    ?>
                 </div>
             </div>
         </div>
-                <?php echo Form::open("inventario/" . $accion); ?>
-                <?php echo Form::hidden("vale.id"); ?>
+        <?php echo Form::open("inventario/" . $accion); ?>
+        <?php echo Form::hidden("vale.id"); ?>
 
 
 
@@ -228,14 +232,14 @@ echo Html::linkAction('listadoRecepcion', Html::img('verLista.png', 'cancel', 's
             <div class="form-row">
 
 
-<?php echo Form::hidden('vale.tipo_documento', 'maxlength="20" required class="form-control"   ', "VALE DE ENTRADA"); ?>
+                <?php echo Form::hidden('vale.tipo_documento', 'maxlength="20" required class="form-control"   ', "VALE DE ENTRADA"); ?>
 
                 <div class="col-sm-5">
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">       Documento:    
                             </div>
-<?php echo Form::text('vale.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ', $num); ?>
+                            <?php echo Form::text('vale.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ', $num); ?>
                         </div>
                     </div> 
                 </div>
@@ -246,7 +250,7 @@ echo Html::linkAction('listadoRecepcion', Html::img('verLista.png', 'cancel', 's
                         <div class="input-group">
                             <div class="input-group-addon">       Fecha:    
                             </div>
-<?php echo form::date('vale.fecha_recepcion', 'placeholder="dd-mm-aa" required class="form-control"', date('Y-m-d')); ?>
+                            <?php echo form::date('vale.fecha_recepcion', 'placeholder="dd-mm-aa" required class="form-control"', date('Y-m-d')); ?>
                         </div>
                     </div> 
                 </div>
@@ -262,34 +266,34 @@ echo Html::linkAction('listadoRecepcion', Html::img('verLista.png', 'cancel', 's
                             <label for="validationCustomUsername">Almacen</label>
                             <div class="input-group">
                                 <?php
-                                echo Form::dbSelect("vale.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'required class="form-control" onchange="buscarOrigen()"');
+                                echo Form::dbSelect("vale.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', ' class="form-control" onchange="buscarOrigen()"');
                                 ?>
                             </div>
                         </div> 
-                        <div class="col-md-3 ">
+                        <div class="col-md-2 ">
                             <label for="validationCustomUsername">Producto</label>
                             <div class="input-group">
-                               <div id="productoEs">
-                                <?php echo Form::text("vale.producto_id", 'required class="form-control"'); ?>
-                            </div
-                            </div>
-                        </div> 
-                    </div>
+                                <div id="productoEs">
+                                    <?php echo Form::text("vale.producto_id", ' class="form-control"'); ?>
+
+                                </div>
+                            </div> 
+                        </div>
                         <div class="col-md-2 ">
                             <label for="validationCustomUsername">Lote</label>
                             <div class="input-group">
                                 <div  id="loteProducto" >
                                     <?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'class="form-control" '); ?>
                                 </div>
-                            </div>
-                        </div> 
 
-                        <div class="col-md-3">
+                            </div> 
+                        </div>
+                        <div class="col-md-2">
                             <label >Cantidad</label>
                             <div class="input-group">
-                                
-<?php echo Form::number('vale.cantidad', '  '); ?>
-                        
+
+                                <?php echo Form::number('vale.cantidad', 'min="0" step="0.1"'); ?>
+
                             </div>
                         </div> 
                         <div class="col-md-1 ">
@@ -300,13 +304,30 @@ echo Html::linkAction('listadoRecepcion', Html::img('verLista.png', 'cancel', 's
                                 </div>
                             </div>
                         </div> 
-                        <div class="col-md-1 ">
-                            <label >.</label>
+                        <div class="col-md-1">
+                            <label >U.*Emp.</label>
                             <div class="input-group">
-<?php echo Form::button("Agregar", "id='Agregar' style='width:98%;' class='btn-success btn' ") ?>
+                                <?php echo Form::number('vale.unidad', 'min="0" '); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-3 ">
+                            <label ></label>
+                            <div class="input-group">
+                               
                             </div>
                         </div> 
-
+                        <div class="col-md-6 ">
+                            <label ></label>
+                            <div class="input-group">
+                                <?php echo Form::button("Agregar", "id='Agregar' style='width:98%;' class='btn-success btn' ") ?>
+                            </div>
+                        </div> 
+<div class="col-md-3 ">
+                            <label ></label>
+                            <div class="input-group">
+                                
+                            </div>
+                        </div> 
                     </div>      
 
 
@@ -346,23 +367,23 @@ echo Html::linkAction('listadoRecepcion', Html::img('verLista.png', 'cancel', 's
                             <div class="input-group">
                                 <div class="input-group-addon">       Valido:    
                                 </div>
-<?php echo Form::text('vale.valido', ' required class="form-control"   '); ?>
+                                <?php echo Form::text('vale.valido', ' required class="form-control"   '); ?>
                             </div>
                         </div> 
                     </div>
                 </div>
             </div>  
-<?php $url = "'" . PUBLIC_PATH . "inventario/listadoRecepcion'"; ?>
+            <?php $url = "'" . PUBLIC_PATH . "inventario/listadoRecepcion'"; ?>
             <table width="100%">
                 <tr align="center">
                     <td width="33%">     
-<?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                        <?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
                     </td>
                     <td>
 
                     </td>
                     <td width="33%">
-    <?php echo Form::submit((($accion == 'crearRecepcion') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+                        <?php echo Form::submit((($accion == 'crearRecepcion') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
                     </td>
                 </tr>
             </table>
@@ -370,13 +391,13 @@ echo Html::linkAction('listadoRecepcion', Html::img('verLista.png', 'cancel', 's
         </div> 
     </div>
     </br>
-<?php echo Form::close(); ?>
+    <?php echo Form::close(); ?>
 
 </body>
 
 <script type="text/javascript">
     $("#venta_producto_id").change(function () {
-       // buscaAlmacen();
+        // buscaAlmacen();
         buscaDetalle();
     });
     $("#vale_proveedor_id").change(function () {

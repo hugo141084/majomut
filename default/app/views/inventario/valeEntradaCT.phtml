@@ -195,7 +195,7 @@ R.F.C.  UPO111114BJ7 <br>
         <td style="width: 10%" border="0" >             </td>
         <td style="width: 10%" border="0" >             </td>
         <td style="width: 15%" border="0" > <strong>Fecha:</strong>            </td>
-        <td style="width: 25%" border="0" >'.$datosCompra->fecha_usuario.'            </td>
+        <td style="width: 25%" border="0" >'.date("d-m-Y", strtotime($datosCompra->fecha_recepcion)).'            </td>
     </tr>
        <tr>
         <td  ><strong>Organización:      </strong>   </td>
@@ -240,18 +240,36 @@ R.F.C.  UPO111114BJ7 <br>
 $i=1;
 $c1=0;$c2=0;$c3=0;$c4=0;
 foreach ($detalleCompra as $datos){
- $paquete=  ceil($datos->cantidad/$datos->peso_neto); 
- $c1 +=$paquete;
- $c2 +=($datos->cantidad + $paquete);
- $c3 +=$datos->cantidad;
+    $cantidad= $datos->cantidad;
+     $producto=new producto();
+ $producto=$producto->find_first("id='$datos->producto_id'");
+ $producto=$producto->find_first("id='$datos->producto_id'");
+$unidadEmpaque=$datos->unidad;
+ $pesoEmpaque=$producto->peso_empaque;
+ $peso=$producto->peso;
+ //$paquete= ceil($datos->cantidad/$unidadEmpaque);
+ $cantidad= $datos->cantidad;
+ 
+  $kn=$cantidad;
+ if($unidadEmpaque < 1) $unidadEmpaque=$cantidad;
+$paquetes=floor(($cantidad/$unidadEmpaque));
+ $residuo=($cantidad % $unidadEmpaque);
+ if($residuo>0)$paquetes+=1;
+ $kb=($cantidad)+ ($paquetes);
+ $tara=$cantidad*$paquetes;
+ 
+ $c1 +=$paquetes;
+ $c2 +=$kb;
+ $c3 +=$paquetes;
+ $c4 +=$datos->cantidad;
 $html .=' <tr align="center">
-<td style="width: 10%; " >'.$paquete.' '.$datos->embalaje.' </td>
+<td style="width: 10%; " >'.$paquetes.' '.$datos->embalaje.' </td>
 <td style="width: 10%" >'.$datos->codigo.'</td>
-<td style="width: 25%" >'.$datos->preparacion.'</td>
-<td style="width: 25%" >'.$datos->presentacion.'</td>
-<td style="width: 10%" >'.($datos->cantidad + $paquete).'</td>
-<td style="width: 10%" >'.$paquete.'</td>
-<td style="width: 10%" bgcolor="#CCCCCF">'.$datos->cantidad.'</td>
+<td style="width: 25%" >'.$datos->descripcion.' '.$datos->presentacion.' '.$datos->preparacion.'</td>
+<td style="width: 25%" >'.$datos->calidad.'</td>
+<td style="width: 10%" >'.($datos->cantidad + $paquetes).'</td>
+<td style="width: 10%" >'. $paquetes.'</td>
+<td style="width: 10%" bgcolor="#CCCCCF">'.$cantidad.'</td>
 </tr>'; 
 $i++;
 }
@@ -275,8 +293,8 @@ $html .=' <tr align="center" bgcolor="#CCCCCC">
 <td style="width: 25%"></td>
 <td style="width: 25%"></td>
 <td style="width: 10%">'.$c2.'</td>
-<td style="width: 10%">'.$c1.'</td>
 <td style="width: 10%">'.$c3.'</td>
+<td style="width: 10%">'.$c4.'</td>
 </tr>'; 
 $html .='</table> </td></tr>';
 
@@ -344,7 +362,10 @@ __________________________________
    
   
 //print_r($datos);
-  
+ if ($datosCompra->estado == 'Cancelado') {
+$pdf->Image('img/cancelado.png', 60, 85, 95);
+} 
+ob_end_clean(); 
 // Print text using writeHTMLCell()
 $pdf->writeHTML($html, true, false, true, false, '');
 
@@ -357,7 +378,7 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
    ob_end_clean();  
 
- $pdf->Output('valeSalidaCT.pdf', 'I');
+ $pdf->Output('valeEntradaCT.pdf', 'I');
 
 ?>
 

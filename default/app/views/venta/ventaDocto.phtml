@@ -1,0 +1,763 @@
+<script type="text/javascript">
+    function imprime_lista()
+    {
+        var operacion = 'MOSTRAR_LISTA_VENTA_DOCTO'
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "operacion=" + operacion,
+            success: function (html) {
+                $("#resultado").html(html);
+                buscaLote();
+                
+            }
+        });
+
+    }
+    function buscaProducto() {
+        buscaLote();
+    }
+    function buscaLote() {
+    var linea = $('#numLinea').val();
+    var almacenId = $('#venta_almacen_id').val();
+    if(linea > 0){
+        for(var k=1;k<=linea;k++){
+            var j=k;
+        var productoId = $('#venta_producto_id'+j).val();
+        boperacionLote(almacenId,productoId,j)
+        }
+        
+        }
+    }
+    function boperacionLote(almacenId,productoId,j) {
+        var operacion = "BUSCA_LOTE_DO";
+    $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "almacenId=" + almacenId + "&productoId=" + productoId + "&operacion=" + operacion+"&num="+j,
+            success: function (html) {
+                
+                texto="loteProducto"+j;
+                $("#"+texto).html(html);
+                
+            }
+        });
+    }
+    function buscaExistencia(linea) {
+    
+        var lote = $('#lote'+linea).val();
+        var cantidad = $('#venta_cantidad'+linea).val();
+        
+        var operacion = "BUSCA_EXISTENCIA_DO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "lote=" + lote  + "&operacion=" + operacion+"&linea="+linea,
+            success: function (html) {
+                $("#existencia").val(html);
+                existencia=$("#existencia").val()
+               
+                if( parseInt(existencia) >= parseInt(cantidad)){
+                insertaLote(linea)
+                }else{
+                    alert("Valide los datos  Existencia insuficiente...!");
+                imprime_lista();
+                }
+            }
+        });
+    }
+    function insertaLote(linea) {
+        var lote = $('#lote'+linea).val();
+        var almacenId = $('#venta_almacen_id').val();
+        var operacion = "INSERTA_LOTE";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "lote=" + lote  + "&operacion=" + operacion+"&linea="+linea+"&almacen="+almacenId,
+            success: function (html) {
+                imprime_lista()
+            }
+        });
+    }
+    function buscaProveedor() {
+        var proveedorId = $('#venta_proveedor_id').val();
+        if (proveedorId > 0) {
+            var operacion = "BUSCA_PROVEEDOR";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+                data: "proveedorId=" + proveedorId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#proveedor").html(html);
+                }
+            });
+        }
+    }
+    function buscaDetalle()
+    {
+        var productoId = $('#venta_producto_id').val();
+        var operacion = 'MOSTRAR_DETALLE'
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+                html = "lote";
+                html = html.replace(/^\s+|\s+$/g, "");
+                $('#opcion').val(html);
+                if (html == "lote") {
+                    $('#loteProducto').show();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').hide();
+                    $('#serie').val('');
+                    $('#numInventario').val('');
+
+                } else if (html == "serie") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').show();
+                    $('#inventarioProducto').hide();
+                    $('#numInventario').val('');
+                    $('#lote').val('');
+                } else if (html == "loteInventario") {
+                    $('#loteProducto').show();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').show();
+                    $('#serie').val('');
+                } else if (html == "serieInventario") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').show();
+                    $('#inventarioProducto').show();
+                    $('#lote').val('');
+                } else if (html == "soloInventario") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').show();
+                    $('#lote').val('');
+                    $('#serie').val('');
+                } else {
+                    $('#inventarioProducto').hide();
+                    $('#loteProducto').hide();
+                    $('#serieProducto').hide();
+                    $('#serie').val('');
+                    $('#lote').val('');
+                    $('#numInventario').val('');
+
+                }
+                //  $("#detalleProducto").html(html);
+            }
+        });
+
+    }
+    function buscaUnidadPrecio() {
+        var productoId = $('#venta_producto_id').val();
+
+        var operacion = "BUSCA_UNIDADPRECIO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+
+                separador = ","
+                cadena = html.split(separador)
+                $("#etiqueta").html(cadena[0]);
+                var valor = cadena[1];
+                $("#venta_precio").val(valor);
+                 buscaLote();
+        buscaDetalle();
+            }
+        });
+    }
+    function buscaCliente() {
+        var clienteId = $('#venta_cliente_id').val();
+        if (clienteId > 0) {
+            var operacion = "BUSCA_CLIENTE";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "clienteId=" + clienteId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#cliente").html(html);
+                }
+            });
+        }
+    }
+    function agregarPartida()
+    {
+
+        var operacion = 'AGREGAR_PARTIDA_VENTA';
+        var cantidad = $('#venta_cantidad').val();
+        var productoId = $('#venta_producto_id').val();
+        var precio = $('#venta_precio').val();
+        var almacenId = $('#venta_almacen_id').val();
+        var presentacionV = $('#presentacionV').val();
+        var serie = "";
+        var lote = $('#lote').val();
+        var opcion = 'lote';
+        var mens = "";
+        var re = /,/g;
+        cantidad = cantidad.replace(re, "");
+
+        if (cantidad == "") {
+            mens += "\n- Inserte una cantidad valida";
+        }
+        if (productoId == "") {
+            mens += "\n- Elija un producto";
+        }
+
+        cantidad=cantidad * presentacionV;
+        
+
+        if (mens != "") {
+            alert('Verifique los siguientes campos:\n' + mens);
+
+        } else
+        {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion + "&almacenId=" + almacenId,
+                success: function (html) {
+
+                    html = html.replace(/^\s+|\s+$/g, "");
+                    if (html == 'Si') {
+                        alert('Esta partida ya existe.......!');
+                    } else {
+
+                        imprime_lista();
+                    }
+                }
+            });
+        }
+    }
+
+    function quitar_partida(linea)
+    {
+
+        var operacion = 'QUITAR_PARTIDA_VENTA'
+        var linea = linea;
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "operacion=" + operacion + "&linea=" + linea,
+            success: function (html) {
+                imprime_lista();
+            }
+        });
+
+
+    }
+    function actualizaEnvio()
+    {
+var cantidadT = $('#cantidadT').val();
+if((parseInt(cantidadT) > 0 ) && (parseInt(cantidadT)<=1)){ $('#venta_costo_envio').val("154");}
+else if((cantidadT>1) && (cantidadT<=2)) $('#venta_costo_envio').val("182");
+else if((cantidadT>2) && (cantidadT<=5)) $('#venta_costo_envio').val("218");
+else if((cantidadT>5) && (cantidadT<=7)) $('#venta_costo_envio').val("228");
+else if((cantidadT>7) && (cantidadT<=8)) $('#venta_costo_envio').val("244");
+else if((cantidadT>8) && (cantidadT<=10)) $('#venta_costo_envio').val("256");
+else if((cantidadT>10) && (cantidadT<=12)) $('#venta_costo_envio').val("314");
+else if((cantidadT>12) && (cantidadT<=15)) $('#venta_costo_envio').val("334");
+else if((cantidadT>15) && (cantidadT<=20)) $('#venta_costo_envio').val("366");
+else if((cantidadT>20) && (cantidadT<=25)) $('#venta_costo_envio').val("404");
+else if((cantidadT>25) && (cantidadT<=30)) $('#venta_costo_envio').val("446");
+else if((cantidadT>30) && (cantidadT<=40)) $('#venta_costo_envio').val("516");
+else if((cantidadT>40) && (cantidadT<=50)) $('#venta_costo_envio').val("606");
+else if((cantidadT>50) && (cantidadT<=60)) $('#venta_costo_envio').val("828");
+else if((cantidadT>60) && (cantidadT<=70)) $('#venta_costo_envio').val("934");
+else if((cantidadT>70) && (cantidadT<=75)) $('#venta_costo_envio').val("954");
+else if((cantidadT>75) && (cantidadT<=80)) $('#venta_costo_envio').val("1008");
+else if((cantidadT>75) && (cantidadT<=90)) $('#venta_costo_envio').val("1188");
+else if((cantidadT>75) && (cantidadT<=100)) $('#venta_costo_envio').val("1220");
+else if((cantidadT>75) && (cantidadT<=130)) $('#venta_costo_envio').val("1590");
+else if((cantidadT>75) && (cantidadT<=140)) $('#venta_costo_envio').val("1850");
+else if((cantidadT>140)  ) $('#venta_costo_envio').val("2132");
+else $('#venta_costo_envio').val("0");
+
+
+    }
+    function validaMonto(){
+       var monto= $("#importe_recibido").val();
+       var recargo= "0";
+       var total=$("#dtotal").val();
+       var re = /,/g;
+      //  monto=monto.replace(re,"");
+      //   total=total.replace(re,"");
+      //   recargo=recargo.replace(re,"");
+        if(monto < 0)
+        {
+            alert('El importe recibido tiene que ser mayor a "0" ', 'ATENCION');
+        }
+        else{
+            var cambio =Math.round(((parseFloat(monto)+ parseFloat(recargo))- parseFloat(total))*100)/100;
+            if(cambio < 0){
+            $("#cambio").val('0');
+            }else{
+          
+               $("#cambio").val(cambio.formatMoney());         
+            }
+        }
+        
+        
+    }
+    
+    function buscarOrigen(){
+         var almacen= $("#venta_almacen_id").val();
+         var concepto = $("#venta_almacen_id option:selected").text()
+         if(almacen >= 1){
+         $("#venta_origen").val(concepto); 
+         buscaProducto();
+        }else{
+            $("#venta_origen").val("");
+        }
+        
+    }
+    function buscaCatalogo() {
+        var empresaId = $('#empresaE').val();
+        if (empresaId > 0) {
+            var operacion = "BUSCA_CATALOGO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "empresaId=" + empresaId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#catalogoEs").html(html);
+                }
+            });
+        }
+    }
+    
+   
+    function asignaPrecio(valor) {
+       
+        if (valor > 0) {
+            var operacion = "BUSCA_COSTO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                    data: "valor=" + valor + "&operacion=" + operacion,
+                success: function (html) {
+                    $('#venta_costo_envio').val(html);
+                }
+            });
+        }
+    }
+</script>    
+<?php View::content(); 
+$presentacionV = array("1" => "Kilo", ".500" => "500 Gr.", ".250" => "250 Gr.");
+?>
+<body id="cuerpo_principal">
+
+    <div id="form_container" style="width:100%;" >
+        <br>
+        <h1><a></a></h1>
+        <div id="titulo_superior"> 
+            <div id="texto_superior"  >
+                <?php echo "VENTAS" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                    echo Html::linkAction('listado'.$origen, Html::img('verLista.png', 'cancel', 'style="text-align:center;width:90px;  padding:2px;"'), '');
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php echo Form::open("venta/".$accion."/".$pedidoId."/".$origen); ?>
+        <?php echo Form::hidden("venta.id"); ?>
+        <?php echo Form::hidden("existencia","",""); ?>
+
+
+        <div id="margen" >
+            <div class="form-row">
+
+
+                <?php echo Form::hidden('venta.tipo_documento', 'maxlength="20" required class="form-control"   ', "VENTA"); ?>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Origen:    
+                            </div>
+                            <?php
+                             echo Form::hidden('venta.origen',' class="form-control" ');
+                             echo Form::dbSelect("venta.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="form-control" onchange="buscarOrigen()" '); 
+                            ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Documento:    
+                            </div>
+<?php echo Form::text('venta.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ', $num); ?>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Fecha:    
+                            </div>
+<?php echo form::text('venta.fecha_documento', 'placeholder="dd-mm-aa" required class="form-control"', date('d-m-Y')); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">    Cliente:    
+                            </div>
+<?php echo Form::dbSelect("venta.cliente_id", "nombrecompleto", array("cliente", "listar"), 'Seleccione..', ' class="form-control" required ',$pedido->cliente_id); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">    Origen:    
+                            </div>
+<?php echo Form::text("venta.origen_venta",' class="form-control" required readonly="readonly"',$origen); ?>
+                        </div>
+                    </div> 
+                </div> 
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">    Referencia:    
+                            </div>
+<?php echo Form::text("venta.docto_venta",  ' class="form-control" required readonly="readonly"',$pedido->documento); ?>
+                        </div>
+                    </div> 
+                </div> 
+
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Datos Cliente </div>
+                <div class="panel-body">
+                    <div id="cliente">
+                   <?php   $campo="";
+                   if($pedido->id==1) $campo='readonly="readonly"'
+ ?><table width="100%" border="0">
+  <tr>
+    <td width="104"><label> Nombre:</label></td>
+    <td width="551">
+    <?php echo Form::text('venta.nombre', "class='form-control' $campo ",$pedido->nombre ); ?>
+    </td>
+  </tr>
+  <tr>
+    <td><label> Direccion:</label></td>
+    <td>
+    <?php echo Form::text('venta.direccion', "class='form-control' $campo ",$pedido->direccion ); ?>
+    </td>
+  </tr>
+  <tr>
+    <td><label> RFC:</label></td>
+    <td>
+    <?php echo Form::text('venta.rfc', "class='form-control' readonly='readonly' ",$pedido->rfc ); ?>
+    </td> 
+  </tr>
+</table>
+                         <?php 
+                  (($cliente->dias=="")? $dias=0:$dias=$cliente->dias);
+$fecha_actual = date("Y-m-d");
+$fecha_vencimiento=date("Y-m-d",strtotime($fecha_actual."+ $dias days"));
+echo Form::hidden('fecha_vencimiento', "class='form-control' readonly='readonly' ",$fecha_vencimiento ); ?>
+                    </div>   
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Datos Producto </div>
+                  
+
+                   
+ 		
+<div id="resultado" style="min-height: 320px;max-height: 320px;   border-bottom-color:#fff;overflow: auto;position: relative;  "> <?php print"<script> imprime_lista() </script>"; ?></div>
+                <?php (($pedido->costo_envio < 1)? $pedido->costo_envio=0:''); ?>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> SubTotal $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dsubtotal', '  class="form-control"  style="text-align:right;" ',$pedido->subtotal); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Impuesto $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dimpuesto', '  class="form-control" style="text-align:right;"  ',$pedido->iva); ?> </td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Total $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dtotal1', '  class="form-control" style="text-align:right;"  ',$pedido->monto); ?> </td>
+                        </tr>
+                    </table>
+<?php echo Form::hidden('dtotal', '  class="form-control" style="text-align:right;"  ',$pedido->monto); ?>
+                <br>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"> Empresa Envio:    
+                                </div>
+                                <?php echo Form::dbSelect("empresaE", 'nombre', array('empresa', 'listar', 0), '- Seleccione -', " class='form-control' onchange='buscaCatalogo()' "); ?>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"> Catalogo Costo:    
+                                </div>
+                                <div id="catalogoEs">
+                                <?php echo Form::dbSelect("venta.costo_id", 'costo', array('costoEnvio', 'datos', 0), '- Codigo, kilos, Costo -', " class='form-control' onchange='asignaPrecio(this.value)'"); ?>
+                                </div>
+                                </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Costo Envio:    
+                                </div>
+                                <?php echo Form::text("venta.costo_envio", "class='form-control' "); ?>
+                            </div>
+                        </div> 
+                    </div>
+                   <br/> 
+                    <br/>  <br/> 
+                   
+                </div>
+            </div>
+<?php $ar2 = array("C" =>'Contado', "CR" =>'Credito'); ?>
+             <fieldset style="padding: 15px;">
+                <legend><b>Datos del Pago :</b></legend> 
+                <div class="col-sm-7">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Condiciones de pago:    
+                            </div>
+<?php echo  Form::Select('venta.condicion', $ar2," class='form-control' required");   ?>
+      
+                        </div>
+                    </div> 
+                </div>
+                <div id="cajaCredito" style="display: none">
+                    <div class="col-sm-5">
+                 <table width="100%">
+        <tr align="center">
+            <td width="40%">     
+               Fecha Probable de Cobro: 
+            </td>
+            <td width="60%">     
+               <?php echo Form::date('venta.fecha_vencimiento', '  class="form-control"  '); ?>
+            </td>
+           
+            
+        </tr>
+                 </table>   </div>
+                </div>
+                
+                
+                <div id="cajaCondiciones">
+
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Forma de pago:
+                            </div>
+<?php echo Form::dbSelect("concepto_id", 'concepto', array('conceptos', 'listar', 0), '- Seleccione -', " class='form-control' "); ?>
+                        </div>
+                    </div> 
+                </div>
+
+                    <div id="cajaDetalle" style="display: none">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Referencia:    
+                            </div>
+<?php echo Form::text('referencia', 'maxlength="30" class="form-control"  '); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Fecha de documento:    
+                            </div>
+<?php echo Form::date('fecha_referencia', 'type="text" class="form-control" placeholder="dd-mm-aa" '); ?> 
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Cuenta Bancaria:    
+                            </div>
+<?php echo Form::dbSelect("cuenta_id", 'cuenta', array('bancosCuentas', 'listarCuentasBancos', 0), '- Seleccione -', " class='form-control '  "); ?>
+                        </div>
+                    </div> 
+                </div>
+                    </div>
+                    
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Uso del CFDI :    
+                            </div>
+<?php echo Form::dbSelect("uso_cfdi", 'descripcion', array('usoCfdi', 'listar', 0), '- Seleccione -', " class='form-control input-sm'   "); ?>
+                        </div>
+                    </div> 
+                </div>
+                <table width="100%" border='0'>
+
+
+
+                    <tr>
+                        <td colspan="2" rowspan="3" width="60%">
+                            <label class="description"> Observaciones </label>  <br/>
+<?php echo Form::textarea('venta.observacion', '  class="form-control"  '); ?>
+                        </td> 
+                        <td width="20%" style="text-align: right">Importe recibido $</td>
+                        <td width="20%" >
+                            <div style="margin-left: 4px" class="input-group">
+
+<?php echo Form::text('importe_recibido', 'maxlength="20" class="form-control" size="10" style="text-align:right;"', 0); ?>
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td width="20%" style="text-align: right">Cambio           $</td>
+                        <td width="20%">
+                            <div style="margin-left: 4px" class="input-group">
+
+<?php echo Form::text('cambio', 'readonly="readonly" maxlength="20" class="form-control" size="10" style="text-align:right;"', 0); ?>                   
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>    
+        </div>
+                
+
+    </fieldset>
+
+
+<?php $url = "'" . PUBLIC_PATH . "venta/listadoVenta'"; ?>
+    <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+<?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+
+            </td>
+            <td width="33%">
+<?php echo Form::submit((($accion == 'ventaDocto') ? 'Guardar' : 'Actualizar'), 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+            </td>
+        </tr>
+    </table>
+
+</div> 
+</div>
+</br>
+<?php echo Form::close(); ?>
+
+</body>
+
+<script type="text/javascript">
+   
+    
+    $("#venta_cliente_id").change(function () {
+        buscaCliente();
+
+    });
+
+    $("#Agregar").click(function () {
+
+        agregarPartida();
+
+    });
+     $("#venta_condicion").change(function () {
+      var condiciones = $('#venta_condicion').val();  
+      if(condiciones=="CR"){
+           $('#cajaCondiciones').hide();
+            $('#cajaCredito').show();
+            $('#venta_fecha_vencimiento').val( $('#fecha_vencimiento').val());
+            
+      }else {
+           $('#cajaCondiciones').show();
+            $('#cajaCredito').hide();
+      }
+   });
+    $("#concepto_id").change(function () {
+        var idConcepto = $('#concepto_id').val();
+        if (idConcepto != '') {
+            operacion = 'BUSCA_MOVIMIENTO';
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/funciones'; ?>",
+                data: "operacion=" + operacion + "&idConcepto=" + idConcepto,
+                success: function (html) {
+                    var aux = html;
+                    aux = aux.replace(/^\s+|\s+$/g, "");
+                    $('#tipo_operacion').val(aux);
+                    if (aux != "C") {
+                        $('#cambio').hide();
+                        $('#etiqCb').hide();
+                        $('#p').hide();
+                        //MUESTRA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
+                        $('#cajaDetalle').show();
+                        operacion = 'BUSCA_BANCO';
+                        $.ajax({
+                            type: "POST",
+                            url: "<?php echo PUBLIC_PATH . 'venta/funciones'; ?>",
+                            data: "operacion=" + operacion,
+                            success: function (html) {
+
+                                $("#bancoI").html(html);
+                            }
+                        });
+
+
+                    } else {
+                        $('#cambio').show();
+                        $('#etiqCb').show();
+                        $('#p').show();
+                        //OCULTA LOS CAMPOS COMPLEMENTARIOS PARA FORMA DE PAGO EN (BANCO)
+                        $('#cajaDetalle').hide();
+                       
+
+
+                    }
+                }
+            });
+        }
+
+    });
+    $("#importe_recibido").keyup(function(){
+     validaMonto();
+ }); 
+ 
+    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
+   var n = this,
+   decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+   decSeparator = decSeparator === undefined ? "." : decSeparator,
+   thouSeparator = thouSeparator === undefined ? "," : thouSeparator,
+   sign = n < 0 ? "-" : "",
+   i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+   j = (j = i.length) > 3 ? j % 3 : 0;
+   return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+};
+</script>  
+
+
+
+
+
+

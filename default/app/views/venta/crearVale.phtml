@@ -246,6 +246,37 @@ else $('#venta_costo_envio').val("0");
             }
         }
     }
+    
+    function buscaCatalogo() {
+        var empresaId = $('#empresaE').val();
+        if (empresaId > 0) {
+            var operacion = "BUSCA_CATALOGO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "empresaId=" + empresaId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#catalogoEs").html(html);
+                }
+            });
+        }
+    }
+    
+   
+    function asignaPrecio(valor) {
+       
+        if (valor > 0) {
+            var operacion = "BUSCA_COSTO";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                    data: "valor=" + valor + "&operacion=" + operacion,
+                success: function (html) {
+                    $('#venta_costo_envio').val(html);
+                }
+            });
+        }
+    }
 </script>    
 <?php View::content(); ?>
 <body id="cuerpo_principal">
@@ -432,23 +463,33 @@ else $('#venta_costo_envio').val("0");
                     </table>
 
                     <br>
-                    <div class="col-sm-5">
+                     <div class="col-sm-4">
                         <div class="form-group">
                             <div class="input-group">
-                                <div class="input-group-addon">       Costo Envio:    
+                                <div class="input-group-addon"> Empresa Envio:    
                                 </div>
-<?php echo Form::number('venta.costo_envio', ' required class="form-control"   '); ?>
+                                <?php echo Form::dbSelect("empresaE", 'nombre', array('empresa', 'listar', 0), '- Seleccione -', " class='form-control' onchange='buscaCatalogo()' "); ?>
                             </div>
                         </div> 
                     </div>
-                    <div class="col-sm-7">
+                    <div class="col-sm-4">
                         <div class="form-group">
-                            <!--
                             <div class="input-group">
-                                <div class="input-group-addon">       Capturo:    
+                                <div class="input-group-addon"> Catalogo Costo:    
                                 </div>
-<?php echo Form::text('venta.capturo', ' required class="form-control"   '); ?>
-                            </div>  !-->
+                                <div id="catalogoEs">
+                                <?php echo Form::dbSelect("venta.costo_id", 'costo', array('costoEnvio', 'datos', 0), '- Codigo, kilos, Costo -', " class='form-control' onchange='asignaPrecio(this.value)'"); ?>
+                                </div>
+                                </div>
+                        </div> 
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">Costo Envio:    
+                                </div>
+                                <?php echo Form::text("venta.costo_envio", "class='form-control' "); ?>
+                            </div>
                         </div> 
                     </div>
 

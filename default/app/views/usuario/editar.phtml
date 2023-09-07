@@ -22,7 +22,7 @@ View::content();
                         <div class="input-group">
                             <div class="input-group-addon"> Empleado:    
                             </div>
-                            <?php echo Form::dbSelect("usuario.empleado_id", 'nombre_completo', array('empleado', 'empleadoAcceso', 0), ''," class='form-control ' disabled  ",$usuario->empleado_id);?>
+                            <?php echo Form::text("empleado.nombre_completo", " class='form-control ' disabled  ");?>
                         </div>
                     </div>
                 </div> 
@@ -41,7 +41,7 @@ View::content();
                         <label for="lastName">Tipo<small class="required">*</small></label>
                         <div class="input-group">
                            <?php
-                        $tipo_valor = array(""=>"Seleccione","1"=>"ADMINISTRADOR");
+                        $tipo_valor = array(""=>"Seleccione","1"=>"ADMINISTRADOR","2"=>"VENTAS","3"=>"ALMACEN");
                         
                         echo Form::Select("usuario.Tipo", $tipo_valor, "class='form-control' ",$usuario->Tipo );
                         ?>                                       </div>

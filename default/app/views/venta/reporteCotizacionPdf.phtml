@@ -1,0 +1,326 @@
+
+<?php
+error_reporting(E_ALL ^ E_NOTICE);
+View::template(null);
+Load::lib('funciones');
+ $pdf = new TCPDF($orientation = 'P', $unit = 'mm', $format = 'Letter');
+
+
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('SISTEMA');
+$pdf->SetTitle('forma de pago');
+$pdf->SetSubject('');
+//================================================================
+//================ SE GENERAN DATOS DEL AVISO  ==================
+//PARA VISULAIZAR UN MES EN ESPANIOL
+//setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
+
+
+// set default header data
+//$pdf->SetHeaderData($logo,30, $titulo, '', "\n" , '', array(190, 190, 190));
+
+//Para que no se imprima el encabezado del PDF.
+$pdf->setPrintHeader(false);
+//$pdf->setPrintFooter(false);
+// set default footer data
+//$pdf->SetFooterData('', array(190, 190, 190), $usuarioCaptura);
+$pdf->SetFooterData('',array(190,190,190),"Teléfonos 967 678 31 96 y 967 678 81 06 \ www.majomut.org \ mail: ventas@majomut.org \  info@majomut.org"." "."");
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', 8));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins (15,20,15)
+$pdf->SetMargins(10, 10, 10); //PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetMargins(10,10,10);//PDF_MARGIN_LEFT, '20', PDF_MARGIN_RIGHT
+$pdf->SetHeaderMargin('10');//PDF_MARGIN_HEADER
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+
+//set auto page breaks
+//$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+
+// ---------------------------------------------------------
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+
+// set default font subsetting mode
+$pdf->setFontSubsetting(true);
+// Set font
+// dejavusans is a UTF-8 Unicode font, if you only need to
+// print standard ASCII chars, you can use core fonts like
+// helvetica or times to reduce file size.
+//$pdf->SetFont('dejavusans', , 8, , true);
+// Add a page
+// This method has several options, check the source code documentation for more information.
+$pdf->AddPage();
+
+$fechaImpresion = date("d/m/Y H:i:s");
+
+
+//$filename = $PNG_TEMP_DIR . '/home/nerito/prod/temporalXml.png';
+//$filename = $PNG_TEMP_DIR.'temporalXml.png';
+
+$matrixPointSize = 10;
+$errorCorrectionLevel = 'L';
+
+
+/*
+
+$datosRecibo = Load::model('recibos')->datosRecibo($id);
+foreach ($datosRecibo as $dato) {
+    $idSujeto = $dato->cat_sujetos_contribuyentes_id;
+    $num_recibo = $dato->num_recibo;
+    $fecha = $dato->fecha_hora;
+    $documento = strftime("%d-%m-%Y", strtotime($dato->fecha_documento)); 
+    $idCobro = $dato->cobros_id;
+    $comentarios = $dato->comentarios;
+    $monto = $dato->monto;
+    $tRecargo = $dato->recargo;
+    $fechaI = strftime("%d-%m-%Y", strtotime($dato->fecha_hora));
+} 
+
+ */
+
+
+$html2="";
+// Set some content to print
+$html = '<style>
+	table.first {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 8pt;
+        top: -100px; 
+    }
+    table.second {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 8pt;
+        top: 10px; 
+    }
+   
+    table.thirty {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 6pt;
+        top: -100px; 
+    }
+    table.four {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 15pt;
+        top: -100px; 
+    }
+        p.first {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 10pt;
+        text-align: center;
+        font-weight: bold;
+    }
+    .estilo1{
+		font-size: 10px; 
+		color: #333; 
+	}
+        .estilo2{
+		font-size: 12px; 
+		color: #333; 
+	}
+        </style>';
+
+//$html.= '<p class="first">'.$nombreEmisor.'</p>';
+
+
+$html .='<table width="100%" border="0" class="estilo1">
+      <tr>
+        <td width="10%" rowspan="3">&nbsp;</td>
+        <td width="40%">Resumen de Pedidos</td>
+        <td width="10%">&nbsp;</td>
+        <td width="40%"><div align="right">'.  FechaCadena(date('Y-m-d')).'</div></td>
+      </tr>
+      <tr>
+        <td>Correspondiente a '.$etiquetaFecha.' </td>
+        <td>&nbsp;</td>
+        <td><p align="right">'.date('H:i:s').' '.date('A').'</p>
+          </td>
+      </tr>
+      <tr>
+        <td>'.$sqlMunicipio->nombre.'</td>
+        <td>&nbsp;</td>
+        <td><p align="right">'.$titulo.'</p></td>
+      </tr>
+      <tr bgcolor="#000" style="font-size:2px; height="2px";">
+              <td colspan="4"><b></b></td>
+            </tr>
+    </table>';
+    
+    $html .='<table class="estilo1" border="0" width="100%" >
+        <tr style="font-weight:bold;" bgcolor="#D8D8D8" >
+        <th width="5%">#</th>
+            <th width="10%">Documento</th>
+            <th width="10%">Orden Pedido</th>
+            <th width="10%" >Fecha</th>
+            <th width="10%" >Estatus</th>
+             <th width="20%" >Cliente</th>
+             <th width="10%" >Subtotal</th>
+              <th width="10%" >IVA</th>
+              <th width="10%" >Total</th> 
+              <th width="5%" >Venta</th>  
+        </tr>
+       ';
+    
+    $i=0;
+    $color="#000";
+    $totalConcepto=0;
+    $totalCobro=0;
+    $k=0;
+    $concepto[][]=0;
+    foreach ($resultado as $detalleDatos) {
+        $i++;
+        if($color=="#FFF")
+        $color="#F8F8F8";
+        else 
+        $color="#FFF";   
+            
+        $html .= '<tr bgcolor="'.$color.'">
+             <td height="20px">'.$i.'</td>
+                  <td >'.$detalleDatos->documento.'</td>
+                      <td >'.$detalleDatos->orden_compra.'</td>
+                 <td>'.$detalleDatos->fecha_documento.'</td>
+                  <td>'.$detalleDatos->estado.'</td>   
+                  <td >'.$detalleDatos->nombre.'</td>
+                  <td align="right"> $ '.number_format($detalleDatos->subtotal, 2,'.',',').'</td>
+                  <td align="right"> $ '.number_format($detalleDatos->iva, 2,'.',',').'</td>
+                  <td align="right"> $ '.number_format($detalleDatos->monto, 2,'.',',').'</td>
+                       <td >'.  (($detalleDatos->venta=='1')? 'Si':'N0') .'</td>
+                  </tr>
+                ';
+       $subtotalV=0; $ivaV=0;$totalCobroV=0;
+       $subtotal=0; $iva=0;$totalCobro=0;
+      if($detalleDatos->estado=="Activo") {
+      $subtotal +=  $detalleDatos->subtotal;
+      $iva +=  $detalleDatos->iva;
+      $totalCobro +=  $detalleDatos->monto;
+      if($detalleDatos->venta=='1'){
+      $subtotalV +=  $detalleDatos->subtotal;
+      $ivaV +=  $detalleDatos->iva;
+      $totalCobroV +=  $detalleDatos->monto;
+      } 
+      }  
+    }
+  $html .='<tr bgcolor="'.$color.'">
+          <td ></td>
+                  <td ></td>
+                 <td></td>
+                  <td></td>
+                  <td></td> 
+                  <td></td> 
+                  <td align="center"> </td>
+                  <td align="right"> </td>
+                  <td align="right"> </td>
+                  </tr>
+                  <tr bgcolor="'.$color.'">
+          <td ></td>
+                  <td >TOTALES:</td>
+                 <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td> 
+                  <td align="right"> $ '.number_format($subtotal, 2,'.',',').'</td>    
+                  <td align="right"> $ '.number_format($iva, 2,'.',',').'</td>
+                  <td align="right"> $ '.number_format($totalCobro, 2,'.',',').'</td>
+                  <td align="right"> </td>
+                  </tr></table> <br><br>'; 
+    
+  
+    
+   
+
+
+$html .='
+    <br>  
+<table style="width: 100%" border="0" class="second">
+<tr>
+<td width="50%">
+<table style="width:80%" border="0" class="second">
+<tr >
+          <td  colspan="3" align="center"·>Resume de Movimientos</td>
+		  
+          </tr>
+          <tr >
+          <td style="width:40%;">Importe</td>
+		  <td style="width:5%;">:</td>
+          <td style="width:55%;" align="right">'.number_format($subtotal, 2,'.',',').'</td>
+          </tr>
+          <tr >
+          <td >Descuento</td>
+		  <td>:</td>
+          <td  align="right">0.00</td>
+          </tr>
+		  <tr >
+          <td >I.V.A.</td>
+          <td>:</td>
+          <td  align="right">'.number_format($iva, 2,'.',',').'</td>
+          </tr>
+		  <tr >
+          <td >Total: </td>
+          <td>:</td>
+          <td  align="right">'.number_format($totalCobro, 2,'.',',').'</td>
+          </tr>
+          </table>
+</td>
+<td width="50%">
+<table style="width: 80%" border="0" class="second">
+<tr >
+          <td  colspan="3" align="center"·>Resume de Movimientos (Ventas)</td>	  
+          </tr>
+          <tr >
+          <td style="width:40%;">Importe</td>
+		  <td style="width:5%;">:</td>
+          <td style="width:55%;" align="right">'.number_format($subtotalV, 2,'.',',').'</td>
+          </tr>
+          <tr >
+          <td s>Descuento</td>
+		  <td>:</td>
+          <td s align="right"> 0.00</td>
+          </tr>
+        <tr >
+          <td >I.V.A.</td>
+          <td>:</td>
+          <td  align="right">'.number_format($ivaV, 2,'.',',').'</td>
+          </tr>
+		  <tr >
+          <td >Total: </td>
+          <td>:</td>
+          <td  align="right">'.number_format($totalCobroV, 2,'.',',').'</td>
+          </tr>
+          </table>
+</td>
+</tr>
+</table>
+';
+echo $html;
+ob_end_clean();    
+// Print text using writeHTMLCell()
+$pdf->writeHTML($html, true, false, true, false, '');
+
+// ---------------------------------------------------------
+// Close and output PDF document
+// This method has several options, check the source code documentation for more information.
+ob_end_clean(); 
+$pdf->Output('recibo.pdf', 'I');
+ 
+
+//============================================================+
+// END OF FILE
+//============================================================+
+
+?>

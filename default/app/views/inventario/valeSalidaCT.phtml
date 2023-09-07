@@ -11,6 +11,9 @@ foreach ($ciclo as $cic){
     if($i<$d) $cicl .=$cic->ciclo.", ";
     else $cicl .=$cic->ciclo.".";
 }
+foreach ($detalleCompra as $datos){
+  $calidad= $datos->presentacion; 
+}
 Load::lib('tcpdf');
 class reporte extends TCPDF {
 
@@ -174,7 +177,7 @@ R.F.C.  UPO111114BJ7 <br>
 <tr>
 <th colspan="2">
 <font align="center" class="resp">
-<strong>VALE  DE ENTRADA</strong>
+<strong>VALE DE SALIDA PARA TOSTADO</strong>
 </font>
 </th>
 </tr>
@@ -190,29 +193,44 @@ R.F.C.  UPO111114BJ7 <br>
 <br>
 <table style="width: 100%" border="0" class="mitabla">   
     <tr >
-        <td style="width: 20%" border="0" ><strong>FOLIO ID: </strong>      </td>
-        <td style="width: 15%" border="0" >'.$datosCompra->documento.'           </td>
-        <td style="width: 10%" border="0" >             </td>
-        <td style="width: 10%" border="0" >             </td>
-        <td style="width: 15%" border="0" > <strong>Fecha:</strong>            </td>
-        <td style="width: 25%" border="0" >'.$datosCompra->fecha_usuario.'            </td>
+        <td style="width: 20%" border="0" ><strong>FLO ID: </strong>      </td>
+        <td style="width: 29%" border="0" >763           </td>
+        <td style="width: 15%" border="0" >             </td>
+        <td style="width: 1%" border="0" >             </td>
+        <td style="width: 15%" border="0" > <strong>NUM.:</strong>            </td>
+        <td style="width: 20%" border="0" >'.$datosCompra->documento.'            </td>
     </tr>
-       <tr>
+    <tr >
         <td  ><strong>Organización:      </strong>   </td>
         <td  >Majomut </td>  
-        <td  >             </td>  
+        <td  border="0" >             </td>
+        <td  border="0" >             </td>
+        <td  ><strong>F. Salida:</strong>             </td>  
+        <td  >'.date("d-m-Y", strtotime($datosCompra->fecha_salida)).'           </td>
+    </tr>
+       <tr>
+        <td  ><strong>Calidad:      </strong>   </td>
+        <td  >'.$calidad.' </td>  
+        <td  > Fairtrade/SPP            </td>  
         <td  >             </td>  
         <td  ><strong>Ciclo:</strong>    </td>  
         <td  >'.$cicl.'            </td>  
     </tr>
-    
+    <tr>
+        <td  ><strong>Cliente:     </strong>    </td>
+        <td  >'.$datosCompra->cliente.'  </td>  
+        <td  >             </td>  
+        <td  >             </td>  
+        <td  ></td>  
+        <td  > </td>  
+    </tr> 
      <tr>
         <td  ><strong>Destino:     </strong>    </td>
-        <td  >'.$alma.'  </td>  
+        <td  >'.$datosCompra->destino.'  </td>  
         <td  >             </td>  
         <td  >             </td>  
-        <td  ><strong>F. Salida:</strong>             </td>  
-        <td  >'.$datosCompra->fecha_salida.'           </td>  
+        <td  ></td>  
+        <td  > </td>  
     </tr> 
  </table>
 
@@ -240,18 +258,35 @@ R.F.C.  UPO111114BJ7 <br>
 $i=1;
 $c1=0;$c2=0;$c3=0;$c4=0;
 foreach ($detalleCompra as $datos){
- $paquete=  ceil($datos->cantidad/$datos->peso_neto); 
- $c1 +=$paquete;
- $c2 +=($datos->cantidad + $paquete);
- $c3 +=$datos->cantidad;
+    
+ $producto=new producto();
+    $producto=$producto->find_first("id='$datos->producto_id'");
+$unidadEmpaque=$datos->unidad;
+ $pesoEmpaque=$producto->peso_empaque;
+ $peso=$producto->peso;
+ //$paquete= ceil($datos->cantidad/$unidadEmpaque);
+ $cantidad= $datos->cantidad;
+ 
+  $kn=$cantidad;
+ if($unidadEmpaque < 1) $unidadEmpaque=$cantidad;
+$paquetes=floor(($cantidad/$unidadEmpaque));
+ $residuo=($cantidad % $unidadEmpaque);
+ if($residuo>0)$paquetes+=1;
+ $kb=($cantidad)+ ($paquetes);
+ $tara=$cantidad*$paquetes;
+ 
+ $c1 +=$paquetes;
+ $c2 +=$kb;
+ $c3 +=$paquetes;
+ $c4 +=$datos->cantidad;
 $html .=' <tr align="center">
-<td style="width: 10%; " >'.$paquete.' '.$datos->embalaje.' </td>
+<td style="width: 10%; " >'.$paquetes.' '.$datos->embalaje.' </td>
 <td style="width: 10%" >'.$datos->codigo.'</td>
-<td style="width: 25%" >'.$datos->preparacion.'</td>
-<td style="width: 25%" >'.$datos->presentacion.'</td>
-<td style="width: 10%" >'.($datos->cantidad + $paquete).'</td>
-<td style="width: 10%" >'.$paquete.'</td>
-<td style="width: 10%" bgcolor="#CCCCCF">'.$datos->cantidad.'</td>
+<td style="width: 25%" >'.$datos->descripcion.' '.$datos->preparacion.'</td>
+<td style="width: 25%" >'.$datos->calidad.'</td>
+<td style="width: 10%" >'.($datos->cantidad + $paquetes).'</td>
+<td style="width: 10%" >'.$paquetes.'</td>
+<td style="width: 10%" bgcolor="#CCCCCF">'.$cantidad.'</td>
 </tr>'; 
 $i++;
 }
@@ -275,8 +310,8 @@ $html .=' <tr align="center" bgcolor="#CCCCCC">
 <td style="width: 25%"></td>
 <td style="width: 25%"></td>
 <td style="width: 10%">'.$c2.'</td>
-<td style="width: 10%">'.$c1.'</td>
 <td style="width: 10%">'.$c3.'</td>
+<td style="width: 10%">'.$c4.'</td>
 </tr>'; 
 $html .='</table> </td></tr>';
 
@@ -311,8 +346,7 @@ $html .=' <tr><td colspan="3"> <table style="width: 100%" border="0" class="mita
 __________________________________
 <BR>
 '.$datosCompra->capturo.'  <BR>
-    Consejo de Vigilancia <BR>
-    Beneficio Majomut
+    Consejo de Vigilancia 
 </td>
 <td style="width: 33%">  <BR>
 <BR>
@@ -342,7 +376,9 @@ __________________________________
 </table>
       ';    
    
-  
+  if ($datosCompra->estado == 'Cancelado') {
+$pdf->Image('img/cancelado.png', 60, 85, 95);
+}  
 //print_r($datos);
   
 // Print text using writeHTMLCell()

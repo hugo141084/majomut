@@ -138,14 +138,16 @@ function cerrar()
     <td>&nbsp;</td>
   </tr>
   <tr >
-    <td colspan="5" bgcolor="#adb5ce"><h5><a id="letra1">Producto </a></h5></td>
-    
+    <td colspan="3" bgcolor="#adb5ce"><h5><a id="letra1">Producto </a></h5></td>
+    <td colspan="2" bgcolor="#adb5ce"><h5><a id="letra1">Lote </a></h5></td>
     </tr>
   <tr>
-    <td colspan="5"><label>
+    <td colspan="3"><label>
       <?php echo Form::dbSelect("movimiento.producto_id","descripcion",array("producto","listarEntrada"),'Seleccione..','type="text"  class="element text" style="width:325px"');?>
     </label></td>
-    
+    <td colspan="2"><label>
+      <?php echo Form::dbSelect("movimiento.lote_id","codigo",array("lote","listar"),'Seleccione..','type="text"  class="element text" style="width:325px"');?>
+    </label></td>
    
   </tr>
   
@@ -158,7 +160,8 @@ function cerrar()
         <div >
       <table width="100%" border="0" class="letra">
  <tr bgcolor="#CCCCCC" style="height: 30px;">
-    <td width="5%"><label>#</label></td>            
+    <td width="5%"><label>#</label></td> 
+    <td width="5%"><label>Num. Concepto</label></td> 
     <td width="5%"><label></label></td>       
     <td width="40%"><label>Descripcion</label></td>
     
@@ -180,6 +183,7 @@ if($color == "#ebf3ff"){
 
  echo"<tr bgcolor='".$color."' class=\"letra\" onclick=\"cambiar_color2('".$i."') \">";	
  echo"<td width=\"5%\" align=\"center\"  >".($i+1)."</td>";
+ echo"<td width=\"5%\" align=\"center\"  >".$datos->num_cpto."</td>";
  echo"<td  width='5%' class=\"letra\"  align=\"center\"><input type='checkbox' name=\"movimiento[]\" value='".$datos->num_cpto."' style=\"visibility:true\" checked=\"checked\"></td>";  
 
  echo"<td  width='40%' class=\"letra\" >".$datos->descripcion."</td>"; 

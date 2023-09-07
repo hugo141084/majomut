@@ -1,0 +1,19 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+<?php
+if ($operacion=="BUSCA_BANCO"){
+ echo Form::dbSelect("cuenta.id", 'concepto', array('bancosCuentas', 'buscarCuenta',$condicion), '- Seleccione -',"style='font-size:10px;width:150px;  padding:1px;' ");   
+ }
+ else if($operacion=="BUSCA_MOVIMIENTO") {
+     echo $tipoMovimiento->movimiento;
+ }else{
+     
+ }
+?>
+

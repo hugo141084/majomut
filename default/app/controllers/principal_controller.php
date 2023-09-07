@@ -10,6 +10,8 @@ class principalController extends AppController
    
      
     public function principal(){
+        $ciclocosechaId = Session::get('cicloCosecha');
+        if($ciclocosechaId < 1) Redirect::to('ciclo/seleccionar');
        $producto=new producto();
        $this->producto=$producto->count();
        $pedido=new pedido();

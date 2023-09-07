@@ -1,0 +1,186 @@
+
+<?php
+View::content();
+Html::includeCss(); 
+
+$anio = date('Y') - 10;
+$total=0;
+$existencia=0;
+?>
+<?php $url = "'" . PUBLIC_PATH . "'"; ?>
+<div id="cuerpo_principal">
+    <div id="form_container"  >
+<h1><a></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Reporte de Movimientos al Inventario" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+             <div class='btn'>
+                    <?php echo Html::img('inicio.png','cancel','style="text-align:center;width:65px;  padding:5px;"  onclick="window.location = ' . $url . '" ');?>
+                </div>  
+               
+            </div>
+    </div>  
+<?php echo Form::open("reportes/movimiento2"); ?> 
+<table>
+    <tr>
+        <td><fieldset style="padding: 15px; height: 100%">
+                                    <legend><b>OPCIONES DEL REPORTE :</b></legend> 
+                                    <table width="100%" class="table table-bordered">
+                                        <tr>
+                                            <td>                
+                                                
+
+<?php echo Form::date('movimiento.fecha_inicial', 'class="form-control" required', date('Y-m-d')); ?>
+                                                    <br> <label> Periodo Inicial</label>       
+                                               
+                                            </td>
+                                            <td>
+
+<?php echo Form::date('movimiento.fecha_final', 'class="form-control" required ', date('Y-m-d')); ?>
+                                                    <br>  <label> Periodo Final </label>
+                                               
+                                            </td>
+                                            <td>
+
+<?php echo Form::dbSelect("movimiento.movimiento_id","descripcion",array("conceptomovimiento","listar"),'Seleccione..','class="form-control" ');?>
+                                                    <br>  <label> T. Movimiento</label>
+                                               
+                                            </td>
+                                            <td>
+
+<?php echo Form::dbSelect("movimiento.producto_id","descripcion",array("producto","listarEntrada"),'Seleccione..',' class="form-control" ');?>
+                                                    <br>  <label> Producto</label>
+                                               
+
+                                            </td>
+                                            <td>
+
+<?php echo Form::dbSelect("movimiento.lote_id","codigo",array("lote","listar"),'Seleccione..','  class="form-control" style="width:325px"');?>
+                                                    <br>  <label> Lote</label>
+                                                
+                                            </td>
+                                             
+                                            <td>
+
+<?php echo form::submit("MOSTRAR", 'class="CSSButton" '); ?>
+                                               
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </fieldset> </td>
+    </tr>
+</table>
+
+                            
+                             
+ <fieldset style="padding: 15px; width: 100%;">
+                    <legend><b>Datos de la Consulta </b></legend>
+     
+    <table width="100%" border="0"  class="arqueo">
+
+        <tr  bgcolor="#00984f" align="center">
+            <th width="5%">#</th>
+            <th width="5%">F. Movimiento</th>
+            <th width="5%" >Referencia</th>
+            <th width="10%" >T. Movimiento</th>
+              <th width="10%" >Producto</th>
+            <th width="10%" >Almacen</th>
+             <th width="10%" >Lote</th>
+             <th width="10%" >Cantidad</th> 
+             <th width="10%" >Existencia</th> 
+                      
+        </tr>
+    </table>
+                    <div style="overflow: scroll; height: 400px">  
+                        <table width="100%" border="0" align="center"  class="table table-bordered"> 
+                            <tr><td></td></tr>
+           <?php 
+                            $color="#0174DF";
+                            $i=0;
+                            if(isset($resultado))
+                                $existencia=0;
+                            foreach ($resultado as $datos){
+                             $i++; 
+                             $desProducto=new producto();
+    $desProducto=$desProducto->listarJuntoXid($datos->producto_id);
+       
+    $movi=new movimiento_inventario();
+    $condicion="";
+    if($num_movi!="")$condicion=' and '.$num_movi;
+    else $condicion='';
+        $detalle=$movi->detalleMovimiento($datos->producto_id,$datos->id_almacen,$fechaInicial,$fechaFinal,$condicion,$loteB);
+       $subtotal=0;
+       
+        foreach ($detalle as $detalleLote){
+           
+             $concepto=new conceptomovimiento();
+             $concepto->listarXid($detalleLote->tipo_movimiento);
+             if($concepto->tipo_movimiento=="S"){
+                 if($detalleLote->cantidad>0) $detalleLote->cantidad=$detalleLote->cantidad * (-1);
+                
+             } 
+             $subtotal+=$detalleLote->cantidad;
+             
+                
+$existencia = $existencia + ($detalleLote->cantidad );   
+            
+             
+             ?>
+            <tr valign="center">      
+            <td width="5%"> <?php echo $i; ?> </td>
+            <td width="5%"> <?php echo strftime("%d-%m-%Y", strtotime($detalleLote->fecha_documento)) ?> </td>
+            <td width="5%"> <?php echo "  ".$detalleLote->referencia; ?> </td>
+             <td width="10%" align="right"><?php echo $concepto->tipo_movimiento."-".$concepto->descripcion ?> </td>
+            <td width="10%" align="right"> <?php echo $datos->clave."-".$desProducto->descripcion ?> </td>
+            <td width="10%"> <?php echo $datos->descripcion_almacen ?> </td>
+            <td width="10%"> <?php echo $detalleLote->lote ?> </td>
+            <td width="10%" align="right"> <?php echo $detalleLote->cantidad ?> </td>
+            <td width="10%" align="right"> <?php echo $existencia ?> </td>
+             </tr>
+       
+                           <?php 
+                           
+           $i++;                
+                          
+}   } ?>  
+             
+		</table> </div>
+                    <table  width="100%" border="0"  class="arqueo">
+                    <tr height="50px">
+              <td colspan="4" width="89%" align="right"> Existencia : $ </td>
+              <td width="10%" align="right">  <?php echo "  ".number_format($existencia,2); ?> </td> 
+            <td width="1%" align="right">  </td> 
+             </tr>
+		</table>
+     </fieldset>
+        
+
+<!--       <fieldset style="padding: 15px;">
+                                    <legend><b>SALIDA DEL REPORTE :</b></legend>  
+<?php $url = "'" . PUBLIC_PATH . "'"; ?>
+                                    <table width="100%" class="table table-bordered">
+                                        <tr>
+                                            <td style="width:40%;">Titulo</td>
+                                            <td style="width:20%;">Estatus</td>
+                                            <td style="width:20%;"></td>
+                                            <td style="width:20%;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td ><?php echo Form::text('titulo', 'class="form-control" '); ?></td>
+                                            <td ><?php echo Form::text('titulo', 'class="form-control" '); ?></td>
+                                            <td style="text-align: center "><?php echo form::submit("IMPRIMIR", 'class="CSSButton" '); ?></td>
+                                            <td style="text-align: center "><?php echo Form::button("CANCELAR", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>   </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>  !-->
+
+<?php echo Form::close(); ?>
+    </div>
+
+
+</div>               
+
+<?php ?>

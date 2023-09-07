@@ -1,0 +1,366 @@
+<script>
+ function imprime_lista_salida()
+{
+var operacion='MOSTRAR_LISTA_SALIDA' 
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion,
+          success: function(html){
+            $("#resultado").html(html);
+          }
+        });
+    
+}   
+
+function vistaPreliminar(){
+alert("hola");
+}
+
+function buscaDetalleSalida()
+{
+var productoId 	=	$('#entrega_PRODUCTO_ID').val();
+var almacenId 	=	$('#entrega_ALMACEN_ID').val();
+var operacion='MOSTRAR_DETALLE_SALIDA' 
+if((productoId !="") &&  (almacenId!="")) {
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+           data: "productoId=" + productoId + "&operacion="+operacion+ "&almacenId="+almacenId,
+          success: function(html){
+           $("#loteSerie").html(html);
+          }
+        });
+        } 
+} 
+
+function buscaExistenciaGeneral() {
+	var productoId 	=	$('#entrega_PRODUCTO_ID').val();
+        
+        var operacion="BUSCA_EXISTENCIA_GENERAL";
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "productoId=" + productoId + "&operacion="+operacion,
+          success: function(html){
+
+        $("#entrega_EXISTENCIA").val(html);
+          }
+        });
+        }  
+function buscaExistenciaAlmacen() {
+	var productoId 	=	$('#entrega_PRODUCTO_ID').val();
+        var almacenId 	=	$('#entrega_ALMACEN_ID').val();
+        var operacion="BUSCA_EXISTENCIA_ALMACEN";
+        if((productoId !="") &&  (almacenId!="")) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "productoId=" + productoId + "&operacion="+operacion+ "&almacenId="+almacenId,
+          success: function(html){
+
+        $("#entrega_EXISTENCIA").val(html);
+          }
+        });
+        }
+        }
+function buscaExistenciaLS() {
+	var opcion 	=	$('#opcion').val();
+        if((opcion=="serie") || (opcion=="serieInventario")){
+        var serieId 	=	$('#entrega_SERIE_ID').val();
+        var loteId      ="";
+        }if(opcion=="lote"|| (opcion=="loteInventario")){
+        var serieId 	="";	
+        var loteId      =$('#entrega_LOTE_ID').val();
+        }
+        
+        var operacion="BUSCA_EXISTENCIA_LS";
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "serieId=" + serieId + "&operacion="+operacion+ "&loteId="+loteId+ "&opcion="+opcion,
+          success: function(html){
+
+        $("#entrega_EXISTENCIA").val(html);
+          }
+        });
+        }
+ 
+function buscaAlmacen() {
+	var productoId 	=	$('#entrega_PRODUCTO_ID').val();
+        
+        var operacion="BUSCA_ALMACEN_SALIDA";
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "productoId=" + productoId + "&operacion="+operacion,
+          success: function(html){
+            $("#almacen").html(html);
+          }
+        });
+        } 
+ function buscaEmpleado() {
+	var empleadoId 	=	$('#entrega_EMPLEADO_ID').val();
+        if(empleadoId >0 ){
+        var operacion="BUSCA_EMPLEADO";
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "empleadoId=" + empleadoId + "&operacion="+operacion,
+          success: function(html){
+            $("#empleado").html(html);
+          }
+        });
+        }
+        }
+function agregarPartida() 
+{
+  
+var operacion='AGREGAR_PARTIDA_SALIDA';	
+var cantidad 	=	$('#entrega_CANTIDAD').val();
+var productoId 	=	$('#entrega_PRODUCTO_ID').val();
+var almacenId 	=	$('#entrega_ALMACEN_ID').val();
+var opcion 	=	$('#opcion').val();
+
+var mens="";
+var re = /,/g;
+cantidad=cantidad.replace(re,"");
+
+	if (cantidad=="") {mens+="\n- Inserte una cantidad valida";}
+        if (productoId=="") {mens+="\n- Elija un producto";}
+        if (almacenId=="") {mens+="\n- Elija un almacen";}
+        if(opcion=='lote'){
+           var loteId 	=	$('#entrega_LOTE_ID').val();
+           var serieId="";
+           var numInventario="";
+        if (loteId=="") {mens+="\n- Indique el numero de Lote";}
+       
+        }
+        
+        if(opcion=='loteInventario'){
+        var loteId 	=	$('#entrega_LOTE_ID').val();
+           var serieId="";
+        if (loteId=="") {mens+="\n- Indique el numero de Lote";}
+        var numInventario 	=	$('#ID').val();
+      
+        if (numInventario=="") {mens+="\n- Indique el numero de Inventario";}
+        }
+        if(opcion=='serieInventario'){
+        var serieId 	=	$('#entrega_SERIE_ID').val();
+            var loteId="";
+         
+        if (serieId=="") {mens+="\n- Indique el numero de Serie";}
+        var numInventario 	=	$('#ID').val();
+        if (numInventario=="") {mens+="\n- Indique el numero de Inventario";}
+        }
+        
+        if(opcion=='serie'){
+            var serieId 	=	$('#entrega_SERIE_ID').val();
+            var loteId="";
+            var numInventario="";
+        if (serieId=="") {mens+="\n- Indique el numero de Serie";}
+        }
+        if(opcion=='inventario'){
+            
+        var serieId 	="";
+        var loteId="";                
+        var numInventario 	=	$('#ID').val();
+        if (numInventario=="") {mens+="\n- Indique el numero de Inventario";}
+        }
+        if(opcion=='ninguno'){
+        var serieId 	="";
+        var loteId="";                
+        var numInventario="";
+        }
+
+if (mens!=""){
+     jAlert('Verifique los siguientes campos:\n'+mens, 'ATENCION');
+		
+}else
+	{
+        $.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: 'operacion=' + operacion + '&cantidad=' + cantidad+"&productoId=" + productoId+"&almacenId=" + almacenId+"&loteId=" + loteId+"&serieId=" + serieId+"&opcion=" + opcion+"&numInventario=" + numInventario,
+         
+            success: function(html){
+        
+        html=html.replace(/^\s+|\s+$/g, "");
+      if (html=='Si'){
+           jAlert('Esta partida ya existe.......!', 'ATENCION');
+      }else{
+         
+          imprime_lista_salida(); 
+      }
+          }
+             });
+	}
+}
+
+function quitar_partida_salida(linea)
+{
+    
+        var operacion='QUITAR_PARTIDA_SALIDA' 
+var linea=linea;
+
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion + "&linea="+ linea,
+          success: function(html){
+         imprime_lista_salida();
+          }
+        });
+   
+
+}
+</script>    
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+
+    <h1><a>Crear</a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Entrega Material" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                        echo Html::linkAction('listadoSalida',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    ?>
+                </div>
+            </div>
+    </div>
+    <?php echo Form::open("inventario/" . $accion); ?>
+ <?php echo Form::hidden("entrega.ID"); ?>
+
+   
+    
+    <div id="margen" >
+  
+     <table width="100%" border="0">
+  <tr align="center">
+    <td width="15%"><label> Tipo de Documento: </label></td>    
+    <td width="15%"><label>F. Solicitud</label></td>
+    <td width="15%"><label>F. Entrega </label></td>
+    <td width="40%"><label>Solicitante</label></td>
+  </tr>
+  <tr align="center">
+  
+    <td>
+    <?php $arregloDocumento = array(''=>'Seleccione...','VALE SALIDA'=>'VALE SALIDA');?>
+                <?php echo Form::Select('entrega.TIPO_DOCUMENTO', $arregloDocumento,'type="text" required class="element text medium" style="width:130px"'); ?>
+    </td>
+   
+    <td><?php echo Calendar::text('entrega.FECHA_SOLICITUD',' required style="width:87px"',''); ?></td>
+    <td><?php echo Calendar::text('entrega.FECHA_ENTREGA','required style="width:87px"',''); ?> 
+   </td>
+   <td ><?php echo Form::dbSelect("entrega.EMPLEADO_ID","NOMBRE",array("empleado","listarNombre"),'Seleccione..','type="text" required class="element text" style="width:425px"');?></td>
+  </tr>
+</table>
+     <hr />     
+            <h5><a id="letra1">Detalle</a></h5>
+
+ 
+<div id="empleado">
+    <table width="100%" border="0">
+  <tr>
+    <td width="104"><label> Solicitante:</label></td>
+    <td width="551"><input name="nombre" id="nombre" type="text" size="40"  class="letra" readonly="readonly"/></td>
+  </tr>
+  <tr>
+    <td><label> Destinatario:</label></td>
+    <td><input type="text" name="direccion" id="direccion" size="50"  class="letra" readonly="readonly"/></td>
+  </tr>
+  <tr>
+    <td><label> Lugar:</label></td>
+    <td><input name="rfc" id="rfc" type="text" size="15"   class="letra" readonly="readonly"/></td> 
+  </tr>
+</table>
+</div>
+             <h5><a id="letra1">Datos Producto </a></h5>  
+        
+<table width="100%" border="0">
+  <tr>
+    <td width="10%"><label>Cantidad</label></td>
+    <td width="16%"><label>Producto</label></td> 
+    
+    <td width="15%"><label>Almacen</label></td> 
+    <td rowspan="2" width="15%" > <div id="loteSerie" > </div></td> 
+   
+    <td >Existencia</td>
+     <td width="14%">&nbsp;</td>
+    </tr>
+    <tr>
+    <td width="10%"><?php echo Form::text('entrega.CANTIDAD', 'style="width:87px"  class="element text medium" '); ?></td>
+    <td width="16%"><?php echo Form::dbSelect("entrega.PRODUCTO_ID","DESCRIPCION",array("producto","listar"),'Seleccione..','type="text"  class="element text" style="width:305px"');?></td>    
+    <td width="15%"><div id="almacen"><?php echo Form::dbSelect("entrega.ALMACEN_ID","DESCRIPCION",array("almacen","listar"),'Seleccione..','type="text"  class="element text" style="width:205px"');?></div></td>    
+     <td ><?php echo Form::text('entrega.EXISTENCIA', 'style="width:80px; text-align:right;"  class="element text medium";  ',0); ?></td>
+    <td width="14%"><?php echo Form::button("Agregar","id='Agregar' style='width:100%; '")?>      </td>
+    </tr>
+  
+</table>
+             
+<div id="resultado" > <?php print"<script> imprime_lista_salida() </script>"; ?></div>
+        </br>
+      <?php echo Html::img('top.png','','id="top" style="width: 100%;"');?>
+        <table style="width: 100%">
+                
+                     <tr >
+      <td>Observaciones:</td>
+      <td><?php echo Form::textarea('entrega.OBSERVACION', '   class="element text medium" style="text-transform:uppercase" onkeyup="Mayusculas(this)"'); ?></td>
+    
+                 </tr>
+             </table>
+        <?php echo Html::img('bottom.png','',"id='bottom' style='width:100%'");?>
+            <?php $url = "'" . PUBLIC_PATH . "inventario/listadoSalida'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td width="33%">     
+            <?php echo Form::button("Cancelar", 'class="CSSButton" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            <td>
+           <?php echo Form::button("Vista Preliminar", 'class="CSSButton" onclick="vistaPreliminar()"'); ?>
+            </td>
+            <td width="33%">
+            <?php echo Form::submit((($accion == 'crearSalida') ? 'Guardar' : 'Actualizar'), 'type="submit" class="CSSButton"'); ?>       
+            </td>
+        </tr>
+     </table>
+     
+  </div> 
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>
+
+<script>
+           $("#entrega_PRODUCTO_ID").change(function(){
+	buscaAlmacen();
+        buscaExistenciaGeneral();
+        
+});
+ $("#entrega_EMPLEADO_ID").change(function(){
+	buscaEmpleado();
+});
+$("#entrega_ALMACEN_ID").change(function(){
+	buscaDetalleSalida();
+        buscaExistenciaAlmacen();
+        
+});
+
+$("#Agregar").click(function(){
+	
+            agregarPartida();
+  
+});
+</script>  
+ 
+
+
+                        
+

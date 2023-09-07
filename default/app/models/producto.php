@@ -16,7 +16,7 @@ class producto extends ActiveRecord {
     public function listar() {
         
         
-        return $this->find_all_by_sql("SELECT p.id, p.descripcion nombre,p.clave,p.descripcion nombre,pre.descripcion presentacion,c.descripcion calidad,pr.descripcion  preparacion,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) datosPago, p.peso, p.existencia FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id where p.estatus='1'");
+        return $this->find_all_by_sql("SELECT p.id, p.descripcion nombre,p.clave,p.descripcion nombre,pre.descripcion presentacion,c.descripcion calidad,pr.descripcion  preparacion,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) datosPago, p.peso, p.existencia,p.precio,p.impuesto FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id where p.estatus='1'");
         
     }
     public function listarJunto() {
@@ -28,17 +28,17 @@ class producto extends ActiveRecord {
     public function listarJuntoXid($id) {
         
         
-        return $this->find_by_sql("SELECT p.id, p.descripcion nombre,p.clave,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) datosPago, p.peso, p.existencia FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id where p.estatus='1' and p.id='$id'");
+        return $this->find_by_sql("SELECT p.id, p.descripcion nombre,p.clave,concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion, p.peso, p.existencia FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id where p.estatus='1' and p.id='$id'");
         
     }
     public function listarEntrada() {
         
         
-        return $this->find_all_by_sql("SELECT p.id, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id ");
+        return $this->find_all_by_sql("SELECT p.id, concat_ws(' - ',p.clave,p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id ");
         
     }
     public function listarXid($id) {
-        return $this->find_by_sql("SELECT p.id, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion,p.clave, p.peso, p.existencia, em.descripcion empaque, me.descripcion medida,p.precio,p.impuesto,p.lote FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.preparacion_id left join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  where p.id=$id");
+        return $this->find_by_sql("SELECT p.id, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion,p.clave, p.peso, p.existencia, em.descripcion empaque, me.descripcion medida,p.precio,p.impuesto,p.lote FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  where p.id=$id");
     }
     public function guardarDatos(){
         $producto = new producto(Input::post('producto'));
@@ -56,7 +56,7 @@ class producto extends ActiveRecord {
     }
     
     public function actualizaProducto($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete){
-     $cantidad=$cantidad *$unidadXpaquete;
+        
        if($tipoMovimiento =="E"){
           $cantidad=$cantidad;
       }else if($tipoMovimiento=="S"){
@@ -72,10 +72,11 @@ FROM producto
  $condicion");
         }
         public function buscaProductos($condicion) {
-        return $this->find_all_by_sql("SELECT p.id,p.clave, p.descripcion producto ,pre.descripcion preparacion,c.descripcion calidad ,pr.descripcion presentacion,p.clave, p.peso, p.existencia, em.descripcion empaque, me.descripcion medida,p.precio,p.impuesto FROM producto p inner join preparacion pr on pr.id=p.preparacion_id inner join presentacion pre on pre.id=p.preparacion_id inner join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  $condicion");
+            if(trim($condicion)=="")$condicion="where p.estatus='1'";
+        return $this->find_all_by_sql("SELECT p.id,p.clave, p.descripcion producto ,pre.descripcion preparacion,c.descripcion calidad ,pr.descripcion presentacion,p.clave, p.peso, p.existencia, em.descripcion empaque, me.descripcion medida,p.precio,p.impuesto FROM producto p left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.presentacion_id left join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  $condicion");
     }
     public function buscarProductoV($condicion) {
-          return $this->find_all_by_sql("SELECT p.id, concat_ws(', ',p.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion FROM inventario inv inner join producto p on inv.producto_id=p.id   left join preparacion pr on pr.id=p.preparacion_id left join presentacion pre on pre.id=p.preparacion_id left join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  where  $condicion");
+          return $this->find_all_by_sql("SELECT p.id, concat_ws('- ',p.clave,p.descripcion,pr.descripcion,c.descripcion,pre.descripcion) descripcion FROM producto p inner join inventario inv on inv.producto_id=p.id left join presentacion pr on p.presentacion_id= pr.id left join preparacion pre on p.preparacion_id=pre.id left join calidad c on p.calidad_id=c.id left join embalaje em on p.empaque_id=em.id left join medida me on p.medida_id=me.id  where  $condicion and p.estatus='1'");
         }
 }   
 

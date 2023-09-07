@@ -1,0 +1,149 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+<script>
+    function imprime_listado()
+{
+var operacion='MOSTRAR' 
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion,
+          success: function(html){
+            $("#resultado").html(html);
+          }
+        });
+    
+}
+
+    function imprime_almacen(almacen)
+{
+var operacion='MOSTRAR_ALMACEN'; 
+var almacenSeleccionado=almacen;
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion + "&almacen=" + almacen,
+          success: function(html){
+            $("#resultado_almacen").html(html);
+          }
+        });
+    
+}
+function agregar_producto(id,i)
+{
+    $('#agregar'+i).attr("disabled", true);
+    if($("#almacen_almacen_id").val()>0){
+        var operacion='AGREGAR_PRODUCTO' 
+var producto=id;
+var almacen=$('#almacen_almacen_id').val();
+var maxima= $('#maxima'+i).val();
+var minimo=$('#minimo'+i).val();
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion + "&producto="+ producto+ "&almacen="+ almacen+ "&minimo="+ minimo+ "&maxima="+ maxima,
+          success: function(html){
+         imprime_almacen($("#almacen_almacen_id").val());  
+          }
+        });
+    }else{
+    alert('Primero Seleccione un almacen');}
+
+}
+function quitar_producto(id,existencia,i)
+{
+    $('#quitar'+i).attr("disabled", true); 
+     if( existencia == 0){
+        var operacion='QUITAR_PRODUCTO' 
+var idRegistro=id;
+
+$.ajax({
+          type: "POST",
+          url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+          data: "operacion=" + operacion + "&id="+ idRegistro,
+          success: function(html){
+         
+          }
+        });
+    }else{
+    alert('Solo se pueden retirar articulos con existencia IGUAL a "CERO" ');}
+
+}
+</script>    
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+<div id="form_container" style="width:100%;" >
+
+    <h1><a ></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Asignar Productos al Almacen" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                        echo Html::linkAction('listadoAlmacen',Html::img('verLista.png','cancel','style="text-align:center;width:90px;  padding:2px;"'),'');
+                    
+                    
+                    ?>
+                </div>
+            </div>
+    </div>
+    <?php echo Form::open("inventario/" . $accion); ?>
+
+
+   
+    
+    <div id="margen" >
+<fieldset>     
+<table width="100%" border="0" class="letra">
+  <tr>
+    <td >Almacen</td>
+    <td width="10%"><?php echo Form::dbSelect("almacen.almacen_id","descripcion",array("almacen","listar"),'Seleccione..','type="text" required class="element text" style="width:425px"');?></td>
+  </tr>
+  <tr>
+      <td height="45" colspan="2" scope="col"><div id="resultado" class="caja_banco"> <?php print"<script> imprime_listado() </script>"; ?></div> </td>
+        </tr>
+         <tr>
+      <td height="45" colspan="2" > </td>
+        </tr>
+        <tr>
+      <td height="45" colspan="2" scope="col"><div id="resultado_almacen" class="caja_banco"> <?php print"<script> imprime_almacen('0') </script>"; ?></div> </td>
+        </tr>
+</table>
+</fieldset>
+
+
+
+        </br>
+            <?php $url = "'" . PUBLIC_PATH . "inventario/listadoAlmacen'"; ?>
+        <table width="100%">
+        <tr align="center">
+            <td >     
+            <?php echo Form::button("Salir", 'class="btn btn-danger" onclick="window.location = ' . $url . '" '); ?>
+            </td>
+            
+            
+        </tr>
+     </table>
+     
+  </div> 
+</div>
+    </br>
+<?php echo Form::close(); ?>
+<?php echo Html::img('bottom.png','',"id='bottom' style='width:90%'");?>
+</body>
+
+<script>
+           $("#almacen_almacen_id").change(function(){
+	imprime_almacen($("#almacen_almacen_id").val());
+});
+</script>    

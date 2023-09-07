@@ -1,0 +1,144 @@
+
+<?php
+View::content();
+$anio = date('Y') - 10;
+$total=0;
+?>
+<?php $url = "'" . PUBLIC_PATH . "'"; ?>
+<body id="cuerpo_principal">
+    <div id="form_container" style="width:100%;" >
+<h1><a></a></h1>
+    <div id="titulo_superior"> 
+        <div id="texto_superior"  >
+                 <?php echo "Resumen de Ventas y Movimientos" ?> 
+            </div>
+            <div style="text-align:right;margin: 0 0; width:49%; float: left; ">
+             <div class='btn'>
+                    <?php echo Html::img('inicio.png','cancel','style="text-align:center;width:65px;  padding:5px;"  onclick="window.location = ' . $url . '" ');?>
+                </div>  
+               
+            </div>
+    </div>  
+<?php echo Form::open("venta/resumenVM"); ?>  
+        <table width="100%" border="0">
+            <tr align="center">
+                <td>
+                    <table width="40%" border="0">
+                        <tr style="width:100%;">
+                             <td><fieldset style="padding: 15px; height: 40%">
+                                   
+                                    <table class=" table table-bordered">
+                                        <tr >
+                                            <td>Periodo Inicial</td>
+                                            <td>                
+<?php echo Form::date('fecha_inicial', 'class="element text" required', date('Y-m-d')); ?>                                          
+                                            </td>
+                                            <td>Periodo Final</td>
+                                            <td>
+
+<?php echo Form::date('fecha_final', 'class="element text" required ', date('Y-m-d')); ?>
+                                                
+                                            </td>
+                                            
+
+                                        </tr>
+                                        <tr>
+                                            <td>Lote</td>
+                                            <td colspan="2"><?php echo Form::dbSelect("codigoS","codigo",array("lote","listar"),'Seleccione..!','class="form-control" style="width:325px"');?></td>
+                                                <td></td>
+                                        
+                                        </tr>
+                                        <tr>
+                                            <td>Almacen</td>
+                                            <td colspan="2"><?php echo Form::dbSelect("almacen_id","descripcion",array("almacen","listar"),'Seleccione..!','class="form-control" style="width:425px"');?></td>
+                                                <td><?php echo form::submit("MOSTRAR", 'class="CSSButton" '); ?></td>
+                                        
+                                        </tr>
+                                    </table>
+                                </fieldset></td>
+                            
+                             <td>
+                             
+                            
+                             </td>
+                        </tr>
+                    </table>
+                    <table style="width:100%;" border="0">
+                        <tr>
+                            <td  colspan="3"> 
+                                 <fieldset style="padding: 15px; width: 100%;">
+                    <legend><b>Datos de la Consulta </b></legend>
+     
+   
+       <div id="contenidoCobrar" style="overflow: scroll; height: 400px">  
+            <table class=" table table-bordered" >
+
+        <tr  bgcolor="#00984f" align="center">
+            <th width="5%">#</th>
+            <th width="9%">Calidades</th>
+            <th width="8%" >Recepcion</th>
+            <th width="20%" >Traspaso</th>
+            <th width="9%" >Entrada Tostado</th>
+            <th width="6%" >Salida Tostado</th>
+              <th width="10%" >Ventas</th>
+                
+        </tr>
+ 
+           <?php 
+           
+           $num= count($arreglo);
+           for($i=1;$i<$num;$i++){ ?>
+             <tr  >
+            <th width="5%"><?php echo $i; ?></th>
+            <th width="9%"><?php echo $arreglo[$i][1]; ?></th>
+            <th width="8%" ><?php if(isset($arreglo[$i][2])) echo number_format(floatval($arreglo[$i][2]),2); ?></th>
+            <th width="20%" ><?php if(isset($arreglo[$i][3])) echo number_format(floatval($arreglo[$i][3]),2); ?></th>
+            <th width="9%" ><?php if(isset($arreglo[$i][4])) echo number_format(floatval($arreglo[$i][4]),2); ?></th>
+            <th width="6%" ><?php if(isset($arreglo[$i][5])) echo number_format(floatval($arreglo[$i][5]),2); ?></th>
+              <th width="10%" ><?php if(isset($arreglo[$i][6])) echo number_format(floatval($arreglo[$i][6]),2); ?></th>
+                
+        </tr>  
+        <?php   }
+           
+           ?>  
+             
+		</table> </div>
+                    <table  width="100%" border="0"  class="arqueo">
+                    <tr height="50px">
+              <td colspan="4" width="79%" align="right"> Total :  </td>
+              <td width="10%" align="right">  <?php echo "  ".number_format($cantidad,2); ?> </td>
+              <td width="10%" align="right">  <?php echo "  ".number_format($total,2); ?> </td>
+            <td width="1%" align="right">  </td> 
+             </tr>
+		</table>
+     </fieldset>
+                                
+                               </td> 
+                            
+                        </tr>
+                        <tr>
+                            <td colspan="3" height="50px"></td>
+                        </tr>
+                        
+                    </table>
+                </td>
+            </tr>
+        </table>
+<?php echo Form::hidden('codigo', 'class="element text" required ' ); ?>
+<?php echo Form::close(); ?>
+    </div>
+
+
+</body>               
+
+<?php ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    $("#codigoS").change(function() {
+       
+        texto=$('#codigoS option:selected').html();
+        $("#codigo").val(texto);
+    });
+});
+    </script>

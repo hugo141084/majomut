@@ -1,0 +1,246 @@
+<script>
+
+    function buscaProducto() {
+        var almacenId = $('#combinacion_almacen_id').val();
+
+        var operacion = "BUSCA_PRODUCTO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "almacenId=" + almacenId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#productoEs").html(html);
+            }
+        });
+    }
+    function buscarOrigen() {
+        var almacen = $("#combinacion_almacen_id").val();
+        var concepto = $("#combinacion_almacen_id option:selected").text()
+        if (almacen >= 1) {
+            $("#venta_origen").val(concepto);
+            buscaProducto();
+        } else {
+            $("#venta_origen").val("");
+        }
+
+    }
+    function buscaUnidadPrecio() {
+        var almacenId = $('#combinacion_almacen_id').val();
+        var productoId = $('#venta_producto_id').val();
+        var operacion = "BUSCA_LOEXT_PRODUCTO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+            data: "productoId=" + productoId + "&almacenId=" + almacenId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#listaOrigen").html(html);
+            }
+        });
+    }
+    function imprime_lista()
+    {
+        var operacion = 'BUSCA_LOEXT_PRODUCTO'
+        var almacenId = "0";
+        var productoId = "0";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+            data: "productoId=" + productoId + "&almacenId=" + almacenId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#listaOrigen").html(html);
+
+
+            }
+        });
+
+    }
+</script>    
+<?php View::content(); ?>
+<body id="cuerpo_principal">
+
+    <div id="form_container" style="width:100%;" >
+        <br>
+        <h1><a></a></h1>
+        <div id="titulo_superior"> 
+            <div id="texto_superior"  >
+                <?php echo "Combinacion de lotes" ?> 
+            </div>
+
+        </div>
+        <?php echo Form::open("inventario/crearCombinacion"); ?>
+        <?php echo Form::hidden("vale.id"); ?>
+<?php if(isset($mensaje)) { ?>
+<div class="alert alert-danger" role="alert">
+ <?php echo $mensaje ?>
+</div>
+<?php } ?>
+
+        <div id="margen" >
+            <div class="form-row">
+
+
+                <?php echo Form::hidden('combinacion.tipo_documento', 'maxlength="20" required class="form-control"   ', "COMBINACION LOTE(S)"); ?>
+
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Documento:    
+                            </div>
+                            <?php echo Form::text('combinacion.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ', $num); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-3">
+
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Fecha :    
+                            </div>
+                            <?php echo Form::date('combinacion.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ', date('Y-m-d')); ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Almacen:    
+                            </div>
+                            <?php
+                            echo Form::dbSelect("combinacion.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'required class="form-control" onchange="buscarOrigen()"');
+                            ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Producto:    
+                            </div>
+                            <div id="productoEs">
+                                <?php echo Form::text("combinacion.producto_id", 'required class="form-control"'); ?>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading">Lotes y Existencias</div>
+                    <div class="panel-body">
+                        <div class="form-row">
+
+                            <div id="listaOrigen" style=" width: 100%; height: 250px; border-bottom:1px;  border-bottom-color:#000; "><?php print"<script> imprime_lista() </script>"; ?> </div>
+
+                        </div>
+
+                    </div>
+                </div>  
+
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading">Nuevo Lote y  Existencia</div>
+                    <div class="panel-body">
+                        <div class="form-row">
+<div id="listaOrigen1" style=" width: 100%; height: 235px; border-bottom:1px;  border-bottom-color:#000; "> 
+                            <div class="col-md-5 ">
+                                <label for="validationCustomUsername"> Lote</label>
+                                <div class="input-group">
+                                    <div  id="loteProducto" >
+                                        <?php echo Form::dbSelect("lote", "codigo", array("lote", "listar"), 'Seleccione..', 'required class="form-control" '); ?>
+                                    </div>
+                                </div>
+                            </div> 
+                             <div class="col-md-2 "></div>
+                            <div class="col-md-4 ">
+                                <label for="validationCustomUsername">cantidad</label>
+                                <div class="input-group">
+
+                                    <?php echo Form::number('cantidadS', ' class="form-control" '); ?>
+
+                                </div>
+                            </div>           
+                            <div class="col-md-1 "></div>
+                            
+                        </div>
+                        </div>      
+
+
+                        
+                        </br>
+
+
+                    </div>
+                </div>
+            </div>    
+
+
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">       Observaciones:    
+                        </div>
+                        <?php echo Form::textarea('observacion', '  class="form-control"  '); ?>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">       Valido:    
+                        </div>
+                        <?php echo Form::text('valido', ' required class="form-control"   '); ?>
+                    </div>
+                </div> 
+            </div>
+
+            <?php $url = "'" . PUBLIC_PATH . "inventario/listadoRecepcion'"; ?>
+            <table width="100%">
+                <tr align="center">
+                    <td width="33%">     
+                        <?php echo Form::button("Cancelar", 'class="btn btn-lg btn-danger" onclick="window.location = ' . $url . '" '); ?>
+                    </td>
+                    <td>
+
+                    </td>
+                    <td width="33%">
+                        <?php echo Form::submit('Guardar', 'type="submit" class="btn btn-lg btn-primary"'); ?>       
+                    </td>
+                </tr>
+            </table>
+            </br>
+            <?php echo Form::close(); ?>
+
+            </body>
+
+            <script type="text/javascript">
+                $("#vale_producto_id").change(function () {
+                    buscaAlmacen();
+                    buscaDetalle();
+                });
+                $("#vale_proveedor_id").change(function () {
+                    buscaProveedor();
+
+                });
+
+                $("#Agregar").click(function () {
+
+                    agregarPartida();
+
+                });
+            </script>  
+
+
+
+
+
+

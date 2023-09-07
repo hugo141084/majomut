@@ -126,7 +126,7 @@ var mens="";
 var re = /,/g;
 cantidad=cantidad.replace(re,"");
 
-	if (cantidad=="") {mens+="\n- Inserte una cantidad valida";}
+	if ((cantidad=="") || (cantidad <= 0 )) {mens+="\n- Inserte una cantidad valida";}
         if (productoId=="") {mens+="\n- Elija un producto";}
         if (almacenId=="") {mens+="\n- Elija un almacen";}
         if(opcion=='lote'){

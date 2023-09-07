@@ -26,15 +26,16 @@
             <thead>
                 <tr  style="font-size: 9px;letter-spacing: -0.8px;">
                     <th> #</th>
-                    <th>TIPO DOCUMENTO</th>
-                    <th> ORIGEN</th>
-                    <th>DOCUMENTO</th>
+                    <th>T. Documento</th>
+                    <th> Origen</th>
+                    <th>Documento</th>
                  
-                   <th>F. DOCUMENTO</th>
-                    <th>CLIENTE</th>
+                   <th>F. Documento</th>
+                    <th>Cliente</th>
                      <th>RFC</th>
-                      <th>ESTADO</th>
-                    <th>ACCION </th>
+                      <th>Estatus</th>
+                    <th>Accion </th>
+                    <th>Vale </th>
                     </tr>
             </thead>
             <tbody>
@@ -55,15 +56,25 @@
                             echo "<td>";
                             if($res->estado=="1") echo "Activo";
                             else echo "Cancelado";
-                            echo $res->estado=="1";
+                            
                             echo "</td>";
                             echo "<td align='center'>";
                                   echo Html::linkAction('reporteVenta/'.$res->id, Html::img('printer.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir ésta Nota de Remision?\'))window.open(this.href,this.target);return false;"'));
-                                         echo Html::linkAction('envio/' . $res->id . '', Html::img('envio.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Consultar Datos de Envio"'), 'rel="shadowbox;width=650;height=370;" ');
+                                  if($res->estado=='1'){
+                          
+                            
+                                  echo Html::linkAction('envio/' . $res->id . '', Html::img('envio.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Consultar Datos de Envio"'), ' ');
                                           echo Html::linkAction('datosFactura/' . $res->id . '', Html::img('factura.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Consultar Datos de Facturacion"'), 'rel="shadowbox;width=650;height=370;" ');
+                                          echo Html::linkAction('ticket/' . $res->id . '', Html::img('ticket.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;" title="Imprimir ticket"'),'target="_blank"');
                                if($res->salidaVale=="Si")
                                           echo Html::linkAction('cupon/'.$res->id, Html::img('cupon.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;"'));
+                              echo Html::linkAction("cancelarVenta/".$res->id, '<span class="glyphicon glyphicon-trash"></span>','class="btn btn-danger btn-xs" title="" data-toggle="tooltip" data-original-title="Eliminar" onclick="return confirm(\'Está Seguro que desea Cancelar esta NOTA REMISION.?\')"');
+                              }
                            echo "</td>"; 
+                           echo "<td>";
+                           echo Html::linkAction('./../inventario/valeSalidaVenta/'.$res->id, Html::img('printer.png', 'cancel', 'style="text-align:center;width:32px;padding:1px;"'),'target="_blank"');
+                           echo "</td>";
+                           
                             echo "</tr>";   
                             
                         $i++; 
@@ -79,7 +90,7 @@
 
 $(function(){
     $("#display2").dataTable ({
-            "aaSorting": [[7,"desc"]],
+            "aaSorting": [[0,"desc"]],
             "bAutoWidth": true,
             "iDisplayLength": 10,
             "aLengthMenu": [[10,25,50,100,250,500,-1], [10,25,50,100,250,500,"Todo"]],

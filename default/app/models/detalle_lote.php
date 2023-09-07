@@ -22,7 +22,14 @@ class detalle_lote extends ActiveRecord{
           echo "<script>  alert ('Registro Insertado....!');</script>";  
         }
     }
-    
+    public function busca_existencia($loteId,$productoId,$almacenId){
+   
+                   return $this->find_first("lote_id='$loteId' and producto_id='$productoId' and almacen_id='$almacenId'  ");                 
+    }
+    public function busca_existenciaT($loteId,$productoId,$almacenId){
+   
+                   return $this->find_first("lote_id='$loteId' and producto_id='$productoId' and almacen_id='$almacenId'  ");                 
+    }
     public function valida_entrada($loteSerie,$fechaCaducidad,$productoId,$almacenId,$cantidad,$unidadXpaquete,$tipoMovimiento){
         
         $lote = new detalle_lote();
@@ -72,7 +79,7 @@ class detalle_lote extends ActiveRecord{
                    return $this->find_first("conditions: lote_id='$loteSerie'  and producto_id=$productoId and almacen_id=$almacenId","order: id desc");
                }
     public function actualizaLote($idLote,$cantidad,$tipoMovimiento,$unidadXpaquete){
-     $cantidad=$cantidad *$unidadXpaquete;
+        
        if($tipoMovimiento =="E"){
           $cantidad=$cantidad;
       }else if($tipoMovimiento=="S"){

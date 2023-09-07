@@ -6,9 +6,125 @@
  * and open the template in the editor.
  */
 ?>
-<div id="form_container" style="width:100%">
-    <br>
-    <h1><a></a></h1>
-<?php View::partial("formatoTabla",false,array('Encabezado'=>$encabezado,'Model'=>$result,'Campos'=>$campos,'ctrlcrear1'=>"crear/",'vale'=>"reporte",'eliminar'=>"eliminar",'ventana'=>"Cotizacion",'tipoVale'=>'Cotizacion'));  ?>
-</div>
 
+<?php Tag::css('demo_page'); ?>
+<?php Tag::css('demo_table'); ?>
+<?php Html::includeCss() ?>
+<?php echo Tag::js('jquery.dataTables.min'); ?>
+<?php View::content(); ?>    
+    <div id="dt_example" style="margin:0 auto; padding:10px 20px; background-color:#ffffff; ">      
+        <br />
+        <div id="texto_superior"  >
+                 <?php echo $encabezado ?> 
+            </div>
+          
+             <div style="text-align:right;margin: 0 0; width:50%; float: left; ">
+                <div class='btn'>
+                    <?php
+                   
+                                           
+                          echo Html::linkAction('crearCotizacion',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');
+                    
+                    
+                    ?>
+                </div>
+            </div> 
+        <br />
+        <br />
+        <table  border="0" width="100%" id="display2" class="display2">
+            <thead>
+                <tr  style="font-size: 12px;letter-spacing: -0.8px;">
+                    <th> #</th>
+                    <th>T. Documento</th>
+                    
+                    <th>Documento</th>
+                 
+                   <th>F. Documento</th>
+                    <th>Cliente</th>
+                     <th>RFC</th>
+                      <th>Estatus</th>
+                    <th>Accion </th>
+                    </tr>
+            </thead>
+            <tbody>
+<?php
+
+           $i=1;
+            foreach($result as $res){
+                        
+                        echo "<tr>";
+                        echo "<td>".$i."</td>";
+                        echo "<td>".$res->tipo_documento."</td>";
+                        
+                            echo "<td>".$res->documento."</td>";
+                           
+                            echo "<td align='center'>".strftime('%d-%m-%Y',strtotime($res->fecha_documento))."</td>"; 
+                            echo "<td>".$res->nombrecompleto."</td>";
+                            echo "<td>".$res->rfc."</td>";
+                            echo "<td>";
+                            if($res->estado=="1")                                 
+                              echo "Activo";
+                            else echo "Cancelado";
+                            
+                            echo "</td>";
+                            echo "<td align='center'>";
+                                  echo Html::linkAction('reporteCotizacion/'.$res->id, Html::img('printer.png', 'cancel', 'style="text-align:center;width:24px;padding:1px;"'), ('onclick="if(confirm(\'Está seguro de imprimir ésta Nota de Remision?\'))window.open(this.href,this.target);return false;"'));
+                                 if($res->venta!='1' && $res->estado=='1'){       
+                                  echo Html::linkAction('ventaDocto/'.$res->id.'/Cotizacion', Html::img('venta.png', 'cancel', 'style="text-align:center;width:24px;padding:1px;" title="Generar Venta"'), '');
+                                  }
+                                  if($res->venta!='1' && $res->estado=='1'){ 
+                                  echo Html::linkAction('editarCotizacion/'.$res->id,'<span class="glyphicon glyphicon-edit"></span>','class="btn btn-info btn-xs"  title="Editar Cotizacion" data-toggle="tooltip"');     
+                                  }
+                                  if($res->estado=='1'){   
+                                  echo Html::linkAction("cancelarCotizacion/".$res->id, '<span class="glyphicon glyphicon-trash"></span>','class="btn btn-danger btn-xs" title="" data-toggle="tooltip" data-original-title="Eliminar" onclick="return confirm(\'Está Seguro que desea Cancelar esta COTIZACION.?\')"');
+                                  }
+                                  
+                                  echo "</td>"; 
+                            echo "</tr>";   
+                            
+                        $i++; 
+               }
+            ?>
+            </tbody>
+        </table>
+        
+       
+        
+        <script type="text/javascript" charset="utf-8">
+
+$(function(){
+    $("#display2").dataTable ({
+            
+            "bAutoWidth": true,
+            "iDisplayLength": 10,
+            "aLengthMenu": [[10,25,50,100,250,500,-1], [10,25,50,100,250,500,"Todo"]],
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                    "aProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "NO EXISTE INFORMACIÓN",
+                    "sInfo": "Mostrando desde _START_ hasta _END_ registros",
+                    "sInfoEmpty": "Mostrando desde 0 hasta 0 de 0 registros",
+                    "sInfoFiltered": "(filtrando de _MAX_ registros en total)",
+                    "sSearch": "Buscar",
+                    "oPaginate": {
+                            "sFirst": "Primero",
+                            "sPrevious": "Anterior",
+                            "sNext": "Siguiente",
+                            "sLast": "Ultimo"
+                    }
+            }
+    });
+    
+    
+});
+
+
+</script>
+
+
+<script>
+   function actualizar(){
+       window.location.reload();
+   }
+</script>

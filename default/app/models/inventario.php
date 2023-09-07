@@ -34,8 +34,8 @@ class inventario extends ActiveRecord {
      public function valida_inventario($almacen_id,$producto_id){
         
         $inventario= new inventario();
-        $existe=$inventario->find_first("almacen_id='$almacen_id' and producto_id='$producto_id' ");
-        if ($existe->id > 0) {
+        $existe=$inventario->count("almacen_id='$almacen_id' and producto_id='$producto_id' ");
+        if ($existe > 0) {
            
         }else{
            $inventario = new inventario();
@@ -61,8 +61,11 @@ class inventario extends ActiveRecord {
      public function buscarXproducto($productoId){    
                    return $this->find_all_by_sql("select * from inventario where producto_id=$productoId and existencia > 0  ");                 
     }
+    public function buscarXalmacen($productoId){    
+                   return $this->find_all_by_sql("select * from inventario where almacen_id=$productoId and existencia > 0  ");                 
+    }
     public function actualizaInventario($productoId,$cantidad,$tipoMovimiento,$unidadXpaquete,$almacenId){
-     $cantidad=$cantidad *$unidadXpaquete;
+        
        if($tipoMovimiento =="E"){
           $cantidad=$cantidad;
       }else if($tipoMovimiento=="S"){

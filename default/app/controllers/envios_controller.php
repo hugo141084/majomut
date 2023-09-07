@@ -23,9 +23,10 @@ class enviosController extends AppController{
         $this->result = $envios->datosCosto();
         $this->campos = array(
             utf8_encode('#') => 'id',
-            utf8_encode('CODIGO') => 'codigo',
-            utf8_encode('KILOS') => 'kilos',
-            utf8_encode('COSTO') => 'costo'
+            utf8_encode('Empresa') => 'empresa',
+            utf8_encode('Codigo') => 'codigo',
+            utf8_encode('Kilo(s)') => 'kilos',
+            utf8_encode('Costo') => 'costo'
             
         );
         $this->encabezado= "";

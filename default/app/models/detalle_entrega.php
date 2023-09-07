@@ -23,7 +23,7 @@ class detalle_entrega extends ActiveRecord {
         return $this->find_by_sql("select * from almacen where ID=$id");
     }
     public function listarProductoCompra($entregaId) {
-         $sqlProducto = "SELECT det.id, pro.clave, pro.descripcion, det.cantidad, det.lote_serie, det.fecha_caducidad, pre.descripcion AS unidad_Salida, det.numero_inventario
+         $sqlProducto = "SELECT det.id, pro.clave, pro.descripcion, det.cantidad, det.lote_serie, det.fecha_caducidad, pre.descripcion AS unidad_Salida, det.numero_inventario, det.unidad
 FROM detalle_entrega AS det, producto AS pro, almacen AS alm, presentacion AS pre
 WHERE det.entrega_id =$entregaId
 AND det.producto_id = pro.id

@@ -1,5 +1,21 @@
 <script type="text/javascript">
-   
+   function imprime_lista()
+    {
+        var operacion = 'MOSTRAR_LISTA_ANTICIPO'
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "operacion=" + operacion,
+            success: function (html) {
+                $("#resultado").html(html);
+                $("#dsubtotal").val($("#iSubtotal").val());
+                $("#dimpuesto").val($("#iImpuesto").val());
+                $("#dtotal").val($("#iTotal").val());
+                
+            }
+        });
+
+    }
     
     function buscaCliente() {
         var clienteId = $('#anticipo_cliente_id').val();
@@ -15,9 +31,209 @@
             });
         }
     }
+    function buscaProducto() {
+        var almacenId = $('#anticipo_almacen_id').val();
+
+        var operacion = "BUSCA_PRODUCTO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "almacenId=" + almacenId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#productoEs").html(html);
+            }
+        });
+    }
+    function buscaUnidadPrecio() {
+        var productoId = $('#venta_producto_id').val();
+
+        var operacion = "BUSCA_UNIDADPRECIO";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+
+                separador = ","
+                cadena = html.split(separador)
+                $("#etiqueta").html(cadena[0]);
+                var valor = cadena[1];
+                $("#venta_precio").val(valor);
+                 buscaLote();
+        buscaDetalle();
+         buscaPresentacion();
+            }
+        });
+    }
+      function buscaDetalle()
+    {
+        var productoId = $('#venta_producto_id').val();
+        var operacion = 'MOSTRAR_DETALLE'
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'inventario/libreriaInventario/'; ?>",
+            data: "productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+                html = "lote";
+                html = html.replace(/^\s+|\s+$/g, "");
+                $('#opcion').val(html);
+                if (html == "lote") {
+                    $('#loteProducto').show();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').hide();
+                    $('#serie').val('');
+                    $('#numInventario').val('');
+
+                } else if (html == "serie") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').show();
+                    $('#inventarioProducto').hide();
+                    $('#numInventario').val('');
+                    $('#lote').val('');
+                } else if (html == "loteInventario") {
+                    $('#loteProducto').show();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').show();
+                    $('#serie').val('');
+                } else if (html == "serieInventario") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').show();
+                    $('#inventarioProducto').show();
+                    $('#lote').val('');
+                } else if (html == "soloInventario") {
+                    $('#loteProducto').hide();
+                    $('#serieProducto').hide();
+                    $('#inventarioProducto').show();
+                    $('#lote').val('');
+                    $('#serie').val('');
+                } else {
+                    $('#inventarioProducto').hide();
+                    $('#loteProducto').hide();
+                    $('#serieProducto').hide();
+                    $('#serie').val('');
+                    $('#lote').val('');
+                    $('#numInventario').val('');
+
+                }
+                //  $("#detalleProducto").html(html);
+            }
+        });
+
+    }
+    function buscaPresentacion() {
+        var productoId = $('#venta_producto_id').val();
+            var operacion = "TIPO_PRESENTACION";
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: "productoId=" + productoId + "&operacion=" + operacion,
+                success: function (html) {
+                    $("#tipoVenta").html(html);
+                }
+            });
+        
+    }
+    function buscaLote() {
+        var almacenId = $('#anticipo_almacen_id').val();
+        var productoId = $('#venta_producto_id').val();
+        var operacion = "BUSCA_LOTE_PA";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "almacenId=" + almacenId + "&productoId=" + productoId + "&operacion=" + operacion,
+            success: function (html) {
+                $("#loteProducto").html(html);
+            }
+        });
+    }
     
+    function buscaExistencia() {
+        var lote = $('#lote').val();
+        var operacion = "BUSCA_EXISTENCIA_PA";
+        $.ajax({
+            type: "POST",
+            url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+            data: "lote=" + lote  + "&operacion=" + operacion,
+            success: function (html) {
+                $("#existencia").val(html);
+            }
+        });
+    }
+    function agregarPartida()
+    {
+trans=0;
+        var operacion = 'AGREGAR_PARTIDA_ANTICIPO';
+        var cantidad = $('#venta_cantidad').val();
+        var productoId = $('#venta_producto_id').val();
+        var precio = $('#venta_precio').val();
+        var almacenId = $('#anticipo_almacen_id').val();
+        var presentacionVe=$('#presentacionVenta').val();
+        if(presentacionVe=='T') var presentacion = $('#presentacionT').val();
+        else {
+            var presentacion = $('#presentacionV').val();
+            trans=presentacion;
+         
+        }
+        var existencia 	=	$('#existencia').val();
+        var serie = "";
+        var lote = $('#lote').val();
+        var opcion = 'lote';
+        var mens = "";
+        var re = /,/g;
+        cantidad = cantidad.replace(re, "");
+if (productoId == "") {
+            mens += "\n- Seleccione un producto";
+        }
+         if (lote=="") {mens+="\n- Seleccione el numero de Lote";}
+        if ((cantidad=="") || (cantidad <= 0 )) {mens+="\n- Inserte una cantidad valida";}
+        
+        if(presentacion=='M1'){presentacion='Molido'; trans="1"; }
+        else if(presentacion=='M1.1'){presentacion='Molido 500 gr.'; trans="0.50";}
+        else if(presentacion=='M1.2'){presentacion='Molido 250 gr.'; trans="0.25";}
+        if(presentacion=='G1'){presentacion='en Grano'; trans="1"; }
+        else if(presentacion=='G1.1'){presentacion='en Grano 500 gr.'; trans="0.50";}
+        else if(presentacion=='G1.2'){presentacion='en Grano 250 gr.'; trans="0.25";}
+        if(trans==''){trans=1;}
+        cantidad=cantidad * trans;
+         if (parseInt(cantidad) > parseInt(existencia)) {mens+="\n- La cantidad no puede ser mayor a la existencia de producto";} 
+
+        if (mens != "") {
+            alert('Verifique los siguientes campos:\n' + mens);
+
+        } else
+        {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo PUBLIC_PATH . 'venta/libreriaVenta/'; ?>",
+                data: 'operacion=' + operacion + '&cantidad=' + cantidad + "&productoId=" + productoId + "&precio=" + precio + "&lote=" + lote + "&serie=" + serie + "&opcion=" + opcion + "&almacenId=" + almacenId+ "&presentacionV=" + presentacion+ "&presentacion=" + trans,
+                success: function (html) {
+
+                    html = html.replace(/^\s+|\s+$/g, "");
+                    if (html == 'Si') {
+                        alert('Esta partida ya existe.......!');
+                    } else {
+
+                        imprime_lista();
+                    }
+                }
+            });
+        }
+    }
+
+    function buscarOrigen(){
+         var almacen= $("#anticipo_almacen_id").val();
+         var concepto = $("#anticipo_almacen_id option:selected").text()
+         if(almacen >= 1){
+         $("#anticipo_origen").val(concepto); 
+         buscaProducto();
+        }else{
+            $("#anticipo_origen").val("");
+        }
+        
+    }
 </script>    
-<?php View::content(); ?>
+<?php View::content(); 
+$presentacionB = array("" => "Seleccione");?>
 <body id="cuerpo_principal">
 
     <div id="form_container" style="width:100%;" >
@@ -46,7 +262,37 @@
 
                 <?php echo Form::hidden('anticipo.tipo_documento', 'maxlength="20" required class="form-control"   ', "VENTA"); ?>
 
-                
+                   <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Origen:    
+                            </div>
+                            <?php
+                             echo Form::hidden('anticipo.origen',' class="form-control" ');
+                             echo Form::dbSelect("anticipo.almacen_id", "descripcion", array("almacen", "listar"), 'Seleccione..', 'class="form-control" onchange="buscarOrigen()" '); 
+                            ?>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Documento:    
+                            </div>
+<?php echo Form::text('anticipo.documento', ' readonly="readonly" maxlength="20" required class="form-control"   ', $num); ?>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">       Fecha:    
+                            </div>
+<?php echo form::date('anticipo.fecha_anticipo', 'placeholder="dd-mm-aa" required class="form-control"', date('Y-m-d')); ?>
+                        </div>
+                    </div> 
+                </div>
                <div class="col-sm-8">
                     <div class="form-group">
                         <div class="input-group">
@@ -57,15 +303,7 @@
                     </div> 
                 </div>
 
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">       Fecha:    
-                            </div>
-<?php echo form::text('anticipo.fecha_documento', 'placeholder="dd-mm-aa" required class="form-control"', date('d-m-Y')); ?>
-                        </div>
-                    </div> 
-                </div>
+                
                 
 
 
@@ -93,6 +331,122 @@
             </div>
             
 <?php $ar2 = array('Contado', 'Credito'); ?>
+            
+             <div class="panel panel-primary">
+                <div class="panel-heading">Datos Producto </div>
+                <div class="panel-body">
+                    <div class="form-row">
+                        <div class="col-md-2 ">
+                            <label for="validationCustomUsername">C. Inventario</label>
+                            <div class="input-group">
+<div id="productoEs">
+<?php echo Form::text("venta.producto_id", ' class="form-control"'); ?>
+</div>
+                            </div>
+                        </div> 
+                        <div class="col-md-2 " id="tipoVenta">
+                            
+                            
+                            <label >C. Venta</label>
+                            <div class="input-group">
+                                <div  id="etiqueta1" >
+                                    <?php echo Form::Select('presentacionV', $presentacionB, 'class="form-control"', ''); ?>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        
+                        <div class="col-md-2 ">
+                            <label >Lote</label>
+                            <div class="input-group">
+                                <div  id="loteProducto" >
+
+                                    <?php echo Form::text("lote",  'class="form-control" '); ?>
+                                </div>
+                            </div>
+                        </div> 
+
+                         
+                        <div class="col-md-2 ">
+                            <label >precio</label>
+                            <div class="input-group">
+                                <div id="almacen">
+<?php echo Form::text("venta.precio",  'class="form-control" '); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2 ">
+                            <label >cantidad</label>
+                            <div class="input-group">
+
+<?php echo Form::number('venta.cantidad', ' class="form-control"  min="0" step="0.1"', '0'); ?>
+
+                            </div>
+                        </div> 
+
+
+                         
+
+
+
+
+
+
+                        
+                        <div class="col-md-1 ">
+                            <label >existencia</label>
+                            <div class="input-group">
+                                <div id="almacen">
+<?php echo Form::text("existencia",  'class="form-control" readonly="readonly"'); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1 ">
+                            <label >.</label>
+                            <div class="input-group">
+<?php echo Form::button("Agregar", "id='Agregar' style='width:98%;' class='btn-success btn' ") ?>
+                            </div>
+                        </div> 
+
+                    </div>      
+                    <br>
+
+                    <div id="resultado" style="min-height: 300px;max-height: 300px;   border-bottom-color:#fff;overflow: auto;position: relative;  "> <?php print"<script> imprime_lista() </script>"; ?></div>
+                    </br>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> SubTotal $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dsubtotal', '  class="form-control"  style="text-align:right;" '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Impuesto $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dimpuesto', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;text-align: right;"> Total $ </td>
+                            <td style="width: 1%;"></td>
+                            <td><?php echo Form::text('dtotal', '  class="form-control" style="text-align:right;"  '); ?> </td>
+                        </tr>
+                    </table>
+
+                    <br>
+                   
+                    <div class="col-sm-7">
+                        <div class="form-group">
+                            <!--
+                            <div class="input-group">
+                                <div class="input-group-addon">       Capturo:    
+                                </div>
+<?php echo Form::text('venta.capturo', ' required class="form-control"   '); ?>
+                            </div>  !-->
+                        </div> 
+                    </div>
+
+                </div>
+            </div>
             <fieldset style="padding: 15px;">
                 <legend><b>Datos del Anticipo :</b></legend> 
                
@@ -131,7 +485,7 @@
                         <div class="input-group">
                             <div class="input-group-addon">Cuenta Bancaria:    
                             </div>
-<?php echo Form::dbSelect("anticipo.cuenta_id", 'cuenta', array('bancosCuentas', 'listarCuentasBancos', 0), '- Seleccione -', " class='form-control '  "); ?>
+<?php echo Form::dbSelect("anticipo.bancos_cuentas_id", 'cuenta', array('bancosCuentas', 'listarCuentasBancos', 0), '- Seleccione -', " class='form-control '  "); ?>
                         </div>
                     </div> 
                 </div>
@@ -172,7 +526,7 @@
     </fieldset>
 
 
-<?php $url = "'" . PUBLIC_PATH . "anticipo/listadoAnticipo'"; ?>
+<?php $url = "'" . PUBLIC_PATH . "venta/listadoAnticipo'"; ?>
     <table width="100%">
         <tr align="center">
             <td width="33%">     
@@ -196,7 +550,11 @@
 
 <script type="text/javascript">
    
-    
+    $("#Agregar").click(function () {
+
+        agregarPartida();
+
+    });
     $("#anticipo_cliente_id").change(function () {
         buscaCliente();
 
