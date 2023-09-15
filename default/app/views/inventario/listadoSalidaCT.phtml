@@ -1,8 +1,7 @@
-
-
+<?php View::content() ?>
+<?php Html::includeCss() ?>
 <?php Tag::css('demo_page'); ?>
 <?php Tag::css('demo_table'); ?>
-<?php Html::includeCss() ?>
 <?php echo Tag::js('jquery.dataTables.min'); ?>
 
 <div id="container" >
@@ -15,10 +14,7 @@
         
                 <div id="dt_example" style="margin:0 auto; padding:10px 20px; background-color:#ffffff; ">      
                    
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="panel panel-default">
-
-                            <div class="panel-body">
+                  <div class="row">
                              <div class="col-md-12">
                                    <div style="text-align:right;margin: 0 0; width:100%; float: left; ">
                                        <div id="texto_superior"  >
@@ -31,7 +27,7 @@
                 </div>
             </div> 
  
- <table  border="0" width="100%" id="display" class="display">
+ <table  border="0" width="100%" id="display" >
             <thead>
                 <tr  style="font-size: 9px;letter-spacing: -0.8px;">
                     <th width='5%'> #</th>
@@ -75,9 +71,7 @@
             </tbody>
         </table>
         </div>     
-                            </div>
-                        </div>
-                    </div>
+                  </div>         
                 </div>
            
 
@@ -88,7 +82,7 @@
 
 <script type="text/javascript" charset="utf-8">
     $(function() {
-        $(".display").dataTable({ 
+        $("#display").dataTable({ 
             "aaSorting": [[0,"desc"]],
             "bAutoWidth": true,
             "sPaginationType": "full_numbers",

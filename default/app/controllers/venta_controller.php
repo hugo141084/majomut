@@ -1218,7 +1218,7 @@ $cantidadP=$cantidad * (1/$presentacion);
                $condicion = $condicion." and DV.lote='$codigo' ";  
             }
             $condicion = $condicion." and V.estado='1' "; 
-            $this->resultado = $consulta->find_all_by_sql("select V.fecha_recepcion, DV.lote, SUM(DV.cantidad) cantidad, P.descripcion, PR.descripcion preparacion, P.clave,DV.pieza,DV.presentacion_venta,sum(DV.total) total,V.origen from venta V INNER join detalle_venta DV on V.id=DV.venta_id INNER JOIN producto P on DV.producto_id=P.id inner join presentacion PR on P.presentacion_id=PR.id $condicion GROUP by V.fecha_recepcion, DV.lote,P.clave, PR.descripcion ORDER BY V.fecha_recepcion ASC");
+            $this->resultado = $consulta->find_all_by_sql("select V.fecha_recepcion, DV.lote, SUM(DV.cantidad) cantidad, P.descripcion, PR.descripcion preparacion, P.clave,DV.pieza,DV.presentacion_venta,sum(DV.total) total,V.origen from venta V INNER join detalle_venta DV on V.id=DV.venta_id INNER JOIN producto P on DV.producto_id=P.id inner join presentacion PR on P.presentacion_id=PR.id $condicion GROUP by V.fecha_recepcion, DV.lote,P.clave,P.descripcion, PR.descripcion,DV.pieza,DV.presentacion_venta,V.origen ORDER BY V.fecha_recepcion ASC");
             
         }
     }
@@ -1247,23 +1247,23 @@ $cantidadP=$cantidad * (1/$presentacion);
             $venta = $consulta->find_all_by_sql("select P.id,P.clave,concat_ws(', ',P.descripcion,pre.descripcion,c.descripcion,pr.descripcion) descripcion, SUM(CASE WHEN CM.tipo_movimiento = 'E' THEN MI.cantidad ELSE 0 END) cancelacion,SUM(CASE WHEN CM.tipo_movimiento = 'S' THEN MI.cantidad ELSE 0 END) venta FROM movimiento_inventario MI inner join producto P on MI.producto_id=P.id left join preparacion pr on pr.id=P.preparacion_id left join presentacion pre on pre.id=P.presentacion_id left join calidad c on P.calidad_id=c.id INNER JOIN conceptomovimiento CM on MI.tipo_movimiento=CM.id $condicion and (MI.tipo_movimiento='11' || MI.tipo_movimiento='16')   GROUP by P.id order by P.id asc");
             $arreglo[][]="";
             foreach ($recepcion as $datos){
-               $arreglo[$datos->id][1]=$datos->descripcion." - ".$datos->descripcion;
+               $arreglo[$datos->id][1]=$datos->clave." - ".$datos->descripcion;
                $arreglo[$datos->id][2]=$datos->entrada-$datos->cancelacion;
             }
             foreach ($traspaso as $datos){
-               $arreglo[$datos->id][1]=$datos->descripcion." - ".$datos->descripcion;
-               $arreglo[$datos->id][3]=$datos->entrada-$datos->salida;
+               $arreglo[$datos->id][1]=$datos->clave." - ".$datos->descripcion;
+               $arreglo[$datos->id][3]=$datos->entrada+$datos->salida;
             }
             foreach ($entradaT as $datos){
-               $arreglo[$datos->id][1]=$datos->descripcion." - ".$datos->descripcion;
+               $arreglo[$datos->id][1]=$datos->clave." - ".$datos->descripcion;
                $arreglo[$datos->id][4]=$datos->entrada-$datos->salida;
             }
             foreach ($salidaT as $datos){
-               $arreglo[$datos->id][1]=$datos->descripcion." - ".$datos->descripcion;
+               $arreglo[$datos->id][1]=$datos->clave." - ".$datos->descripcion;
                $arreglo[$datos->id][5]=$datos->entrada-$datos->salida;
             }
             foreach ($venta as $datos){
-               $arreglo[$datos->id][1]=$datos->descripcion." - ".$datos->descripcion;
+               $arreglo[$datos->id][1]=$datos->clave." - ".$datos->descripcion;
                $arreglo[$datos->id][6]=$datos->venta-$datos->cancelacion;
             }
             sort($arreglo);

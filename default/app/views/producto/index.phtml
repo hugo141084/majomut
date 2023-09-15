@@ -1,10 +1,10 @@
+<?php Html::includeCss() ?>
+<?php View::content(); ?>
 ﻿<?php Tag::css('demo_page'); ?>
 <?php Tag::css('demo_table'); ?>
-<?php Html::includeCss() ?>
+
 <?php echo Tag::js('jquery.dataTables.min'); ?>
-<?php
-View::content();
-?>
+
 
 
 
@@ -12,92 +12,89 @@ View::content();
     <br/>
     <div id="form_container" style="width:100%;" >
         <h1 class="lineaSuperior"><a></a></h1>
-        
-        
 
-        
-                <div id="dt_example" style="margin:0 auto; padding:10px 20px; background-color:#ffffff; ">      
-                   
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="panel panel-default">
+        <div id="dt_example" style="margin:0 auto; padding:10px 20px; background-color:#ffffff; ">      
 
-                            <div class="panel-body">
-                             <div class="col-md-12">
-                                   <div style="text-align:right;margin: 0 0; width:100%; float: left; ">
-                                       <div id="texto_superior"  >
-                 <?php echo "PRODUCTOS" ?> 
-            </div>
-                <div class='btn'>
-                    <?php                                      
-                          echo Html::linkAction('crear',Html::img('nuevo.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');                 
-                    ?>
-                    <?php                                      
-                          echo Html::linkAction('importar',Html::img('importar.png','cancel','style="text-align:center;width:75px;  padding:2px;"'),'');                 
-                    ?>
-                </div>
-            </div> 
- 
- <table  border="0" width="100%" id="display" class="display">
-            <thead>
-                <tr  style="font-size: 9px;letter-spacing: -0.8px;">
-                    <th width='5%'> #</th>
-                    <th width='10%'> Clave</th>
-                    <th width='25%'> Descripcion</th>
-                    <th width='25%'>Tipo</th>                              
-                    <th width='13%'>Presentacion</th>
-                    <th width='13%'>Preparacion</th>
-                    <th width='13%'>Precio</th>
-                    <th width='13%'>Impuesto</th>
-                    <th width='13%'>Existencia</th>
-                    <th width='15%'>Acción</th>
-                    </tr>
-            </thead>
-            <tbody>
-<?php
+            
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div style="text-align:right;margin: 0 0; width:100%; float: left; ">
+                                    <div id="texto_superior"  >
+                                        <?php echo "PRODUCTOS" ?> 
+                                    </div>
+                                    <div class='btn'>
+                                        <?php
+                                        echo Html::linkAction('crear', Html::img('nuevo.png', 'cancel', 'style="text-align:center;width:75px;  padding:2px;"'), '');
+                                        ?>
+                                        <?php
+                                        echo Html::linkAction('importar', Html::img('importar.png', 'cancel', 'style="text-align:center;width:75px;  padding:2px;"'), '');
+                                        ?>
+                                    </div>
+                                </div> 
 
-           $i=1;
-            foreach($result as $res){
-
-              
-                       echo "<tr>";
-                        echo "<td>".$res->id."</td>";
-                        echo "<td>".$res->clave."</td>";
-                            echo "<td>".$res->nombre."</td>";
-                            echo "<td>".$res->presentacion."</td>";
-                            echo "<td>".$res->calidad."</td>"; 
-                            echo "<td>".$res->preparacion."</td>"; 
-                            echo "<td>".$res->precio."</td>"; 
-                            echo "<td>".$res->impuesto."</td>"; 
-                            echo "<td>".$res->existencia."</td>"; 
-                            echo "<td>";
-                            
-                            echo Html::linkAction("editar/" . $res->id,'<span class="glyphicon glyphicon-edit"></span>','class="btn btn-info btn-xs"  title="Editar" data-toggle="tooltip"');
-                            echo Html::linkAction("bloquear/" . $res->id, '<span class="glyphicon glyphicon-trash"></span>','class="btn btn-danger btn-xs" title="" data-toggle="tooltip" data-original-title="Eliminar" onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"');
-                            
-                            
-                            echo "</td>";
-                            echo "</tr>";  
-                             
-                        $i++; 
-               }
-            ?>
-            </tbody>
-        </table>
-        </div>     
                             </div>
-                        </div>
-                    </div>
-                </div>
-           
+                            <div class="col-md-12">
+                                <table  border="0" width="100%" id="display" >
+                                    <thead>
+                                        <tr  style="font-size: 9px;letter-spacing: -0.8px;">
+                                            <th width='5%'> #</th>
+                                            <th width='10%'> Clave</th>
+                                            <th width='25%'> Descripcion</th>
+                                            <th width='25%'>Tipo</th>                              
+                                            <th width='13%'>Presentacion</th>
+                                            <th width='13%'>Preparacion</th>
+                                            <th width='13%'>Precio</th>
+                                            <th width='13%'>Impuesto</th>
+                                            <th width='13%'>Existencia</th>
+                                            <th width='15%'>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $i = 1;
+                                        foreach ($result as $res) {
 
-       
+
+                                            echo "<tr>";
+                                            echo "<td>" . $res->id . "</td>";
+                                            echo "<td>" . $res->clave . "</td>";
+                                            echo "<td>" . $res->nombre . "</td>";
+                                            echo "<td>" . $res->presentacion . "</td>";
+                                            echo "<td>" . $res->calidad . "</td>";
+                                            echo "<td>" . $res->preparacion . "</td>";
+                                            echo "<td>" . $res->precio . "</td>";
+                                            echo "<td>" . $res->impuesto . "</td>";
+                                            echo "<td>" . $res->existencia . "</td>";
+                                            echo "<td>";
+
+                                            echo Html::linkAction("editar/" . $res->id, '<span class="glyphicon glyphicon-edit"></span>', 'class="btn btn-info btn-xs"  title="Editar" data-toggle="tooltip"');
+                                            echo Html::linkAction("bloquear/" . $res->id, '<span class="glyphicon glyphicon-trash"></span>', 'class="btn btn-danger btn-xs" title="" data-toggle="tooltip" data-original-title="Eliminar" onclick="return confirm(\'Está Seguro que desea Eliminar el Registro?\')"');
+
+                                            echo "</td>";
+                                            echo "</tr>";
+
+                                            $i++;
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>  
+                            </div>  
+                        </div>     
+                    
+        </div>
+        <div>
+        
+        </div>
+
+
 
     </div>
 </div>
+
 <script type="text/javascript" charset="utf-8">
-    $(function() {
-        $(".display").dataTable({ 
-            "aaSorting": [[0,"asc"]],
+    $(function () {
+        $("#display").dataTable({
+            "aaSorting": [[0, "asc"]],
             "bAutoWidth": true,
             "sPaginationType": "full_numbers",
             "oLanguage": {
@@ -117,5 +114,5 @@ View::content();
             }
         });
     });
-    
+
 </script>
